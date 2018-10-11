@@ -1,0 +1,24 @@
+swagger: "2.0"
+info:
+  description: This is the swagger file that goes with our server code
+  version: "1.0.0"
+  title: Swagger REST Article
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+
+basePath: "/api"
+
+# Paths supported by the server application
+paths:
+  /sheep:
+    get:
+      operationId: "endpoint.get_sound"
+      summary: "Baah."
+      description: "Baah."
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            type: "string"
