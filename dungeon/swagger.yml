@@ -1,8 +1,8 @@
 swagger: "2.0"
 info:
-  description: This is the swagger file that goes with our server code
+  description: This is the API for the dungeon
   version: "1.0.0"
-  title: Swagger REST Article
+  title: Dungeon API
 consumes:
   - "application/json"
 produces:
@@ -12,13 +12,19 @@ basePath: "/api"
 
 # Paths supported by the server application
 paths:
-  /sheep:
+  /view:
     get:
-      operationId: "endpoint.get_sound"
-      summary: "Baah."
-      description: "Baah."
+      operationId: "endpoint.get_view"
+      summary: "Get everything in the room."
+      description: "Currently returns everything in the room."
       responses:
         200:
           description: "Successful operation"
           schema:
-            type: "string"
+            type: "array"
+            items:
+              properties:
+                x:
+                  type: "integer"
+                y:
+                  type: "integer"

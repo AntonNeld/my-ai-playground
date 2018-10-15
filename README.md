@@ -8,6 +8,7 @@ Prerequisites:
 ```sh
 pip3 install flask
 pip3 install connexion
+pip3 install requests
 ```
 
 Try it out:
@@ -16,10 +17,10 @@ Try it out:
 python3 dungeon/main.py
 ```
 
-In a web browser, go to:
+In another shell, do:
 
-```
-localhost:5000/api/sheep
+```sh
+python3 text_client/main.py
 ```
 
 ## Docker stuff (future)
