@@ -10,3 +10,6 @@ def get_view():
                         "looks_like": thing.looks_like}
         serializables.append(serializable)
     return serializables
+
+def step():
+    print("Did a step!")

@@ -28,3 +28,11 @@ paths:
                   type: "integer"
                 y:
                   type: "integer"
+  /step:
+    post:
+      operationId: "endpoint.step"
+      summary: "Step world forward."
+      description: "Moves all agents."
+      responses:
+        201:
+          description: "Stepped"
