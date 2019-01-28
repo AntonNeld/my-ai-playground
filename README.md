@@ -1,4 +1,5 @@
 # ai-dungeon
+
 Experimenting with AI and microservices. Very early phases so far.
 
 ## Getting started
@@ -11,7 +12,7 @@ Prerequisites:
 Install and use dependencies:
 
 ```sh
-pipenv install
+pipenv install --dev
 pipenv shell
 ```
 
