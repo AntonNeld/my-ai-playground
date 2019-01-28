@@ -1,37 +1,29 @@
 # ai-dungeon
-Experimenting with AI and microservices.
+Experimenting with AI and microservices. Very early phases so far.
 
 ## Getting started
 
 Prerequisites:
 
+* pipenv
+* Add `export PIPENV_VENV_IN_PROJECT=1` to `.bashrc` or similar.
+
+Install and use dependencies:
+
 ```sh
-pip3 install flask
-pip3 install connexion
-pip3 install requests
+pipenv install
+pipenv shell
 ```
 
 Try it out:
 
 ```sh
-python3 dungeon/main.py
+python dungeon/main.py
 ```
 
 In another shell, do:
 
 ```sh
-python3 text_client/main.py
+pipenv shell
+python text_client/main.py
 ```
-
-## Docker stuff (future)
-
-Install docker and set up a swarm:
-
-```sh
-sudo apt install docker.io
-sudo usermod -aG docker ${USER}
-# Log out and in again
-docker swarm init
-```
-
-To be continued...
