@@ -4,3 +4,4 @@ class Wall:
         self.x = x
         self.y = y
         self.looks_like = "wall"
+        self.solid = True

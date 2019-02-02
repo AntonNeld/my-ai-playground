@@ -1,5 +1,6 @@
 import requests
 import json
+import room
 
 AI_URL = "http://127.0.0.1:5100/api/nextmove"
 
@@ -10,15 +11,22 @@ class Player:
         self.x = x
         self.y = y
         self.looks_like = "player"
+        self.solid = False
 
     def step(self):
         r = requests.get(AI_URL)
         action = json.loads(r.text)
+        dx = dy = 0
+
         if action == "move_up":
-            self.y += 1
+            dy = 1
         elif action == "move_down":
-            self.y -= 1
+            dy = -1
         elif action == "move_left":
-            self.x -= 1
+            dx = -1
         elif action == "move_right":
-            self.x += 1
+            dx = 1
+
+        if not room.default_room.is_wall(self.x + dx, self.y + dy):
+            self.x += dx
+            self.y += dy
