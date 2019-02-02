@@ -17,6 +17,13 @@ class Room:
     def get_things(self):
         return self._things.copy()
 
+    def step(self):
+        for thing in self._things:
+            try:
+                thing.step()
+            except AttributeError:
+                pass  # Fine if thing doesn't have step method.
+
 
 # Create a default room (just for testing)
 default_room = Room()
