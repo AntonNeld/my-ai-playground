@@ -6,9 +6,26 @@ from pyglet.window import key
 
 n = 0
 x = y = 128
+
+
 window = pyglet.window.Window()
+
+# Images go here
 block = pyglet.resource.image('res/img/block.png')
 player = pyglet.resource.image('res/img/player.png')
+default = pyglet.resource.image('res/img/default.png')
+
+
+r = requests.get("http://127.0.0.1:5000/api/view")
+things = json.loads(r.text)
+
+
+SYMBOLS = {"wall": block,
+           "player": player}
+DEFAULT_SYMBOL = default
+
+[{"looks_like": "wall", "x": 1, "y": 2},
+ {"looks_like": "wall", "x": 4, "y": 2}]
 
 
 @window.event
@@ -24,15 +41,25 @@ def on_draw():
 
     window.clear()
     label.draw()
-    block.blit(x + math.cos(n/10) * 64, y + math.sin(n/10) * 64)
-    block.blit(x + math.cos(n/10 + math.pi) * 64,
-               y + math.sin(n/10 + math.pi) * 64)
-    player.blit(x, y)
+
+    for thing in things:
+
+        if thing["looks_like"] in SYMBOLS:
+            obj = SYMBOLS[thing["looks_like"]]
+        else:
+            obj = DEFAULT_SYMBOL
+
+        obj.blit(thing["x"]*32, thing["y"]*32)
+
+    #block.blit(x + math.cos(n/10) * 64, y + math.sin(n/10) * 64)
+    # block.blit(x + math.cos(n/10 + math.pi) * 64,
+    #           y + math.sin(n/10 + math.pi) * 64)
+    #player.blit(x, y)
 
 
 @window.event
 def on_key_press(symbol, modifiers):
-    global x, y, n
+    global x, y, n, things
 
     r = requests.get("http://127.0.0.1:5000/api/view")
     things = json.loads(r.text)
