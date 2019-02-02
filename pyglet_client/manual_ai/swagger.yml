@@ -1,0 +1,24 @@
+swagger: "2.0"
+info:
+  description: This is the API for the manual input AI
+  version: "1.0.0"
+  title: Dungeon API
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+
+basePath: "/api"
+
+# Paths supported by the server application
+paths:
+  /nextmove:
+    get:
+      operationId: "manual_ai.endpoint.next_move"
+      summary: "Get next move."
+      description: "Get next move."
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            type: "string"

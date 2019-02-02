@@ -3,6 +3,7 @@ import math
 import requests
 import json
 from pyglet.window import key
+import manual_ai
 
 n = 0
 x = y = 128
@@ -61,24 +62,27 @@ def on_draw():
 def on_key_press(symbol, modifiers):
     global x, y, n, things
 
-    r = requests.get("http://127.0.0.1:5000/api/view")
-    things = json.loads(r.text)
-    print(things)
-    r = requests.post("http://127.0.0.1:5000/api/step")
-
     print('A key was pressed')
     if symbol == key.RIGHT:
         x += 32
+        manual_ai.set_action("move_right")
     elif symbol == key.LEFT:
         x -= 32
+        manual_ai.set_action("move_left")
     elif symbol == key.UP:
         y += 32
+        manual_ai.set_action("move_up")
     elif symbol == key.DOWN:
         y -= 32
-
+        manual_ai.set_action("move_down")
+    r = requests.post("http://127.0.0.1:5000/api/step")
+    r = requests.get("http://127.0.0.1:5000/api/view")
+    things = json.loads(r.text)
+    print(things)
     n += 1
 
     print(n)
 
 
+manual_ai.run()
 pyglet.app.run()
