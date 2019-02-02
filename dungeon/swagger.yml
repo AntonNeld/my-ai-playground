@@ -21,13 +21,22 @@ paths:
         200:
           description: "Successful operation"
           schema:
-            type: "array"
-            items:
-              properties:
-                x:
-                  type: "integer"
-                y:
-                  type: "integer"
+            type: object
+            properties:
+              steps:
+                type: integer
+              score:
+                type: integer
+              things:
+                type: array
+                items:
+                  properties:
+                    x: 
+                      type: integer
+                    y: 
+                      type: integer
+                    looks_like: 
+                      type: string
   /step:
     post:
       operationId: "endpoint.step"

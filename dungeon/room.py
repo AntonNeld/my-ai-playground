@@ -26,6 +26,20 @@ class Room:
     def get_things(self):
         return self._things.copy()
 
+    def get_view(self):
+        to_return = {"score": self.score,
+                     "steps": self.steps}
+        serializables = []
+        things = self.get_things()
+        for thing in things:
+            serializable = {"x":          thing.x,
+                            "y":          thing.y,
+                            "looks_like": thing.looks_like}
+            serializables.append(serializable)
+
+        to_return["things"] = serializables
+        return to_return
+
     def step(self):
         for thing in self._things:
             if hasattr(thing, "step"):

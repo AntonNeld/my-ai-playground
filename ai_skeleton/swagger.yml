@@ -14,7 +14,7 @@ basePath: "/api"
 paths:
   /nextmove:
     post:
-      operationId: "manual_ai.endpoint.next_move"
+      operationId: "endpoint.next_move"
       summary: "Get the next action."
       description: "Get the next action for the given sensory input."
       consumes:
@@ -41,7 +41,7 @@ paths:
                     looks_like: 
                       type: string
       responses:
-        201:
+        200:
           description: "Successful operation"
           schema:
             type: "string"

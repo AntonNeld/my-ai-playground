@@ -14,7 +14,7 @@ class Player:
         self.solid = False
 
     def step(self):
-        r = requests.get(AI_URL)
+        r = requests.post(AI_URL, json=room.get_current_room().get_view())
         action = json.loads(r.text)
 
         room.get_current_room().steps += 1
