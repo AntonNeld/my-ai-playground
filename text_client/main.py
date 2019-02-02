@@ -1,7 +1,8 @@
 import requests
 import json
 
-SYMBOLS = {"wall": "#"}
+SYMBOLS = {"wall": "#",
+           "player": "o"}
 DEFAULT_SYMBOL = "?"
 
 
