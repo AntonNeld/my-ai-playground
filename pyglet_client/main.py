@@ -3,6 +3,7 @@ import math
 import requests
 import json
 from pyglet.window import key
+from pyglet import sprite
 import manual_ai
 
 verbose = False
@@ -13,6 +14,7 @@ window = pyglet.window.Window()
 # Images go here
 block = pyglet.resource.image('res/img/block.png')
 player = pyglet.resource.image('res/img/player.png')
+coin = pyglet.resource.image('res/img/coin.png')
 default = pyglet.resource.image('res/img/default.png')
 
 
@@ -20,12 +22,10 @@ r = requests.get("http://127.0.0.1:5000/api/view")
 things = json.loads(r.text)
 
 
-SYMBOLS = {"wall": block,
-           "player": player}
+SYMBOLS = {"wall": sprite.Sprite(block),
+           "player": sprite.Sprite(player),
+           "coin": sprite.Sprite(coin)}
 DEFAULT_SYMBOL = default
-
-[{"looks_like": "wall", "x": 1, "y": 2},
- {"looks_like": "wall", "x": 4, "y": 2}]
 
 
 @window.event
@@ -51,8 +51,9 @@ def on_draw():
             obj = SYMBOLS[thing["looks_like"]]
         else:
             obj = DEFAULT_SYMBOL
-
-        obj.blit(thing["x"]*32, thing["y"]*32)
+        obj.x = thing["x"]*32
+        obj.y = thing["y"]*32
+        obj.draw()
 
     goldlabel.draw()
     steplabel.draw()
@@ -60,7 +61,7 @@ def on_draw():
 
 @window.event
 def on_key_press(symbol, modifiers):
-    global x, y, n, things
+    global things
 
     if symbol == key.RIGHT:
         manual_ai.set_action("move_right")
@@ -79,3 +80,9 @@ def on_key_press(symbol, modifiers):
 
 manual_ai.run()
 pyglet.app.run()
+event_loop = pyglet.app.EventLoop()
+
+
+@event_loop.event
+def on_window_close(window):
+    event_loop.exit()
