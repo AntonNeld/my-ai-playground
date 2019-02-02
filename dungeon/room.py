@@ -1,6 +1,9 @@
+import pytmx
 from entities.wall import Wall
 from entities.player import Player
 from entities.coin import Coin
+
+current_room = None
 
 
 class Room:
@@ -37,7 +40,26 @@ class Room:
         return False
 
 
-# Create a default room (just for testing)
-default_room = Room()
-default_room.add_things(Wall(0, 0), Wall(0, 1), Wall(0, 2), Wall(
-    0, 3), Wall(0, 4), Wall(1, 2), Wall(3, 3), Player(5, 5), Coin(7, 7), Coin(7, 9), Coin(4, 12))
+def create_room_from_tilemap(path):
+    new_room = Room()
+    tiledata = pytmx.TiledMap(path)
+    for layer in tiledata.layers:
+        thing_type = layer.properties["Type"]
+        for (x, y, gid) in layer.iter_data():
+            if gid != 0:
+                if thing_type == "block":
+                    new_room.add_things(Wall(x, y))
+                elif thing_type == "player":
+                    new_room.add_things(Player(x, y))
+                elif thing_type == "coin":
+                    new_room.add_things(Coin(x, y))
+    return new_room
+
+
+def set_current_room(room):
+    global current_room
+    current_room = room
+
+
+def get_current_room():
+    return current_room

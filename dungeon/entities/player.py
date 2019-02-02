@@ -28,11 +28,12 @@ class Player:
         elif action == "move_right":
             dx = 1
 
-        if not room.default_room.is_wall(self.x + dx, self.y + dy):
+        if not room.get_current_room().is_wall(self.x + dx, self.y + dy):
             self.x += dx
             self.y += dy
 
-        for thing in room.default_room.get_things():
-            if thing.looks_like == "coin" and thing.x == self.x and thing.y == self.y:
-                room.default_room.remove_things(thing)
-                score += 1
+        for thing in room.get_current_room().get_things():
+            if (thing.looks_like == "coin" and thing.x == self.x
+                    and thing.y == self.y):
+                room.get_current_room().remove_things(thing)
+                self.score += 1

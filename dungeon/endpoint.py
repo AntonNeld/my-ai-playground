@@ -1,11 +1,11 @@
-from room import default_room
+import room
 
 # Get stuff.
 
 
 def get_view():
     serializables = []
-    things = default_room.get_things()
+    things = room.get_current_room().get_things()
     for thing in things:
         serializable = {"x":          thing.x,
                         "y":          thing.y,
@@ -15,4 +15,4 @@ def get_view():
 
 
 def step():
-    default_room.step()
+    room.get_current_room().step()

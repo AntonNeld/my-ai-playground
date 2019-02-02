@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" tiledversion="1.1.5" orientation="orthogonal" renderorder="right-up" width="20" height="15" tilewidth="32" tileheight="32" infinite="0" nextobjectid="1">
- <tileset firstgid="1" source="../../../../../files/Downloads/TiledTiles.tsx"/>
+ <tileset firstgid="1" source="./TiledTiles.tsx"/>
  <layer name="Blocks" width="20" height="15">
   <properties>
    <property name="Type" value="block"/>
