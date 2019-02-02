@@ -1,4 +1,5 @@
 from entities.wall import Wall
+from entities.player import Player
 
 
 class Room:
@@ -19,4 +20,4 @@ class Room:
 
 # Create a default room (just for testing)
 default_room = Room()
-default_room.add_things(Wall(0, 0), Wall(1, 2), Wall(3, 3))
+default_room.add_things(Wall(0, 0), Wall(1, 2), Wall(3, 3), Player(2, 2))
