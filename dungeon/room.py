@@ -28,10 +28,8 @@ class Room:
 
     def step(self):
         for thing in self._things:
-            try:
+            if hasattr(thing, "step"):
                 thing.step()
-            except AttributeError:
-                pass  # Fine if thing doesn't have step method.
 
     def is_wall(self, x, y):
         for thing in self._things:
