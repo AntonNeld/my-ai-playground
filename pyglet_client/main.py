@@ -64,7 +64,6 @@ def on_key_press(symbol, modifiers):
     r = requests.get("http://127.0.0.1:5000/api/view")
     things = json.loads(r.text)
     print(things)
-    input()
     r = requests.post("http://127.0.0.1:5000/api/step")
 
     print('A key was pressed')
