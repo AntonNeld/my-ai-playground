@@ -1,4 +1,5 @@
 from entities.wall import Wall
+from entities.player import Player
 
 
 class Room:
@@ -16,7 +17,14 @@ class Room:
     def get_things(self):
         return self._things.copy()
 
+    def step(self):
+        for thing in self._things:
+            try:
+                thing.step()
+            except AttributeError:
+                pass  # Fine if thing doesn't have step method.
+
 
 # Create a default room (just for testing)
 default_room = Room()
-default_room.add_things(Wall(0, 0), Wall(1, 2), Wall(3, 3))
+default_room.add_things(Wall(0, 0), Wall(1, 2), Wall(3, 3), Player(2, 2))

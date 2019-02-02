@@ -15,4 +15,4 @@ def get_view():
 
 
 def step():
-    print("Did a step!")
+    default_room.step()
