@@ -12,11 +12,12 @@ class Player:
         self.y = y
         self.looks_like = "player"
         self.solid = False
-        self.score = 0
 
     def step(self):
         r = requests.get(AI_URL)
         action = json.loads(r.text)
+
+        room.get_current_room().steps += 1
         dx = dy = 0
 
         if action == "move_up":
@@ -36,4 +37,4 @@ class Player:
             if (thing.looks_like == "coin" and thing.x == self.x
                     and thing.y == self.y):
                 room.get_current_room().remove_things(thing)
-                self.score += 1
+                room.get_current_room().score += 1

@@ -7,8 +7,6 @@ from pyglet import sprite
 import manual_ai
 
 verbose = False
-gold = 1337
-steps = 42
 window = pyglet.window.Window()
 
 # Images go here
@@ -30,13 +28,13 @@ DEFAULT_SYMBOL = default
 
 @window.event
 def on_draw():
-    goldlabel = pyglet.text.Label('Gold: ' + str(gold),
+    goldlabel = pyglet.text.Label('Gold: ' + str(things["score"]),
                                   font_name='Times New Roman',
                                   font_size=18,
                                   color=(200, 200, 0, 255),
                                   x=8, y=window.height,
                                   anchor_x='left', anchor_y='top')
-    steplabel = pyglet.text.Label('Steps: ' + str(steps),
+    steplabel = pyglet.text.Label('Steps: ' + str(things["steps"]),
                                   font_name='Times New Roman',
                                   font_size=18,
                                   color=(0, 128, 255, 255),
@@ -45,7 +43,7 @@ def on_draw():
 
     window.clear()
 
-    for thing in things:
+    for thing in things["things"]:
 
         if thing["looks_like"] in SYMBOLS:
             obj = SYMBOLS[thing["looks_like"]]

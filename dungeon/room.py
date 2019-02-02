@@ -10,6 +10,7 @@ class Room:
 
     def __init__(self):
         self._things = []
+        self.score = self.steps = 0
 
     def add_things(self, *things):
         for thing in things:
