@@ -3,7 +3,7 @@ import json
 current_action = "none"
 
 
-def next_move(state):
+def next_move(percept):
     return current_action
 
 

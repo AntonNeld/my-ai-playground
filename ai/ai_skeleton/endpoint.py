@@ -1,2 +1,2 @@
-def next_move(state):
+def next_move(percept):
     return "none"

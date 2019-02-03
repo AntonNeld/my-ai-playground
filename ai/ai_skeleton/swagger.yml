@@ -20,7 +20,7 @@ paths:
       consumes:
         - application/json
       parameters:
-        - name: state
+        - name: percept
           in: body
           required: true
           schema:
