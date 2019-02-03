@@ -6,5 +6,9 @@ services:
       DUNGEON_PLAYER_AI: ai
     ports:
       - "5000:5000"
+    volumes:
+      - "../dungeon/:/code"
   ai:
     build: "../ai/random_movement/"
+    volumes:
+      - "../ai/random_movement/:/code"
