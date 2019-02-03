@@ -9,6 +9,7 @@ Prerequisites:
 * [pipenv](https://pypi.org/project/pipenv/)
 * Add `export PIPENV_VENV_IN_PROJECT=1` to `.bashrc` or similar.
 * [docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
+* [tiled](https://www.mapeditor.org/), if you want to make new maps.
 
 Install and use dependencies:
 
