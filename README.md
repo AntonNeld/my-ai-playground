@@ -32,3 +32,18 @@ python text_client/main.py
 ```
 
 Press any key to advance the world one step. If the scenario is `manual.yml` the arrow keys control the player.
+
+## Creating new scenarios
+
+Create a new `.yml` file in `scenarios`. For many purposes, it's enough to copy `random-movement.yml` and changing:
+
+* `DUNGEON_MAP` in `dungeon`, to another map placed in `dungeon/maps`.
+* `build` and `volumes` in `ai`, to another AI placed in `ai`.
+
+## Creating new maps
+
+Create a new map using Tiled. Each type of object should have its own layer, with a custom property `Type` signifying what it is.
+
+## Creating new AIs
+
+Copy `ai/ai_skeleton`, and change `next_move(state)` in `endpoint.py`. It should examine `state` and return one of `"none"`,`"move_left"`,`"move_right"`,`"move_up"`,`"move_down"`.
