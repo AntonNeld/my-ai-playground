@@ -8,6 +8,7 @@ Prerequisites:
 
 * pipenv
 * Add `export PIPENV_VENV_IN_PROJECT=1` to `.bashrc` or similar.
+* docker
 
 Install and use dependencies:
 

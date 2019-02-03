@@ -6,6 +6,7 @@ verify_ssl = true
 [dev-packages]
 pycodestyle = "*"
 autopep8 = "*"
+docker-compose = "*"
 
 [packages]
 flask = "~=1.0"
