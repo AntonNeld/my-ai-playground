@@ -4,7 +4,6 @@ import requests
 import json
 from pyglet.window import key
 from pyglet import sprite
-import manual_ai
 
 verbose = False
 window = pyglet.window.Window()
@@ -57,18 +56,28 @@ def on_draw():
     steplabel.draw()
 
 
+def set_action(action):
+    try:
+        requests.put("http://127.0.0.1:5100/api/setmove", json=action)
+    except requests.exceptions.ConnectionError as e:
+        if verbose:
+            print(e)
+
+
 @window.event
 def on_key_press(symbol, modifiers):
     global things
 
     if symbol == key.RIGHT:
-        manual_ai.set_action("move_right")
+        set_action("move_right")
     elif symbol == key.LEFT:
-        manual_ai.set_action("move_left")
+        set_action("move_left")
     elif symbol == key.UP:
-        manual_ai.set_action("move_up")
+        set_action("move_up")
     elif symbol == key.DOWN:
-        manual_ai.set_action("move_down")
+        set_action("move_down")
+    else:
+        set_action("none")
     r = requests.post("http://127.0.0.1:5000/api/step")
     r = requests.get("http://127.0.0.1:5000/api/view")
     things = json.loads(r.text)
@@ -76,7 +85,6 @@ def on_key_press(symbol, modifiers):
         print(things)
 
 
-manual_ai.run()
 pyglet.app.run()
 event_loop = pyglet.app.EventLoop()
 

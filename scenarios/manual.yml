@@ -1,0 +1,12 @@
+version: '3'
+services:
+  dungeon:
+    build: "../dungeon/"
+    environment:
+      DUNGEON_PLAYER_AI: ai
+    ports:
+      - "5000:5000"
+  ai:
+    build: "../ai/manual/"
+    ports:
+      - "5100:5100"

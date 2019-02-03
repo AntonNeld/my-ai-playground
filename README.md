@@ -30,4 +30,4 @@ pipenv shell
 python text_client/main.py
 ```
 
-Press any key to advance the world one step.
+Press any key to advance the world one step. If the scenario is `manual.yml` the arrow keys control the player.
