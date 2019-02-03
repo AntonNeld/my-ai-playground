@@ -26,16 +26,22 @@ class Room:
     def get_things(self):
         return self._things.copy()
 
-    def get_view(self):
+    def get_view(self, perceptor=None):
+        if perceptor:
+            x = perceptor.x
+            y = perceptor.y
+        else:
+            x = y = 0
         to_return = {"score": self.score,
                      "steps": self.steps}
         serializables = []
         things = self.get_things()
         for thing in things:
-            serializable = {"x":          thing.x,
-                            "y":          thing.y,
-                            "looks_like": thing.looks_like}
-            serializables.append(serializable)
+            if thing != perceptor:
+                serializable = {"x":          thing.x - x,
+                                "y":          thing.y - y,
+                                "looks_like": thing.looks_like}
+                serializables.append(serializable)
 
         to_return["things"] = serializables
         return to_return
