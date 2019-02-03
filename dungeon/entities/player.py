@@ -1,8 +1,13 @@
 import requests
 import json
+import os
 import room
 
-AI_URL = "http://127.0.0.1:5100/api/nextmove"
+if "DUNGEON_PLAYER_AI" in os.environ:
+    ai_host = os.environ["DUNGEON_PLAYER_AI"]
+else:
+    ai_host = "127.0.0.1"
+AI_URL = "http://" + ai_host + ":5100/api/nextmove"
 
 
 class Player:

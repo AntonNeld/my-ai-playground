@@ -6,9 +6,9 @@ Experimenting with AI and microservices. Very early phases so far.
 
 Prerequisites:
 
-* pipenv
+* [pipenv](https://pypi.org/project/pipenv/)
 * Add `export PIPENV_VENV_IN_PROJECT=1` to `.bashrc` or similar.
-* docker
+* [docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
 
 Install and use dependencies:
 
@@ -17,15 +17,17 @@ pipenv install --dev
 pipenv shell
 ```
 
-Try it out:
+Run a scenario:
 
 ```sh
-python dungeon/main.py
+docker-compose -f scenarios/random-movement.yml up --build
 ```
 
-In another shell, do:
+In another shell, connect with the scenario using the frontend:
 
 ```sh
 pipenv shell
 python text_client/main.py
 ```
+
+Press any key to advance the world one step.
