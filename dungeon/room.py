@@ -58,7 +58,8 @@ def create_room_from_tilemap(path):
     tiledata = pytmx.TiledMap(path)
     for layer in tiledata.layers:
         thing_type = layer.properties["Type"]
-        for (x, y, gid) in layer.iter_data():
+        for (x, inverted_y, gid) in layer.iter_data():
+            y = tiledata.height - inverted_y - 1
             if gid != 0:
                 if thing_type == "block":
                     new_room.add_things(Wall(x, y))
