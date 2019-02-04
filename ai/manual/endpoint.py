@@ -10,3 +10,7 @@ def next_move(percept):
 def set_move(action):
     global current_action
     current_action = action
+
+
+def reset():
+    pass

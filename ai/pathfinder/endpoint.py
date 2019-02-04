@@ -22,3 +22,8 @@ def next_move(percept):
         if not actions:
             actions = ["none"]
     return actions.pop(0)
+
+
+def reset():
+    global actions
+    actions = []
