@@ -1,9 +1,23 @@
+import os
+from os.path import abspath, dirname, join
+import requests
 import pytmx
 from entities.wall import Wall
 from entities.player import Player
 from entities.coin import Coin
 
 current_room = None
+
+if "DUNGEON_MAP" in os.environ:
+    MAP = os.environ["DUNGEON_MAP"]
+else:
+    MAP = "default"
+
+if "DUNGEON_PLAYER_AI" in os.environ:
+    ai_host = os.environ["DUNGEON_PLAYER_AI"]
+else:
+    ai_host = "127.0.0.1"
+RESET_AI_URL = "http://" + ai_host + ":5100/api/reset"
 
 
 class Room:
@@ -83,3 +97,9 @@ def set_current_room(room):
 
 def get_current_room():
     return current_room
+
+
+def init_room():
+    requests.put(RESET_AI_URL)
+    set_current_room(create_room_from_tilemap(
+        join(dirname(abspath(__file__)), "maps", MAP + ".tmx")))

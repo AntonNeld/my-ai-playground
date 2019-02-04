@@ -28,10 +28,16 @@ In another shell, connect with the scenario using the frontend:
 
 ```sh
 pipenv shell
-python text_client/main.py
+python pyglet_client/main.py
 ```
 
-Press any key to advance the world one step. If the scenario is `manual.yml` the arrow keys control the player.
+## Using the frontend
+
+If you use the `manual` AI (like in the scenario `manual`), you can control the player with the arrow keys.
+
+Press R to reset the dungeon.
+
+Any other key steps the world one step forward.
 
 ## Creating new scenarios
 

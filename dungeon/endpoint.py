@@ -9,3 +9,7 @@ def get_view():
 
 def step():
     room.get_current_room().step()
+
+
+def reset():
+    room.init_room()

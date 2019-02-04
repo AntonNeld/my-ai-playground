@@ -78,7 +78,11 @@ def on_key_press(symbol, modifiers):
         set_action("move_down")
     else:
         set_action("none")
-    r = requests.post("http://127.0.0.1:5000/api/step")
+
+    if symbol == key.R:
+        r = requests.put("http://127.0.0.1:5000/api/reset")
+    else:
+        r = requests.post("http://127.0.0.1:5000/api/step")
     r = requests.get("http://127.0.0.1:5000/api/view")
     things = json.loads(r.text)
     if verbose:

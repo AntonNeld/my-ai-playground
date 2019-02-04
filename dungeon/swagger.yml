@@ -45,3 +45,11 @@ paths:
       responses:
         201:
           description: "Stepped"
+  /reset:
+    put:
+      operationId: "endpoint.reset"
+      summary: "Clear all state."
+      description: "Reinitialize the room."
+      responses:
+        200:
+          description: "Successful operation"
