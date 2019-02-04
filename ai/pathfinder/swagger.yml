@@ -1,0 +1,47 @@
+swagger: "2.0"
+info:
+  description: This is the API for an AI
+  version: "1.0.0"
+  title: Dungeon API
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+
+basePath: "/api"
+
+# Paths supported by the server application
+paths:
+  /nextmove:
+    post:
+      operationId: "endpoint.next_move"
+      summary: "Get the next action."
+      description: "Get the next action for the given sensory input."
+      consumes:
+        - application/json
+      parameters:
+        - name: percept
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              steps:
+                type: integer
+              score:
+                type: integer
+              things:
+                type: array
+                items:
+                  properties:
+                    x: 
+                      type: integer
+                    y: 
+                      type: integer
+                    looks_like: 
+                      type: string
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            type: "string"

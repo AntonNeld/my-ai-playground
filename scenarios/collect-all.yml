@@ -4,12 +4,12 @@ services:
     build: "../dungeon/"
     environment:
       DUNGEON_PLAYER_AI: ai
-      DUNGEON_MAP: single_gold
+      DUNGEON_MAP: default
     ports:
       - "5000:5000"
     volumes:
       - "../dungeon/:/code"
   ai:
-    build: "../ai/random_movement/"
+    build: "../ai/pathfinder/"
     volumes:
-      - "../ai/random_movement/:/code"
+      - "../ai/pathfinder/:/code"
