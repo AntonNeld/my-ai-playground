@@ -10,7 +10,6 @@ produces:
 
 basePath: "/api"
 
-# Paths supported by the server application
 paths:
   /view:
     get:
@@ -21,22 +20,38 @@ paths:
         200:
           description: "Successful operation"
           schema:
-            type: object
-            properties:
-              steps:
-                type: integer
-              score:
-                type: integer
-              things:
-                type: array
-                items:
-                  properties:
-                    x: 
-                      type: integer
-                    y: 
-                      type: integer
-                    looks_like: 
-                      type: string
+            type: array
+            items:
+              properties:
+                x: 
+                  type: integer
+                y: 
+                  type: integer
+                looks_like: 
+                  type: string
+                id:
+                  type: string
+  /score:
+    get:
+      operationId: "endpoint.get_score"
+      summary: "Get score."
+      description: "Get score for some or all agents."
+      parameters:
+        - name: agent
+          in: query
+          required: false
+          type: string
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            type: array
+            items:
+              properties:
+                id: 
+                  type: string
+                score: 
+                  type: integer
   /step:
     post:
       operationId: "endpoint.step"
@@ -45,6 +60,15 @@ paths:
       responses:
         201:
           description: "Stepped"
+    get:
+      operationId: "endpoint.get_steps"
+      summary: "Get steps."
+      description: "Get number of steps since beginning."
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            type: integer
   /reset:
     put:
       operationId: "endpoint.reset"

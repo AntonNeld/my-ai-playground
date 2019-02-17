@@ -51,14 +51,12 @@ class Room:
     def get_agents(self):
         return self._agents.copy()
 
-    def get_view(self, perceptor=None):
+    def get_view(self, perceptor=None, include_id=False):
         if perceptor:
             x = perceptor.x
             y = perceptor.y
         else:
             x = y = 0
-        to_return = {"score": self._agents[0].score,
-                     "steps": self.steps}
         serializables = []
         things = self.get_things()
         for thing in things:
@@ -66,10 +64,11 @@ class Room:
                 serializable = {"x":          thing.x - x,
                                 "y":          thing.y - y,
                                 "looks_like": thing.looks_like}
+                if include_id:
+                    serializable["id"] = thing.id
                 serializables.append(serializable)
 
-        to_return["things"] = serializables
-        return to_return
+        return serializables
 
     def step(self):
         actions = {}

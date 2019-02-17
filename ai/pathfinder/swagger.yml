@@ -28,22 +28,15 @@ paths:
           in: body
           required: true
           schema:
-            type: object
-            properties:
-              steps:
-                type: integer
-              score:
-                type: integer
-              things:
-                type: array
-                items:
-                  properties:
-                    x: 
-                      type: integer
-                    y: 
-                      type: integer
-                    looks_like: 
-                      type: string
+            type: array
+            items:
+              properties:
+                x: 
+                  type: integer
+                y: 
+                  type: integer
+                looks_like: 
+                  type: string
       responses:
         200:
           description: "Successful operation"
