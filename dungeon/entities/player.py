@@ -34,7 +34,7 @@ class Player:
         elif action == "move_right":
             dx = 1
 
-        if not room.get_current_room().is_wall(self.x + dx, self.y + dy):
+        if room.get_current_room().passable(self.x + dx, self.y + dy):
             self.x += dx
             self.y += dy
 

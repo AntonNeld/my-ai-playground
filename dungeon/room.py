@@ -65,12 +65,11 @@ class Room:
             if hasattr(thing, "step"):
                 thing.step()
 
-    def is_wall(self, x, y):
+    def passable(self, x, y):
         for thing in self._things:
             if thing.x == x and thing.y == y and thing.solid:
-                return True
-
-        return False
+                return False
+        return True
 
 
 def create_room_from_tilemap(path):
