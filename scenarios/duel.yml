@@ -1,0 +1,15 @@
+version: '3'
+services:
+  dungeon:
+    build: "../dungeon/"
+    environment:
+      DUNGEON_PLAYER_AI: ai
+      DUNGEON_MAP: two_players
+    ports:
+      - "5000:5000"
+    volumes:
+      - "../dungeon/:/code"
+  ai:
+    build: "../ai/pathfinder/"
+    volumes:
+      - "../ai/pathfinder/:/code"

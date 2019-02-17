@@ -1,13 +1,7 @@
-import requests
-import json
-import os
-import room
+import uuid
 
-if "DUNGEON_PLAYER_AI" in os.environ:
-    ai_host = os.environ["DUNGEON_PLAYER_AI"]
-else:
-    ai_host = "127.0.0.1"
-AI_URL = "http://" + ai_host + ":5100/api/nextmove"
+import room
+from .coin import Coin
 
 
 class Player:
@@ -16,13 +10,11 @@ class Player:
         self.x = x
         self.y = y
         self.looks_like = "player"
-        self.solid = False
+        self.id = uuid.uuid4().hex
+        self.solid = True
+        self.score = 0
 
-    def step(self):
-        r = requests.post(AI_URL, json=room.get_current_room().get_view(self))
-        action = json.loads(r.text)
-
-        room.get_current_room().steps += 1
+    def step(self, action="none"):
         dx = dy = 0
 
         if action == "move_up":
@@ -39,7 +31,7 @@ class Player:
             self.y += dy
 
         for thing in room.get_current_room().get_things():
-            if (thing.looks_like == "coin" and thing.x == self.x
+            if (isinstance(thing, Coin) and thing.x == self.x
                     and thing.y == self.y):
                 room.get_current_room().remove_things(thing)
-                room.get_current_room().score += 1
+                self.score += 1

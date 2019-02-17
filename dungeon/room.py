@@ -1,7 +1,9 @@
 import os
 from os.path import abspath, dirname, join
 import requests
+import json
 import pytmx
+
 from entities.wall import Wall
 from entities.player import Player
 from entities.coin import Coin
@@ -17,14 +19,16 @@ if "DUNGEON_PLAYER_AI" in os.environ:
     ai_host = os.environ["DUNGEON_PLAYER_AI"]
 else:
     ai_host = "127.0.0.1"
-RESET_AI_URL = "http://" + ai_host + ":5100/api/reset"
+RESET_AI_URL = "http://" + ai_host + ":5100/api/agent"
+AI_URL = "http://" + ai_host + ":5100/api/nextmove"
 
 
 class Room:
 
     def __init__(self):
         self._things = []
-        self.score = self.steps = 0
+        self.steps = 0
+        self._agents = []
 
     def add_things(self, *things):
         for thing in things:
@@ -32,13 +36,20 @@ class Room:
                 self._things.append(thing)
             else:
                 raise RuntimeError("Cannot add thing twice: " + str(thing))
+            if isinstance(thing, Player):
+                self._agents.append(thing)
 
     def remove_things(self, *things):
         for thing in things:
             self._things.remove(thing)
+            if thing in self._agents:
+                self._agents.remove(thing)
 
     def get_things(self):
         return self._things.copy()
+
+    def get_agents(self):
+        return self._agents.copy()
 
     def get_view(self, perceptor=None):
         if perceptor:
@@ -46,7 +57,7 @@ class Room:
             y = perceptor.y
         else:
             x = y = 0
-        to_return = {"score": self.score,
+        to_return = {"score": self._agents[0].score,
                      "steps": self.steps}
         serializables = []
         things = self.get_things()
@@ -61,9 +72,18 @@ class Room:
         return to_return
 
     def step(self):
+        actions = {}
+        for agent in self._agents:
+            r = requests.post(AI_URL + "?agent=" + agent.id,
+                              json=self.get_view(agent))
+            actions[agent] = json.loads(r.text)
         for thing in self._things:
             if hasattr(thing, "step"):
-                thing.step()
+                if thing in actions:
+                    thing.step(actions[thing])
+                else:
+                    thing.step()
+        self.steps += 1
 
     def passable(self, x, y):
         for thing in self.get_things():
@@ -99,9 +119,9 @@ def get_current_room():
 
 
 def init_room():
-    try:
-        requests.put(RESET_AI_URL)
-    except requests.exceptions.ConnectionError:
-        pass  # Probably just not started
+    current = get_current_room()
+    if current:
+        for agent in current.get_agents():
+            requests.delete(RESET_AI_URL + "/" + agent.id)
     set_current_room(create_room_from_tilemap(
         join(dirname(abspath(__file__)), "maps", MAP + ".tmx")))
