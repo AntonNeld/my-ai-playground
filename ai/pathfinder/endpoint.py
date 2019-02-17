@@ -10,8 +10,6 @@ def next_move(agent, percept):
     if agent not in actions or not actions[agent]:
         walls = get_coordinates(percept, "wall")
         coins = get_coordinates(percept, "coin")
-        if not coins:
-            return "none"
         shortest = math.inf
         for coin in coins:
             new_actions = breadth_first((0, 0), coin, walls)

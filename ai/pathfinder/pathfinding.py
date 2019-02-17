@@ -23,7 +23,6 @@ def breadth_first(origin, destination, obstructions):
 
 
 def find_steps(frontier, explored, obstructions, destination):
-    # logger.info(frontier)
     if destination in frontier:
         return [destination]
     if not frontier:
