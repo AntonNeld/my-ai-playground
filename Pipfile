@@ -4,9 +4,9 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-pycodestyle = "*"
 autopep8 = "*"
 docker-compose = "*"
+flake8 = "*"
 
 [packages]
 flask = "~=1.0"
