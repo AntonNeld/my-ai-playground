@@ -1,7 +1,8 @@
-class Coin:
+from .entity import Entity
+
+
+class Coin(Entity):
 
     def __init__(self, x, y):
-        self.x = x
-        self.y = y
-        self.looks_like = "coin"
+        super().__init__(x, y, "coin")
         self.solid = False

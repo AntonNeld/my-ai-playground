@@ -1,17 +1,12 @@
-import uuid
-
 import room
 from .coin import Coin
+from .entity import Entity
 
 
-class Player:
+class Player(Entity):
 
     def __init__(self, x, y):
-        self.x = x
-        self.y = y
-        self.looks_like = "player"
-        self.id = uuid.uuid4().hex
-        self.solid = True
+        super().__init__(x, y, "player")
         self.score = 0
 
     def step(self, action="none"):
