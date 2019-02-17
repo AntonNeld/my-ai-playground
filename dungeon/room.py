@@ -66,7 +66,7 @@ class Room:
                 thing.step()
 
     def passable(self, x, y):
-        for thing in self._things:
+        for thing in self.get_things():
             if thing.x == x and thing.y == y and thing.solid:
                 return False
         return True
@@ -99,6 +99,9 @@ def get_current_room():
 
 
 def init_room():
-    requests.put(RESET_AI_URL)
+    try:
+        requests.put(RESET_AI_URL)
+    except requests.exceptions.ConnectionError:
+        pass  # Probably just not started
     set_current_room(create_room_from_tilemap(
         join(dirname(abspath(__file__)), "maps", MAP + ".tmx")))
