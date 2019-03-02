@@ -2,62 +2,32 @@ import pyglet
 import requests
 import json
 from pyglet.window import key
-from pyglet import sprite
+
+from thing import Thing
 
 verbose = False
 window = pyglet.window.Window()
 
-# Images go here
-block = pyglet.resource.image('res/img/block.png')
-player = pyglet.resource.image('res/img/player.png')
-coin = pyglet.resource.image('res/img/coin.png')
-default = pyglet.resource.image('res/img/default.png')
+STEP_DURATION = 0.5
 
-
-SYMBOLS = {"wall": sprite.Sprite(block),
-           "player": sprite.Sprite(player),
-           "coin": sprite.Sprite(coin)}
-DEFAULT_SYMBOL = default
-
-things = []
-scores = []
+things = {}
 steps = 0
 
 
 @window.event
 def on_draw():
+    window.clear()
     steplabel = pyglet.text.Label('Steps: ' + str(steps),
                                   font_name='Times New Roman',
                                   font_size=18,
                                   color=(0, 128, 255, 255),
                                   x=8, y=window.height,
                                   anchor_x='left', anchor_y='top')
-
-    window.clear()
-    goldlabels = []
-    for thing in things:
-
-        if thing["looks_like"] in SYMBOLS:
-            obj = SYMBOLS[thing["looks_like"]]
-        else:
-            obj = DEFAULT_SYMBOL
-        obj.x = thing["x"]*32
-        obj.y = thing["y"]*32
-        obj.draw()
-        if thing["looks_like"] == "player":
-            score = ""
-            for s in scores:
-                if s["id"] == thing["id"]:
-                    score = str(s["score"])
-            goldlabel = pyglet.text.Label(score,
-                                          font_name='Times New Roman',
-                                          font_size=10,
-                                          color=(255, 255, 255, 255),
-                                          x=obj.x+32, y=obj.y+42,
-                                          anchor_x='left', anchor_y='top')
-            goldlabels.append(goldlabel)
-    for goldlabel in goldlabels:
-        goldlabel.draw()
+    for sprite in [things[identity].sprite for identity in things]:
+        sprite.draw()
+    for label in [things[identity].label for
+                  identity in things if things[identity].label]:
+        label.draw()
     steplabel.draw()
 
 
@@ -72,9 +42,33 @@ def set_action(action):
 def get_state():
     global things, scores, steps
     r = requests.get("http://127.0.0.1:5000/api/view")
-    things = json.loads(r.text)
+    new_things = json.loads(r.text)
     r = requests.get("http://127.0.0.1:5000/api/score")
-    scores = json.loads(r.text)
+    scores_list = json.loads(r.text)
+    scores = {}
+    for item in scores_list:
+        scores[item["id"]] = item["score"]
+    if verbose:
+        print(things)
+    for thing in new_things:
+        identity = thing["id"]
+        # Create new things
+        if identity not in things:
+            things[identity] = Thing(
+                thing["x"], thing["y"], thing["looks_like"])
+        # Update existing things
+        else:
+            things[identity].set_pos(thing["x"], thing["y"])
+        # Set score label
+        if identity in scores:
+            things[identity].set_label(str(scores[identity]))
+        else:
+            things[identity].set_label(None)
+    # Remove nonexistent things
+    identities = list(things.keys())
+    for identity in identities:
+        if identity not in [thing["id"] for thing in new_things]:
+            del things[identity]
     r = requests.get("http://127.0.0.1:5000/api/step")
     steps = json.loads(r.text)
 
@@ -97,8 +91,6 @@ def on_key_press(symbol, modifiers):
     else:
         requests.post("http://127.0.0.1:5000/api/step")
     get_state()
-    if verbose:
-        print(things)
 
 
 get_state()
