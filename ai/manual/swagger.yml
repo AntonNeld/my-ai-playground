@@ -16,10 +16,14 @@ paths:
     post:
       operationId: "endpoint.next_move"
       summary: "Get the next action."
-      description: "Get the next action for the given sensory input."
+      description: "Get the next action for the given agent and sensory input."
       consumes:
         - application/json
       parameters:
+        - name: agent
+          in: query
+          required: true
+          type: string
         - name: percept
           in: body
           required: true
@@ -38,6 +42,19 @@ paths:
           description: "Successful operation"
           schema:
             type: "string"
+  /agent/{agent}:
+    delete:
+      operationId: "endpoint.delete"
+      summary: "Remove agent."
+      description: "Remove all state for one agent."
+      parameters:
+        - name: agent
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: "Successful operation"
   /setmove:
     put:
       operationId: "endpoint.set_move"
@@ -50,14 +67,6 @@ paths:
           required: true
           schema:
             type: string
-      responses:
-        200:
-          description: "Successful operation"
-  /reset:
-    put:
-      operationId: "endpoint.reset"
-      summary: "Clear all state."
-      description: "Clear any state the AI has."
       responses:
         200:
           description: "Successful operation"

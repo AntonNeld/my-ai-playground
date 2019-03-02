@@ -1,6 +1,6 @@
-def next_move(percept):
+def next_move(agent, percept):
     return "none"
 
 
-def reset():
+def delete(agent):
     pass

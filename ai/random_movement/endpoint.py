@@ -1,9 +1,9 @@
 import random
 
 
-def next_move(percept):
+def next_move(agent, percept):
     return random.choice(["move_up", "move_down", "move_left", "move_right"])
 
 
-def reset():
+def delete(agent):
     pass

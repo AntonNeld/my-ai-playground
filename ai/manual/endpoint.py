@@ -1,9 +1,8 @@
-import json
 
 current_action = "none"
 
 
-def next_move(percept):
+def next_move(agent, percept):
     return current_action
 
 
@@ -12,5 +11,5 @@ def set_move(action):
     current_action = action
 
 
-def reset():
+def delete(agent):
     pass
