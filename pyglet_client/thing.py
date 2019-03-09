@@ -10,17 +10,24 @@ DEFAULT_IMAGE = pyglet.resource.image('res/img/default.png')
 
 class Thing:
 
-    def __init__(self, x, y, looks_like):
+    def __init__(self, x, y, looks_like, offset=(0, 0)):
         if looks_like in IMAGES:
             image = IMAGES[looks_like]
         else:
             image = DEFAULT_IMAGE
-        self.sprite = pyglet.sprite.Sprite(image, x=x*32, y=y*32)
+        self.sprite = pyglet.sprite.Sprite(image)
+        self.x = x
+        self.y = y
+        self.offset_x = offset[0]
+        self.offset_y = offset[1]
+        self.set_pos(x, y)
         self.label = None
 
     def set_pos(self, x, y):
-        self.sprite.x = x*32
-        self.sprite.y = y*32
+        self.x = x
+        self.y = y
+        self.sprite.x = x*32 + self.offset_x
+        self.sprite.y = y*32 + self.offset_y
 
     def set_label(self, label):
         if label:
