@@ -4,7 +4,9 @@ from pyglet.window import key
 
 from view import View
 
+
 window = pyglet.window.Window(width=800, height=600)
+event_loop = pyglet.app.EventLoop()
 
 views = [View((30, 770, 80, 260)), View((0, 400, 300, 600))]
 
@@ -37,6 +39,11 @@ def on_key_press(symbol, modifiers):
         view.get_state()
 
 
+@event_loop.event
+def on_window_close(window):
+    event_loop.exit()
+
+
 def set_action(action):
     try:
         requests.put("http://127.0.0.1:5100/api/setmove", json=action)
@@ -44,12 +51,7 @@ def set_action(action):
         pass
 
 
-for view in views:
-    view.get_state()
-pyglet.app.run()
-event_loop = pyglet.app.EventLoop()
-
-
-@event_loop.event
-def on_window_close(window):
-    event_loop.exit()
+if __name__ == "__main__":
+    for view in views:
+        view.get_state()
+    pyglet.app.run()
