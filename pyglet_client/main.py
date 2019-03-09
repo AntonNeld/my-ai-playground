@@ -7,8 +7,9 @@ from view import View
 FPS = 30
 
 STEP_DURATION = 0.3
+STEP_INTERVAL = 0.3
 
-config = {"manual_mode": False}
+config = {"manual_mode": False, "auto_step": False}
 
 window = pyglet.window.Window(width=800, height=600)
 event_loop = pyglet.app.EventLoop()
@@ -26,6 +27,7 @@ def print_help():
     r: reset dungeon
     h: print this help again
     space: step forward
+    a: toggle auto-step
 
     If in manual mode (and the backend supports it):
         up: move up
@@ -52,6 +54,12 @@ def on_key_press(symbol, modifiers):
         print("Manual mode: " + str(config["manual_mode"]))
     elif symbol == key.R:
         reset()
+    elif symbol == key.A:
+        config["auto_step"] = not config["auto_step"]
+        if config["auto_step"]:
+            pyglet.clock.schedule_interval(step, STEP_INTERVAL)
+        else:
+            pyglet.clock.unschedule(step)
     elif symbol == key.H:
         print_help()
 
@@ -80,7 +88,7 @@ def set_action(action):
         print("Cannot set next move. Is there a manual AI?")
 
 
-def step():
+def step(dt=None):
     requests.post("http://127.0.0.1:5000/api/step")
     for view in views:
         view.get_state()
