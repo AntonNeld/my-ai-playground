@@ -6,13 +6,14 @@ from view import View
 
 window = pyglet.window.Window(width=800, height=600)
 
-view = View((30, 670, 80, 560))
+views = [View((30, 770, 80, 260)), View((0, 400, 300, 600))]
 
 
 @window.event
 def on_draw():
     window.clear()
-    view.draw()
+    for view in views:
+        view.draw()
 
 
 @window.event
@@ -32,7 +33,8 @@ def on_key_press(symbol, modifiers):
         requests.put("http://127.0.0.1:5000/api/reset")
     else:
         requests.post("http://127.0.0.1:5000/api/step")
-    view.get_state()
+    for view in views:
+        view.get_state()
 
 
 def set_action(action):
@@ -42,7 +44,8 @@ def set_action(action):
         pass
 
 
-view.get_state()
+for view in views:
+    view.get_state()
 pyglet.app.run()
 event_loop = pyglet.app.EventLoop()
 

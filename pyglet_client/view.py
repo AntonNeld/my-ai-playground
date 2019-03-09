@@ -4,6 +4,9 @@ import requests
 
 from thing import Thing
 
+# Hard-coded for now
+CAMERA_BOX = (0, 20, 0, 15)
+
 
 class View:
 
@@ -14,6 +17,8 @@ class View:
         self.max_x = bounding_box[1]
         self.min_y = bounding_box[2]
         self.max_y = bounding_box[3]
+        self.scale = ((self.max_x - self.min_x)/(CAMERA_BOX[1]-CAMERA_BOX[0]),
+                      (self.max_y - self.min_y)/(CAMERA_BOX[3]-CAMERA_BOX[2]))
         if show_steps:
             self.steplabel = pyglet.text.Label('N/A',
                                                font_name='Times New Roman',
@@ -49,7 +54,7 @@ class View:
             if identity not in self.things:
                 self.things[identity] = Thing(
                     thing["x"], thing["y"], thing["looks_like"],
-                    offset=(self.min_x, self.min_y))
+                    offset=(self.min_x, self.min_y), scale=self.scale)
             # Update existing things
             else:
                 self.things[identity].set_pos(thing["x"], thing["y"])
