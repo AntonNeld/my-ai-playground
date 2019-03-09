@@ -10,7 +10,8 @@ CAMERA_BOX = (0, 20, 0, 15)
 
 class View:
 
-    def __init__(self, bounding_box=(0, 640, 0, 480), show_steps=True):
+    def __init__(self, bounding_box=(0, 640, 0, 480),
+                 show_steps=True, step_duration=0):
         self.things = {}
         self.min_x = bounding_box[0]
         self.max_x = bounding_box[1]
@@ -18,6 +19,7 @@ class View:
         self.max_y = bounding_box[3]
         self.scale = ((self.max_x - self.min_x)/(CAMERA_BOX[1]-CAMERA_BOX[0]),
                       (self.max_y - self.min_y)/(CAMERA_BOX[3]-CAMERA_BOX[2]))
+        self.step_duration = step_duration
         if show_steps:
             self.steplabel = pyglet.text.Label('N/A',
                                                font_name='Times New Roman',
@@ -55,7 +57,8 @@ class View:
                     offset=(self.min_x, self.min_y), scale=self.scale)
             # Update existing things
             else:
-                self.things[identity].set_pos(thing["x"], thing["y"])
+                self.things[identity].set_pos(
+                    thing["x"], thing["y"], duration=self.step_duration)
             # Set score label
             if identity in scores:
                 self.things[identity].set_label(str(scores[identity]))
@@ -70,3 +73,7 @@ class View:
             r = requests.get("http://127.0.0.1:5000/api/step")
             steps = json.loads(r.text)
             self.steplabel.text = 'Steps: ' + str(steps)
+
+    def animate(self, dt):
+        for _, thing in self.things.items():
+            thing.animate(dt)
