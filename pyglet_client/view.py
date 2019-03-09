@@ -12,7 +12,6 @@ class View:
 
     def __init__(self, bounding_box=(0, 640, 0, 480), show_steps=True):
         self.things = {}
-        self.steps = 0
         self.min_x = bounding_box[0]
         self.max_x = bounding_box[1]
         self.min_y = bounding_box[2]
@@ -37,7 +36,6 @@ class View:
                       identity in self.things if self.things[identity].label]:
             label.draw()
         if self.steplabel:
-            self.steplabel.text = 'Steps: ' + str(self.steps)
             self.steplabel.draw()
 
     def get_state(self):
@@ -68,5 +66,7 @@ class View:
         for identity in identities:
             if identity not in [thing["id"] for thing in new_things]:
                 del self.things[identity]
-        r = requests.get("http://127.0.0.1:5000/api/step")
-        self.steps = json.loads(r.text)
+        if self.steplabel:
+            r = requests.get("http://127.0.0.1:5000/api/step")
+            steps = json.loads(r.text)
+            self.steplabel.text = 'Steps: ' + str(steps)

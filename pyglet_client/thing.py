@@ -26,23 +26,21 @@ class Thing:
         self.scale_y = scale[1]
         self.sprite.scale_x = self.scale_x/IMAGE_SIZE
         self.sprite.scale_y = self.scale_y/IMAGE_SIZE
-        self.set_pos(x, y)
         self.label = None
+        self.set_pos(x, y)
 
     def set_pos(self, x, y):
         self.x = x
         self.y = y
         self.sprite.x = x*self.scale_x + self.offset_x
         self.sprite.y = y*self.scale_y + self.offset_y
+        if self.label:
+            self._set_label_pos()
 
     def set_label(self, label):
         if label:
-            x = self.sprite.x + self.scale_x
-            y = self.sprite.y + self.scale_y + 10
             if self.label:
                 self.label.text = label
-                self.label.x = x
-                self.label.y = y
             else:
                 self.label = pyglet.text.Label(
                     label,
@@ -50,7 +48,11 @@ class Thing:
                     font_size=10,
                     color=(
                         255, 255, 255, 255),
-                    x=x, y=y,
                     anchor_x='left', anchor_y='top')
+                self._set_label_pos()
         else:
             self.label = None
+
+    def _set_label_pos(self):
+        self.label.x = self.sprite.x + self.scale_x
+        self.label.y = self.sprite.y + self.scale_y + 10
