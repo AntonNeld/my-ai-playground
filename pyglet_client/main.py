@@ -14,7 +14,9 @@ config = {"manual_mode": False, "auto_step": False}
 window = pyglet.window.Window(width=800, height=600)
 event_loop = pyglet.app.EventLoop()
 
-views = [View(step_duration=STEP_DURATION)]
+session = requests.session()
+
+views = [View(step_duration=STEP_DURATION, session=session)]
 
 # Uncomment to test multiple views, currently of the same dungeon
 # views = [View((30, 770, 80, 260),step_duration=STEP_DURATION),
@@ -62,7 +64,6 @@ def on_key_press(symbol, modifiers):
             pyglet.clock.unschedule(step)
     elif symbol == key.H:
         print_help()
-
     if config["manual_mode"]:
         actions = {key.RIGHT: "move_right",
                    key.LEFT: "move_left",
@@ -89,13 +90,13 @@ def set_action(action):
 
 
 def step(dt=None):
-    requests.post("http://127.0.0.1:5000/api/step")
+    session.post("http://127.0.0.1:5000/api/step")
     for view in views:
         view.get_state()
 
 
 def reset():
-    requests.put("http://127.0.0.1:5000/api/reset")
+    session.put("http://127.0.0.1:5000/api/reset")
     for view in views:
         view.get_state()
 

@@ -11,7 +11,8 @@ CAMERA_BOX = (0, 20, 0, 15)
 class View:
 
     def __init__(self, bounding_box=(0, 640, 0, 480),
-                 show_steps=True, step_duration=0):
+                 show_steps=True, step_duration=0, session=None):
+        self.session = session
         self.things = {}
         self.min_x = bounding_box[0]
         self.max_x = bounding_box[1]
@@ -41,10 +42,20 @@ class View:
             self.steplabel.draw()
 
     def get_state(self):
-        r = requests.get("http://127.0.0.1:5000/api/view")
-        new_things = json.loads(r.text)
-        r = requests.get("http://127.0.0.1:5000/api/score")
-        scores_list = json.loads(r.text)
+        if self.session:
+            view_response = self.session.get("http://127.0.0.1:5000/api/view")
+            score_response = self.session.get(
+                "http://127.0.0.1:5000/api/score")
+            step_response = self.session.get("http://127.0.0.1:5000/api/step")
+        else:
+            view_response = requests.get("http://127.0.0.1:5000/api/view")
+            score_response = requests.get("http://127.0.0.1:5000/api/score")
+            step_response = requests.get("http://127.0.0.1:5000/api/step")
+        new_things = json.loads(view_response.text)
+        scores_list = json.loads(score_response.text)
+        if self.steplabel:
+            steps = json.loads(step_response.text)
+            self.steplabel.text = 'Steps: ' + str(steps)
         scores = {}
         for item in scores_list:
             scores[item["id"]] = item["score"]
@@ -69,10 +80,6 @@ class View:
         for identity in identities:
             if identity not in [thing["id"] for thing in new_things]:
                 del self.things[identity]
-        if self.steplabel:
-            r = requests.get("http://127.0.0.1:5000/api/step")
-            steps = json.loads(r.text)
-            self.steplabel.text = 'Steps: ' + str(steps)
 
     def animate(self, dt):
         for _, thing in self.things.items():
