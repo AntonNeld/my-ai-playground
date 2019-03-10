@@ -1,5 +1,6 @@
 import pyglet
 import requests
+import timeit
 from pyglet.window import key
 
 from view import View
@@ -30,6 +31,7 @@ def print_help():
     h: print this help again
     space: step forward
     a: toggle auto-step
+    t: do 150 steps and measure average time
 
     If in manual mode (and the backend supports it):
         up: move up
@@ -64,6 +66,10 @@ def on_key_press(symbol, modifiers):
             pyglet.clock.unschedule(step)
     elif symbol == key.H:
         print_help()
+    elif symbol == key.T:
+        number = 150
+        print("Measuring average step time...")
+        print(timeit.timeit(step, number=number)/number)
     if config["manual_mode"]:
         actions = {key.RIGHT: "move_right",
                    key.LEFT: "move_left",
