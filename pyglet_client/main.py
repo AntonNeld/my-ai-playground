@@ -1,9 +1,10 @@
-import pyglet
-import requests
-import timeit
-from pyglet.window import key
-
 from view import View
+from pyglet.window import key
+import timeit
+import requests
+import pyglet
+import json
+
 
 FPS = 30
 
@@ -17,7 +18,7 @@ event_loop = pyglet.app.EventLoop()
 
 session = requests.session()
 
-views = [View(step_duration=STEP_DURATION, session=session)]
+views = [View(step_duration=STEP_DURATION)]
 
 # Uncomment to test multiple views, currently of the same dungeon
 # views = [View((30, 770, 80, 260),step_duration=STEP_DURATION),
@@ -88,6 +89,15 @@ def on_window_close(window):
     event_loop.exit()
 
 
+def get_state():
+    view_response = session.get("http://127.0.0.1:5000/api/view")
+    score_response = session.get("http://127.0.0.1:5000/api/score")
+    step_response = session.get("http://127.0.0.1:5000/api/step")
+    return {"view": json.loads(view_response.text),
+            "score": json.loads(score_response.text),
+            "steps": json.loads(step_response.text)}
+
+
 def set_action(action):
     try:
         requests.put("http://127.0.0.1:5100/api/setmove", json=action)
@@ -97,14 +107,16 @@ def set_action(action):
 
 def step(dt=None):
     session.post("http://127.0.0.1:5000/api/step")
+    state = get_state()
     for view in views:
-        view.get_state()
+        view.set_state(state)
 
 
 def reset():
     session.put("http://127.0.0.1:5000/api/reset")
+    state = get_state()
     for view in views:
-        view.get_state()
+        view.set_state(state)
 
 
 def animate(dt):
@@ -114,7 +126,8 @@ def animate(dt):
 
 if __name__ == "__main__":
     print_help()
+    state = get_state()
     for view in views:
-        view.get_state()
+        view.set_state(state)
     pyglet.clock.schedule_interval(animate, 1/FPS)
     pyglet.app.run()
