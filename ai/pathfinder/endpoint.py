@@ -22,4 +22,5 @@ def next_move(agent, percept):
 
 
 def delete(agent):
-    del actions[agent]
+    if agent in actions:
+        del actions[agent]
