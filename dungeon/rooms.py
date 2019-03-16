@@ -8,8 +8,6 @@ from entities.wall import Wall
 from entities.player import Player
 from entities.coin import Coin
 
-current_room = None
-
 if "DUNGEON_MAP" in os.environ:
     MAP = os.environ["DUNGEON_MAP"]
 else:
@@ -21,6 +19,9 @@ else:
     ai_host = "127.0.0.1"
 RESET_AI_URL = "http://" + ai_host + ":5100/api/agent"
 AI_URL = "http://" + ai_host + ":5100/api/nextmove"
+
+
+rooms = {}
 
 
 class Room:
@@ -100,27 +101,30 @@ def create_room_from_tilemap(path):
             y = tiledata.height - inverted_y - 1
             if gid != 0:
                 if thing_type == "block":
-                    new_room.add_things(Wall(x, y))
+                    new_room.add_things(Wall(new_room, x, y))
                 elif thing_type == "player":
-                    new_room.add_things(Player(x, y))
+                    new_room.add_things(Player(new_room, x, y))
                 elif thing_type == "coin":
-                    new_room.add_things(Coin(x, y))
+                    new_room.add_things(Coin(new_room, x, y))
     return new_room
 
 
-def set_current_room(room):
-    global current_room
-    current_room = room
+def get_room(room_id):
+    try:
+        return rooms[room_id]
+    except KeyError:
+        return None
 
 
-def get_current_room():
-    return current_room
-
-
-def init_room():
-    current = get_current_room()
+def delete_room(room_id):
+    current = get_room(room_id)
     if current:
         for agent in current.get_agents():
             requests.delete(RESET_AI_URL + "/" + agent.id)
-    set_current_room(create_room_from_tilemap(
-        join(dirname(abspath(__file__)), "maps", MAP + ".tmx")))
+        del rooms[room_id]
+
+
+def init_room(room_id):
+    delete_room(room_id)
+    rooms[room_id] = create_room_from_tilemap(
+        join(dirname(abspath(__file__)), "maps", MAP + ".tmx"))

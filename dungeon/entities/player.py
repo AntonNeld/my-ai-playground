@@ -1,12 +1,11 @@
-import rooms
 from .coin import Coin
 from .entity import Entity
 
 
 class Player(Entity):
 
-    def __init__(self, x, y):
-        super().__init__(x, y, "player")
+    def __init__(self, room, x, y):
+        super().__init__(room, x, y, "player")
         self.score = 0
 
     def step(self, action="none"):
@@ -21,12 +20,12 @@ class Player(Entity):
         elif action == "move_right":
             dx = 1
 
-        if rooms.get_current_room().passable(self.x + dx, self.y + dy):
+        if self.room.passable(self.x + dx, self.y + dy):
             self.x += dx
             self.y += dy
 
-        for thing in rooms.get_current_room().get_things():
+        for thing in self.room.get_things():
             if (isinstance(thing, Coin) and thing.x == self.x
                     and thing.y == self.y):
-                rooms.get_current_room().remove_things(thing)
+                self.room.remove_things(thing)
                 self.score += 1
