@@ -3,6 +3,7 @@ import timeit
 import requests
 import pyglet
 import json
+import os
 import sys
 
 from view import View
@@ -12,6 +13,11 @@ FPS = 30
 
 STEP_DURATION = 0.3
 STEP_INTERVAL = 0.3
+
+if "PLAYER_AI" in os.environ:
+    PLAYER_AI = os.environ["PLAYER_AI"]
+else:
+    PLAYER_AI = "pathfinder-ai"
 
 config = {"manual_mode": False, "auto_step": False}
 
@@ -120,7 +126,7 @@ def step(dt=None):
 
 def new_room():
     global room_id
-    data = maps.load(sys.argv[1])
+    data = maps.load(sys.argv[1], PLAYER_AI)
     if not room_id:
         response = session.post("http://127.0.0.1:5000/api/room", json=data)
         room_id = json.loads(response.text)

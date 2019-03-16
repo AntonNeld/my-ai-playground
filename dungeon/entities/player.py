@@ -4,8 +4,9 @@ from .entity import Entity
 
 class Player(Entity):
 
-    def __init__(self, room, x, y):
+    def __init__(self, room, x, y, ai):
         super().__init__(room, x, y, "player")
+        self.ai = ai
         self.score = 0
 
     def step(self, action="none"):

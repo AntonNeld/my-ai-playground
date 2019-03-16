@@ -30,6 +30,8 @@ paths:
                   type: integer
                 type: 
                   type: string
+                ai:
+                  type: string
       responses:
         200:
           description: "Successful operation"

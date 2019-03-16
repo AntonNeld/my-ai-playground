@@ -18,10 +18,10 @@ pipenv install --dev
 pipenv shell
 ```
 
-Run a scenario:
+Run the backend:
 
 ```sh
-docker-compose -f scenarios/random-movement.yml up --build
+docker-compose -f compose.yml up --build
 ```
 
 In another shell, connect with the scenario using the frontend:
@@ -31,19 +31,16 @@ pipenv shell
 python pyglet_client/main.py <PATH_TO_MAP>
 ```
 
+To use a different AI than the default, set the environment variable PLAYER_AI to the service name when starting the client. Default is `pathfinder-ai`. (This config will change soon.)
+
 ## Using the frontend
 
-If you use the `manual` AI (like in the scenario `manual`), you can control the player with the arrow keys.
+If you use the `manual` AI, you can control the player with the arrow keys.
 
 Press R to reset the dungeon.
 
 Any other key steps the world one step forward.
 
-## Creating new scenarios
-
-Create a new `.yml` file in `scenarios`. For many purposes, it's enough to copy `random-movement.yml` and changing:
-
-* `build` and `volumes` in `ai`, to another AI placed in `ai`.
 
 ## Creating new maps
 

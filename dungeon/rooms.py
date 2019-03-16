@@ -1,18 +1,9 @@
-import os
 import requests
 import json
 
 from entities.wall import Wall
 from entities.player import Player
 from entities.coin import Coin
-
-if "DUNGEON_PLAYER_AI" in os.environ:
-    ai_host = os.environ["DUNGEON_PLAYER_AI"]
-else:
-    ai_host = "127.0.0.1"
-RESET_AI_URL = "http://" + ai_host + ":5100/api/agent"
-AI_URL = "http://" + ai_host + ":5100/api/nextmove"
-
 
 rooms = {}
 
@@ -67,7 +58,8 @@ class Room:
     def step(self):
         actions = {}
         for agent in self._agents:
-            r = requests.post(AI_URL + "?agent=" + agent.id,
+            url = "http://{}:5100/api/nextmove".format(agent.ai)
+            r = requests.post(url + "?agent=" + agent.id,
                               json=self.get_view(agent))
             actions[agent] = json.loads(r.text)
         for thing in self._things:
@@ -93,7 +85,7 @@ def create_room_from_list(data):
         if thing["type"] == "block":
             new_room.add_things(Wall(new_room, x, y))
         elif thing["type"] == "player":
-            new_room.add_things(Player(new_room, x, y))
+            new_room.add_things(Player(new_room, x, y, thing["ai"]))
         elif thing["type"] == "coin":
             new_room.add_things(Coin(new_room, x, y))
     return new_room
@@ -110,7 +102,8 @@ def delete_room(room_id):
     current = get_room(room_id)
     if current:
         for agent in current.get_agents():
-            requests.delete(RESET_AI_URL + "/" + agent.id)
+            url = "http://" + agent["ai"] + ":5100/api/agent"
+            requests.delete(url + "/" + agent.id)
         del rooms[room_id]
 
 
