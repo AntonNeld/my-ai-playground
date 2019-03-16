@@ -1,5 +1,4 @@
 import connexion
-import rooms
 import cherrypy
 
 
@@ -7,7 +6,6 @@ app = connexion.App(__name__, specification_dir="./")
 app.add_api("swagger.yml")
 
 if __name__ == "__main__":
-    rooms.init_room()
     cherrypy.tree.graft(app, "/")
     cherrypy.server.unsubscribe()
     server = cherrypy._cpserver.Server()

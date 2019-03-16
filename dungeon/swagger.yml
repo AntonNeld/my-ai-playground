@@ -88,14 +88,26 @@ paths:
           description: "Successful operation"
           schema:
             type: integer
-  /reset:
+  /room/{room}:
     put:
-      operationId: "endpoint.reset"
-      summary: "Clear all state."
-      description: "Reinitialize the room."
+      operationId: "endpoint.create_room"
+      summary: "(Re-)initialize room."
+      description: "Create a new room, possibly overwriting the old."
       parameters:
         - name: room
-          in: query
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: "Successful operation"
+    delete:
+      operationId: "endpoint.delete_room"
+      summary: "Remove room."
+      description: "Delete a room that is no longer needed."
+      parameters:
+        - name: room
+          in: path
           required: true
           type: string
       responses:

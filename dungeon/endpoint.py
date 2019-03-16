@@ -25,3 +25,11 @@ def step(room):
 
 def reset(room):
     rooms.init_room()
+
+
+def create_room(room):
+    rooms.init_room()
+
+
+def delete_room(room):
+    pass

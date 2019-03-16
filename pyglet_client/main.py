@@ -58,7 +58,7 @@ def on_key_press(symbol, modifiers):
         config["manual_mode"] = not config["manual_mode"]
         print("Manual mode: " + str(config["manual_mode"]))
     elif symbol == key.R:
-        reset()
+        new_room()
     elif symbol == key.A:
         config["auto_step"] = not config["auto_step"]
         if config["auto_step"]:
@@ -112,8 +112,8 @@ def step(dt=None):
         view.set_state(state)
 
 
-def reset():
-    session.put("http://127.0.0.1:5000/api/reset")
+def new_room():
+    session.put("http://127.0.0.1:5000/api/room/tmp")
     state = get_state()
     for view in views:
         view.set_state(state)
@@ -125,6 +125,7 @@ def animate(dt):
 
 
 if __name__ == "__main__":
+    new_room()
     print_help()
     state = get_state()
     for view in views:
