@@ -11,11 +11,22 @@ produces:
 basePath: "/api"
 
 paths:
-  /room/{room}:
+  /room:
     put:
       operationId: "endpoint.create_room"
       summary: "(Re-)initialize room."
-      description: "Create a new room, possibly overwriting the old."
+      description: "Create a new room."
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            type: string
+            description: Room ID
+  /room/{room}:
+    put:
+      operationId: "endpoint.create_room_with_id"
+      summary: "(Re-)initialize room."
+      description: "Create a new room with given ID, possibly overwriting the old."
       parameters:
         - name: room
           in: path

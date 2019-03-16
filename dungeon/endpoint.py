@@ -1,4 +1,5 @@
 import rooms
+import uuid
 
 # Get stuff.
 
@@ -23,7 +24,13 @@ def step(room):
     rooms.get_room(room).step()
 
 
-def create_room(room):
+def create_room():
+    room_id = uuid.uuid4().hex
+    rooms.init_room(room_id)
+    return room_id
+
+
+def create_room_with_id(room):
     rooms.init_room(room)
 
 

@@ -19,6 +19,7 @@ event_loop = pyglet.app.EventLoop()
 session = requests.session()
 
 views = [View(step_duration=STEP_DURATION)]
+room_id = None
 
 # Uncomment to test multiple views, currently of the same dungeon
 # views = [View((30, 770, 80, 260),step_duration=STEP_DURATION),
@@ -90,9 +91,12 @@ def on_window_close(window):
 
 
 def get_state():
-    view_response = session.get("http://127.0.0.1:5000/api/room/tmp/view")
-    score_response = session.get("http://127.0.0.1:5000/api/room/tmp/score")
-    step_response = session.get("http://127.0.0.1:5000/api/room/tmp/step")
+    view_response = session.get(
+        "http://127.0.0.1:5000/api/room/{}/view".format(room_id))
+    score_response = session.get(
+        "http://127.0.0.1:5000/api/room/{}/score".format(room_id))
+    step_response = session.get(
+        "http://127.0.0.1:5000/api/room/{}/step".format(room_id))
     return {"view": json.loads(view_response.text),
             "score": json.loads(score_response.text),
             "steps": json.loads(step_response.text)}
@@ -106,14 +110,19 @@ def set_action(action):
 
 
 def step(dt=None):
-    session.post("http://127.0.0.1:5000/api/room/tmp/step")
+    session.post("http://127.0.0.1:5000/api/room/{}/step".format(room_id))
     state = get_state()
     for view in views:
         view.set_state(state)
 
 
 def new_room():
-    session.put("http://127.0.0.1:5000/api/room/tmp")
+    global room_id
+    if not room_id:
+        response = session.put("http://127.0.0.1:5000/api/room")
+        room_id = json.loads(response.text)
+    else:
+        session.put("http://127.0.0.1:5000/api/room/{}".format(room_id))
     state = get_state()
     for view in views:
         view.set_state(state)
