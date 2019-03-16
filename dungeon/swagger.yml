@@ -16,6 +16,11 @@ paths:
       operationId: "endpoint.get_view"
       summary: "Get everything in the room."
       description: "Currently returns everything in the room."
+      parameters:
+        - name: room
+          in: query
+          required: true
+          type: string
       responses:
         200:
           description: "Successful operation"
@@ -37,6 +42,10 @@ paths:
       summary: "Get score."
       description: "Get score for some or all agents."
       parameters:
+        - name: room
+          in: query
+          required: true
+          type: string
         - name: agent
           in: query
           required: false
@@ -57,6 +66,11 @@ paths:
       operationId: "endpoint.step"
       summary: "Step world forward."
       description: "Moves all agents."
+      parameters:
+        - name: room
+          in: query
+          required: true
+          type: string
       responses:
         201:
           description: "Stepped"
@@ -64,6 +78,11 @@ paths:
       operationId: "endpoint.get_steps"
       summary: "Get steps."
       description: "Get number of steps since beginning."
+      parameters:
+        - name: room
+          in: query
+          required: true
+          type: string
       responses:
         200:
           description: "Successful operation"
@@ -74,6 +93,11 @@ paths:
       operationId: "endpoint.reset"
       summary: "Clear all state."
       description: "Reinitialize the room."
+      parameters:
+        - name: room
+          in: query
+          required: true
+          type: string
       responses:
         200:
           description: "Successful operation"

@@ -1,27 +1,27 @@
-import room
+import rooms
 
 # Get stuff.
 
 
-def get_view():
-    return room.get_current_room().get_view(include_id=True)
+def get_view(room):
+    return rooms.get_current_room().get_view(include_id=True)
 
 
-def get_score(agents=None):
+def get_score(room, agents=None):
     scores = []
-    for agent in room.get_current_room().get_agents():
+    for agent in rooms.get_current_room().get_agents():
         if agents is None or agent in agents:
             scores.append({"id": agent.id, "score": agent.score})
     return scores
 
 
-def get_steps():
-    return room.get_current_room().steps
+def get_steps(room):
+    return rooms.get_current_room().steps
 
 
-def step():
-    room.get_current_room().step()
+def step(room):
+    rooms.get_current_room().step()
 
 
-def reset():
-    room.init_room()
+def reset(room):
+    rooms.init_room()

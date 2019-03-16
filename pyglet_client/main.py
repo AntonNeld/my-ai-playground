@@ -90,9 +90,9 @@ def on_window_close(window):
 
 
 def get_state():
-    view_response = session.get("http://127.0.0.1:5000/api/view")
-    score_response = session.get("http://127.0.0.1:5000/api/score")
-    step_response = session.get("http://127.0.0.1:5000/api/step")
+    view_response = session.get("http://127.0.0.1:5000/api/view?room=tmp")
+    score_response = session.get("http://127.0.0.1:5000/api/score?room=tmp")
+    step_response = session.get("http://127.0.0.1:5000/api/step?room=tmp")
     return {"view": json.loads(view_response.text),
             "score": json.loads(score_response.text),
             "steps": json.loads(step_response.text)}
@@ -106,7 +106,7 @@ def set_action(action):
 
 
 def step(dt=None):
-    session.post("http://127.0.0.1:5000/api/step")
+    session.post("http://127.0.0.1:5000/api/step?room=tmp")
     state = get_state()
     for view in views:
         view.set_state(state)
