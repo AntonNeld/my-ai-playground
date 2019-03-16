@@ -1,10 +1,12 @@
-from view import View
 from pyglet.window import key
 import timeit
 import requests
 import pyglet
 import json
+import sys
 
+from view import View
+import maps
 
 FPS = 30
 
@@ -118,11 +120,13 @@ def step(dt=None):
 
 def new_room():
     global room_id
+    data = maps.load(sys.argv[1])
     if not room_id:
-        response = session.put("http://127.0.0.1:5000/api/room")
+        response = session.post("http://127.0.0.1:5000/api/room", json=data)
         room_id = json.loads(response.text)
     else:
-        session.put("http://127.0.0.1:5000/api/room/{}".format(room_id))
+        session.post(
+            "http://127.0.0.1:5000/api/room/{}".format(room_id), json=data)
     state = get_state()
     for view in views:
         view.set_state(state)

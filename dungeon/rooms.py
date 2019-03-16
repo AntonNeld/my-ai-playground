@@ -1,17 +1,10 @@
 import os
-from os.path import abspath, dirname, join
 import requests
 import json
-import pytmx
 
 from entities.wall import Wall
 from entities.player import Player
 from entities.coin import Coin
-
-if "DUNGEON_MAP" in os.environ:
-    MAP = os.environ["DUNGEON_MAP"]
-else:
-    MAP = "default"
 
 if "DUNGEON_PLAYER_AI" in os.environ:
     ai_host = os.environ["DUNGEON_PLAYER_AI"]
@@ -92,20 +85,17 @@ class Room:
         return True
 
 
-def create_room_from_tilemap(path):
+def create_room_from_list(data):
     new_room = Room()
-    tiledata = pytmx.TiledMap(path)
-    for layer in tiledata.layers:
-        thing_type = layer.properties["Type"]
-        for (x, inverted_y, gid) in layer.iter_data():
-            y = tiledata.height - inverted_y - 1
-            if gid != 0:
-                if thing_type == "block":
-                    new_room.add_things(Wall(new_room, x, y))
-                elif thing_type == "player":
-                    new_room.add_things(Player(new_room, x, y))
-                elif thing_type == "coin":
-                    new_room.add_things(Coin(new_room, x, y))
+    for thing in data:
+        x = thing["x"]
+        y = thing["y"]
+        if thing["type"] == "block":
+            new_room.add_things(Wall(new_room, x, y))
+        elif thing["type"] == "player":
+            new_room.add_things(Player(new_room, x, y))
+        elif thing["type"] == "coin":
+            new_room.add_things(Coin(new_room, x, y))
     return new_room
 
 
@@ -124,7 +114,6 @@ def delete_room(room_id):
         del rooms[room_id]
 
 
-def init_room(room_id):
+def init_room(room_id, data):
     delete_room(room_id)
-    rooms[room_id] = create_room_from_tilemap(
-        join(dirname(abspath(__file__)), "maps", MAP + ".tmx"))
+    rooms[room_id] = create_room_from_list(data)

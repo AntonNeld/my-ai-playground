@@ -1,5 +1,4 @@
 flask~=1.0
 connexion~=2.2
 requests~=2.21
-pytmx~=3.21.7
 cherrypy~=18.1.0

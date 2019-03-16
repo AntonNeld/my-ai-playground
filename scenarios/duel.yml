@@ -4,7 +4,6 @@ services:
     build: "../dungeon/"
     environment:
       DUNGEON_PLAYER_AI: ai
-      DUNGEON_MAP: two_players
     ports:
       - "5000:5000"
     volumes:

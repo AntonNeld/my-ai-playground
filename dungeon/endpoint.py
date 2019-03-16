@@ -24,14 +24,14 @@ def step(room):
     rooms.get_room(room).step()
 
 
-def create_room():
+def create_room(data):
     room_id = uuid.uuid4().hex
-    rooms.init_room(room_id)
+    rooms.init_room(room_id, data)
     return room_id
 
 
-def create_room_with_id(room):
-    rooms.init_room(room)
+def create_room_with_id(room, data):
+    rooms.init_room(room, data)
 
 
 def delete_room(room):

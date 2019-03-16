@@ -28,7 +28,7 @@ In another shell, connect with the scenario using the frontend:
 
 ```sh
 pipenv shell
-python pyglet_client/main.py
+python pyglet_client/main.py <PATH_TO_MAP>
 ```
 
 ## Using the frontend
@@ -43,7 +43,6 @@ Any other key steps the world one step forward.
 
 Create a new `.yml` file in `scenarios`. For many purposes, it's enough to copy `random-movement.yml` and changing:
 
-* `DUNGEON_MAP` in `dungeon`, to another map placed in `dungeon/maps`.
 * `build` and `volumes` in `ai`, to another AI placed in `ai`.
 
 ## Creating new maps

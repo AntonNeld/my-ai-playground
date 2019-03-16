@@ -12,10 +12,24 @@ basePath: "/api"
 
 paths:
   /room:
-    put:
+    post:
       operationId: "endpoint.create_room"
       summary: "(Re-)initialize room."
       description: "Create a new room."
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              properties:
+                x: 
+                  type: integer
+                y: 
+                  type: integer
+                type: 
+                  type: string
       responses:
         200:
           description: "Successful operation"
@@ -23,7 +37,7 @@ paths:
             type: string
             description: Room ID
   /room/{room}:
-    put:
+    post:
       operationId: "endpoint.create_room_with_id"
       summary: "(Re-)initialize room."
       description: "Create a new room with given ID, possibly overwriting the old."
@@ -32,6 +46,19 @@ paths:
           in: path
           required: true
           type: string
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              properties:
+                x: 
+                  type: integer
+                y: 
+                  type: integer
+                type: 
+                  type: string
       responses:
         200:
           description: "Successful operation"
