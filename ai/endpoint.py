@@ -1,15 +1,12 @@
-from pathfinder import endpoint as pathfinder
-from manual import endpoint as manual
-from random_movement import endpoint as random_movement
+from ai import pathfinder
+from ai import manual
+from ai import random
+
+ai_types = {"pathfinder": pathfinder, "manual": manual, "random": random}
 
 
 def next_move(ai, agent, percept):
-    if ai == "pathfinder":
-        return pathfinder.next_move(agent, percept)
-    if ai == "manual":
-        return manual.next_move(agent, percept)
-    if ai == "random":
-        return random_movement.next_move(agent, percept)
+    return ai_types[ai].next_move(agent, percept)
 
 
 def manual_set_move(agent, action):
@@ -17,9 +14,4 @@ def manual_set_move(agent, action):
 
 
 def delete(ai, agent):
-    if ai == "pathfinder":
-        pathfinder.delete(agent)
-    if ai == "manual":
-        manual.delete(agent)
-    if ai == "random":
-        random_movement.delete(agent)
+    ai_types[ai].delete(agent)

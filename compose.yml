@@ -12,5 +12,7 @@ services:
     build: "./ai/"
     environment:
       - PYTHONDONTWRITEBYTECODE=true
+    ports:
+      - "5100:5100"
     volumes:
       - "./ai/:/code"

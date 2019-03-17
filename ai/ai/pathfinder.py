@@ -1,7 +1,7 @@
 import math
 
-from .perception import get_coordinates
-from .pathfinding import breadth_first
+from lib.perception import get_coordinates
+from lib.pathfinding import breadth_first
 
 actions = {}
 
