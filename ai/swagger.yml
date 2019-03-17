@@ -63,7 +63,7 @@ paths:
       responses:
         200:
           description: "Successful operation"
-  /manual/{agent}/setmove:
+  /manual/agent/{agent}/setmove:
     put:
       operationId: "endpoint.manual_set_move"
       summary: "Set the next action"

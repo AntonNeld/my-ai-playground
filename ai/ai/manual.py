@@ -1,15 +1,18 @@
 
-current_action = "none"
+actions = {}
 
 
 def next_move(agent, percept):
-    return current_action
+    try:
+        return actions[agent]
+    except KeyError:
+        return "none"
 
 
-def set_move(action):
-    global current_action
-    current_action = action
+def set_move(agent, action):
+    actions[agent] = action
 
 
 def delete(agent):
-    pass
+    if agent in actions:
+        del actions[agent]

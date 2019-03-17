@@ -19,7 +19,7 @@ if "PLAYER_AI" in os.environ:
 else:
     PLAYER_AI = "pathfinder"
 
-config = {"manual_mode": False, "auto_step": False}
+config = {"manual_mode": [], "auto_step": False}
 
 window = pyglet.window.Window(width=800, height=600)
 event_loop = pyglet.app.EventLoop()
@@ -36,7 +36,6 @@ room_id = None
 
 def print_help():
     help_string = """
-    m: toggle manual mode
     r: reset dungeon
     h: print this help again
     space: step forward
@@ -62,11 +61,7 @@ def on_draw():
 
 @window.event
 def on_key_press(symbol, modifiers):
-
-    if symbol == key.M:
-        config["manual_mode"] = not config["manual_mode"]
-        print("Manual mode: " + str(config["manual_mode"]))
-    elif symbol == key.R:
+    if symbol == key.R:
         new_room()
     elif symbol == key.A:
         config["auto_step"] = not config["auto_step"]
@@ -111,11 +106,10 @@ def get_state():
 
 
 def set_action(action):
-    try:
+    for agent in config["manual_mode"]:
         requests.put(
-            "http://127.0.0.1:5100/api/manual/tmp/setmove", json=action)
-    except requests.exceptions.ConnectionError:
-        print("Cannot set next move. Is there a manual AI?")
+            "http://127.0.0.1:5100/api/manual/agent/{}/setmove".format(agent),
+            json=action)
 
 
 def step(dt=None):
@@ -137,6 +131,10 @@ def new_room():
     state = get_state()
     for view in views:
         view.set_state(state)
+    # temporary solution, will change how agent info is fetched,
+    # and how manual mode is set
+    if PLAYER_AI == "manual":
+        config["manual_mode"] = [item["id"] for item in state["score"]]
 
 
 def animate(dt):

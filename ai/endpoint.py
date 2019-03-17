@@ -10,7 +10,7 @@ def next_move(ai, agent, percept):
 
 
 def manual_set_move(agent, action):
-    manual.set_move(action)
+    manual.set_move(agent, action)
 
 
 def delete(ai, agent):
