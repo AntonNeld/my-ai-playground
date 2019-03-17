@@ -31,7 +31,7 @@ pipenv shell
 python pyglet_client/main.py <PATH_TO_MAP>
 ```
 
-To use a different AI than the default, set the environment variable PLAYER_AI to the service name when starting the client. Default is `pathfinder-ai`. (This config will change soon.)
+To use a different AI than the default, set the environment variable PLAYER_AI to the service name when starting the client. Default is `pathfinder`. (This config will change soon.)
 
 ## Using the frontend
 
@@ -47,4 +47,4 @@ Create a new map using Tiled. Each type of object should have its own layer, wit
 
 ## Creating new AIs
 
-Under construction.
+Add a file `<AI name>.py` under `ai/ais/`, containing the functions `next_move(agent, percept)` and `delete(agent)`.

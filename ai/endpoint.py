@@ -1,8 +1,12 @@
-from ai import pathfinder
-from ai import manual
-from ai import random
+import importlib
+import os
+from os import path
 
-ai_types = {"pathfinder": pathfinder, "manual": manual, "random": random}
+# Dynamically import all modules from ai/ into ai_types
+ai_types = {}
+for f in os.listdir(path.join(path.dirname(__file__), "ais")):
+    module = f.replace(".py", "")
+    ai_types[module] = importlib.import_module("ais.{}".format(module))
 
 
 def next_move(ai, agent, percept):
@@ -10,7 +14,7 @@ def next_move(ai, agent, percept):
 
 
 def manual_set_move(agent, action):
-    manual.set_move(agent, action)
+    ai_types["manual"].set_move(agent, action)
 
 
 def delete(ai, agent):
