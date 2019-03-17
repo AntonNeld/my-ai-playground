@@ -12,7 +12,7 @@ basePath: "/api"
 
 # Paths supported by the server application
 paths:
-  /nextmove:
+  /{ai}/agent/{agent}/nextmove:
     post:
       operationId: "endpoint.next_move"
       summary: "Get the next action."
@@ -20,8 +20,12 @@ paths:
       consumes:
         - application/json
       parameters:
+        - name: ai
+          in: path
+          required: true
+          type: string
         - name: agent
-          in: query
+          in: path
           required: true
           type: string
         - name: percept
@@ -42,12 +46,16 @@ paths:
           description: "Successful operation"
           schema:
             type: "string"
-  /agent/{agent}:
+  /{ai}/agent/{agent}:
     delete:
       operationId: "endpoint.delete"
       summary: "Remove agent."
       description: "Remove all state for one agent."
       parameters:
+        - name: ai
+          in: path
+          required: true
+          type: string
         - name: agent
           in: path
           required: true
@@ -55,13 +63,17 @@ paths:
       responses:
         200:
           description: "Successful operation"
-  /setmove:
+  /manual/{agent}/setmove:
     put:
-      operationId: "endpoint.set_move"
+      operationId: "endpoint.manual_set_move"
       summary: "Set the next action"
       consumes:
         - application/json
       parameters:
+        - name: agent
+          in: path
+          required: true
+          type: string
         - name: action
           in: body
           required: true

@@ -17,7 +17,7 @@ STEP_INTERVAL = 0.3
 if "PLAYER_AI" in os.environ:
     PLAYER_AI = os.environ["PLAYER_AI"]
 else:
-    PLAYER_AI = "pathfinder-ai"
+    PLAYER_AI = "pathfinder"
 
 config = {"manual_mode": False, "auto_step": False}
 
@@ -112,7 +112,8 @@ def get_state():
 
 def set_action(action):
     try:
-        requests.put("http://127.0.0.1:5100/api/setmove", json=action)
+        requests.put(
+            "http://127.0.0.1:5100/api/manual/tmp/setmove", json=action)
     except requests.exceptions.ConnectionError:
         print("Cannot set next move. Is there a manual AI?")
 

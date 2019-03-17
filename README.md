@@ -41,11 +41,10 @@ Press R to reset the dungeon.
 
 Any other key steps the world one step forward.
 
-
 ## Creating new maps
 
 Create a new map using Tiled. Each type of object should have its own layer, with a custom property `Type` signifying what it is.
 
 ## Creating new AIs
 
-Copy `ai/ai_skeleton`, and change `next_move(state)` in `endpoint.py`. It should examine `state` and return one of `"none"`,`"move_left"`,`"move_right"`,`"move_up"`,`"move_down"`.
+Under construction.

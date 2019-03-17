@@ -2,23 +2,11 @@ version: '3'
 services:
   dungeon:
     build: "./dungeon/"
-    environment:
-      DUNGEON_PLAYER_AI: pathfinder-ai
     ports:
       - "5000:5000"
     volumes:
       - "./dungeon/:/code"
-  random-ai:
-    build: "./ai/random_movement/"
+  ai:
+    build: "./ai/"
     volumes:
-      - "./ai/random_movement/:/code"
-  manual-ai:
-    build: "./ai/manual/"
-    ports:
-      - "5100:5100"
-    volumes:
-      - "./ai/manual/:/code"
-  pathfinder-ai:
-    build: "./ai/pathfinder/"
-    volumes:
-      - "./ai/pathfinder/:/code"
+      - "./ai/:/code"

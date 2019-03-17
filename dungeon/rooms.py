@@ -58,8 +58,9 @@ class Room:
     def step(self):
         actions = {}
         for agent in self._agents:
-            url = "http://{}:5100/api/nextmove".format(agent.ai)
-            r = requests.post(url + "?agent=" + agent.id,
+            url = "http://ai:5100/api/{ai}/agent/{agent}/nextmove".format(
+                ai=agent.ai, agent=agent.id)
+            r = requests.post(url,
                               json=self.get_view(agent))
             actions[agent] = json.loads(r.text)
         for thing in self._things:
@@ -102,8 +103,9 @@ def delete_room(room_id):
     current = get_room(room_id)
     if current:
         for agent in current.get_agents():
-            url = "http://" + agent["ai"] + ":5100/api/agent"
-            requests.delete(url + "/" + agent.id)
+            url = "http://ai:5100/api/{ai}/agent/{agent}".format(
+                ai=agent.ai, agent=agent.id)
+            requests.delete(url)
         del rooms[room_id]
 
 

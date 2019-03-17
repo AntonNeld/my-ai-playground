@@ -1,2 +1,0 @@
-connexion~=2.2
-cherrypy~=18.1.0
