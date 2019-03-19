@@ -31,15 +31,9 @@ pipenv shell
 python pyglet_client/main.py <PATH_TO_MAP>
 ```
 
+Instructions will be printed in the terminal.
+
 To use a different AI than the default, set the environment variable PLAYER_AI to the service name when starting the client. Default is `pathfinder`. (This config will change soon.)
-
-## Using the frontend
-
-If you use the `manual` AI, you can control the player with the arrow keys.
-
-Press R to reset the dungeon.
-
-Any other key steps the world one step forward.
 
 ## Creating new maps
 
