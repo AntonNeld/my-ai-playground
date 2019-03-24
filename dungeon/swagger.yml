@@ -14,7 +14,7 @@ paths:
   /room:
     post:
       operationId: "endpoint.create_room"
-      summary: "(Re-)initialize room."
+      summary: "Create room."
       description: "Create a new room."
       parameters:
         - name: data
@@ -60,6 +60,8 @@ paths:
                 y: 
                   type: integer
                 type: 
+                  type: string
+                ai:
                   type: string
       responses:
         200:
