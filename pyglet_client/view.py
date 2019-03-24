@@ -6,15 +6,18 @@ from thing import Thing
 class View:
 
     def __init__(self, bounding_box=(0, 640, 0, 480),
-                 show_steps=True, step_duration=0, camera=(0, 20, 0, 15)):
+                 show_steps=True, step_duration=0, camera=None):
         self.things = {}
         self.min_x = bounding_box[0]
         self.max_x = bounding_box[1]
         self.min_y = bounding_box[2]
         self.max_y = bounding_box[3]
-        self.scale = ((self.max_x - self.min_x)/(camera[1]-camera[0]),
-                      (self.max_y - self.min_y)/(camera[3]-camera[2]))
-        self.camera = camera
+        if camera is None:
+            self.autoscale = True
+            self.camera = None
+        else:
+            self.autoscale = False
+            self.set_camera(camera)
         self.step_duration = step_duration
         if show_steps:
             self.steplabel = pyglet.text.Label('N/A',
@@ -40,6 +43,10 @@ class View:
 
     def set_state(self, state):
         new_things = state["view"]
+        if self.autoscale:
+            x = [thing["x"] for thing in new_things]
+            y = [thing["y"] for thing in new_things]
+            self.set_camera((min(x), max(x)+1, min(y), max(y)+1))
         scores_list = state["score"]
         if self.steplabel:
             steps = state["steps"]
@@ -72,6 +79,11 @@ class View:
     def animate(self, dt):
         for _, thing in self.things.items():
             thing.animate(dt)
+
+    def set_camera(self, camera):
+        self.scale = ((self.max_x - self.min_x)/(camera[1]-camera[0]),
+                      (self.max_y - self.min_y)/(camera[3]-camera[2]))
+        self.camera = camera
 
     def _visible(self, identity):
         if identity not in self.things:
