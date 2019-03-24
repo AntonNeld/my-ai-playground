@@ -2,21 +2,19 @@ import pyglet
 
 from thing import Thing
 
-# Hard-coded for now
-CAMERA_BOX = (0, 20, 0, 15)
-
 
 class View:
 
     def __init__(self, bounding_box=(0, 640, 0, 480),
-                 show_steps=True, step_duration=0):
+                 show_steps=True, step_duration=0, camera=(0, 20, 0, 15)):
         self.things = {}
         self.min_x = bounding_box[0]
         self.max_x = bounding_box[1]
         self.min_y = bounding_box[2]
         self.max_y = bounding_box[3]
-        self.scale = ((self.max_x - self.min_x)/(CAMERA_BOX[1]-CAMERA_BOX[0]),
-                      (self.max_y - self.min_y)/(CAMERA_BOX[3]-CAMERA_BOX[2]))
+        self.scale = ((self.max_x - self.min_x)/(camera[1]-camera[0]),
+                      (self.max_y - self.min_y)/(camera[3]-camera[2]))
+        self.camera = camera
         self.step_duration = step_duration
         if show_steps:
             self.steplabel = pyglet.text.Label('N/A',
@@ -30,10 +28,12 @@ class View:
 
     def draw(self):
         for sprite in [self.things[identity].sprite
-                       for identity in self.things]:
+                       for identity in self.things
+                       if self._visible(identity)]:
             sprite.draw()
         for label in [self.things[identity].label for
-                      identity in self.things if self.things[identity].label]:
+                      identity in self.things if self.things[identity].label
+                      and self._visible(identity)]:
             label.draw()
         if self.steplabel:
             self.steplabel.draw()
@@ -72,3 +72,11 @@ class View:
     def animate(self, dt):
         for _, thing in self.things.items():
             thing.animate(dt)
+
+    def _visible(self, identity):
+        if identity not in self.things:
+            return False
+        x = self.things[identity].x
+        y = self.things[identity].y
+        return (x >= self.camera[0] and x < self.camera[1] and
+                y >= self.camera[2] and y < self.camera[3])
