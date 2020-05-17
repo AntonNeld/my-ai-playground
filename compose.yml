@@ -4,16 +4,12 @@ services:
     build: "./dungeon/"
     environment:
       - PYTHONDONTWRITEBYTECODE=true
-    ports:
-      - "5000:5000"
     volumes:
       - "./dungeon/:/code"
   ai:
     build: "./ai/"
     environment:
       - PYTHONDONTWRITEBYTECODE=true
-    ports:
-      - "5100:5100"
     volumes:
       - "./ai/:/code"
   web_client:

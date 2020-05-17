@@ -95,11 +95,11 @@ def on_window_close(window):
 
 def get_state():
     view_response = session.get(
-        "http://127.0.0.1:5000/api/room/{}/view".format(room_id))
+        "http://127.0.0.1:8300/api/room/{}/view".format(room_id))
     score_response = session.get(
-        "http://127.0.0.1:5000/api/room/{}/score".format(room_id))
+        "http://127.0.0.1:8300/api/room/{}/score".format(room_id))
     step_response = session.get(
-        "http://127.0.0.1:5000/api/room/{}/step".format(room_id))
+        "http://127.0.0.1:8300/api/room/{}/step".format(room_id))
     return {"view": json.loads(view_response.text),
             "score": json.loads(score_response.text),
             "steps": json.loads(step_response.text)}
@@ -108,12 +108,12 @@ def get_state():
 def set_action(action):
     for agent in config["manual_mode"]:
         requests.put(
-            "http://127.0.0.1:5100/api/manual/agent/{}/setmove".format(agent),
+            "http://127.0.0.1:8300/api/manual/agent/{}/setmove".format(agent),
             json=action)
 
 
 def step(dt=None):
-    session.post("http://127.0.0.1:5000/api/room/{}/step".format(room_id))
+    session.post("http://127.0.0.1:8300/api/room/{}/step".format(room_id))
     state = get_state()
     for view in views:
         view.set_state(state)
@@ -123,11 +123,11 @@ def new_room():
     global room_id
     data = maps.load(sys.argv[1], PLAYER_AI)
     if not room_id:
-        response = session.post("http://127.0.0.1:5000/api/room", json=data)
+        response = session.post("http://127.0.0.1:8300/api/room", json=data)
         room_id = json.loads(response.text)
     else:
         session.post(
-            "http://127.0.0.1:5000/api/room/{}".format(room_id), json=data)
+            "http://127.0.0.1:8300/api/room/{}".format(room_id), json=data)
     state = get_state()
     for view in views:
         view.set_state(state)
