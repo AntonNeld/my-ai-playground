@@ -17,4 +17,4 @@ pytmx = "~=3.21.7"
 cherrypy = "~=18.1.0"
 
 [requires]
-python_version = "3.6"
+python_version = "3.7"
