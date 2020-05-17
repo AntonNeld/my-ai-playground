@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
   dungeon:
     build: "./dungeon/"
@@ -16,3 +16,11 @@ services:
       - "5100:5100"
     volumes:
       - "./ai/:/code"
+  web_client:
+    build: "./web_client/"
+    environment:
+      - PYTHONDONTWRITEBYTECODE=true
+    ports:
+      - "8300:8300"
+    volumes:
+      - "./web_client/:/code"
