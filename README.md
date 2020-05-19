@@ -6,10 +6,10 @@ Experimenting with AI and microservices. Very early phases so far.
 
 Prerequisites:
 
-* [pipenv](https://pypi.org/project/pipenv/)
-* Add `export PIPENV_VENV_IN_PROJECT=1` to `.bashrc` or similar.
-* [docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
-* [tiled](https://www.mapeditor.org/), if you want to make new maps.
+- [pipenv](https://pypi.org/project/pipenv/)
+- Add `export PIPENV_VENV_IN_PROJECT=1` to `.bashrc` or similar.
+- [docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
+- [tiled](https://www.mapeditor.org/), if you want to make new maps.
 
 Install and use dependencies:
 
@@ -24,6 +24,8 @@ Run the backend:
 docker-compose -f compose.yml up --build
 ```
 
+### pyglet frontend
+
 In another shell, connect with the scenario using the frontend:
 
 ```sh
@@ -34,6 +36,17 @@ python pyglet_client/main.py <PATH_TO_MAP>
 Instructions will be printed in the terminal.
 
 To use a different AI than the default, set the environment variable PLAYER_AI to the service name when starting the client. Default is `pathfinder`. (This config will change soon.)
+
+### Testing
+
+In another shell, run:
+
+```sh
+pipenv shell
+pytest
+```
+
+Do this before committing
 
 ## Creating new maps
 
