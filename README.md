@@ -21,7 +21,7 @@ pipenv shell
 Run the backend:
 
 ```sh
-cd dungeon
+cd server
 uvicorn main:app --host 0.0.0.0 --port 8300 --reload
 ```
 
