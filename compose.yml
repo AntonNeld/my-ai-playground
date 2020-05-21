@@ -4,13 +4,7 @@ services:
     build: "./dungeon/"
     environment:
       - PYTHONDONTWRITEBYTECODE=true
-    volumes:
-      - "./dungeon/:/code"
-  web_client:
-    build: "./web_client/"
-    environment:
-      - PYTHONDONTWRITEBYTECODE=true
     ports:
       - "8300:8300"
     volumes:
-      - "./web_client/:/code"
+      - "./dungeon/:/code"
