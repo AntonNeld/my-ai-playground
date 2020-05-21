@@ -21,7 +21,8 @@ pipenv shell
 Run the backend:
 
 ```sh
-docker-compose -f compose.yml up --build
+cd dungeon
+uvicorn main:app --host 0.0.0.0 --port 8300 --reload
 ```
 
 ### pyglet frontend
