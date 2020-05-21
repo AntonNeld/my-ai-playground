@@ -1,6 +1,6 @@
 # ai-dungeon
 
-Experimenting with AI and microservices. Very early phases so far.
+Experimenting with AI. Very early phases so far.
 
 ## Getting started
 
@@ -54,4 +54,4 @@ Create a new map using Tiled. Each type of object should have its own layer, wit
 
 ## Creating new AIs
 
-Add a file `<AI name>.py` under `ai/ais/`, containing the functions `next_move(agent, percept)` and `delete(agent)`.
+Add a file `<AI name>.py` under `dungeon/ais/`, containing the functions `next_move(agent, percept)` and `delete(agent)`.

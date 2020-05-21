@@ -96,6 +96,6 @@ async def get_steps(room: str):
 @app.put("/api/manual/agent/{agent}/setmove")
 async def set_move(agent: str, action: str = Body(...)):
     async with session.put(
-            f"http://ai:5100/api/manual/agent/{agent}/setmove",
+            f"http://dungeon:5000/api/manual/agent/{agent}/setmove",
             json=action) as response:
         return await response.json()

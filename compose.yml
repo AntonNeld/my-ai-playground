@@ -6,12 +6,6 @@ services:
       - PYTHONDONTWRITEBYTECODE=true
     volumes:
       - "./dungeon/:/code"
-  ai:
-    build: "./ai/"
-    environment:
-      - PYTHONDONTWRITEBYTECODE=true
-    volumes:
-      - "./ai/:/code"
   web_client:
     build: "./web_client/"
     environment:

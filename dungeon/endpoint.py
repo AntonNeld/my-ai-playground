@@ -1,5 +1,7 @@
-import rooms
 import uuid
+
+from ais import ai_types
+import rooms
 
 # Get stuff.
 
@@ -36,3 +38,7 @@ def create_room_with_id(room, data):
 
 def delete_room(room):
     rooms.delete_room(room)
+
+
+def manual_set_move(agent, action):
+    ai_types["manual"].set_move(agent, action)

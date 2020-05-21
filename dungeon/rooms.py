@@ -1,6 +1,4 @@
-import requests
-import json
-
+from ais import ai_types
 from entities.wall import Wall
 from entities.player import Player
 from entities.coin import Coin
@@ -58,11 +56,8 @@ class Room:
     def step(self):
         actions = {}
         for agent in self._agents:
-            url = "http://ai:5100/api/{ai}/agent/{agent}/nextmove".format(
-                ai=agent.ai, agent=agent.id)
-            r = requests.post(url,
-                              json=self.get_view(agent))
-            actions[agent] = json.loads(r.text)
+            actions[agent] = ai_types[agent.ai].next_move(
+                agent.id, self.get_view(agent))
         for thing in self._things:
             if hasattr(thing, "step"):
                 if thing in actions:
@@ -103,9 +98,7 @@ def delete_room(room_id):
     current = get_room(room_id)
     if current:
         for agent in current.get_agents():
-            url = "http://ai:5100/api/{ai}/agent/{agent}".format(
-                ai=agent.ai, agent=agent.id)
-            requests.delete(url)
+            ai_types[agent.ai].delete(agent.id)
         del rooms[room_id]
 
 
