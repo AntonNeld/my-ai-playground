@@ -25,8 +25,8 @@ class Player(Entity):
             self.x += dx
             self.y += dy
 
-        for thing in self.room.get_things():
-            if (isinstance(thing, Coin) and thing.x == self.x
-                    and thing.y == self.y):
-                self.room.remove_things(thing)
+        for entity in self.room.get_entities():
+            if (isinstance(entity, Coin) and entity.x == self.x
+                    and entity.y == self.y):
+                self.room.remove_entities(entity)
                 self.score += 1
