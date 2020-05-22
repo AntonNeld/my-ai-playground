@@ -19,6 +19,12 @@ class Entity(BaseModel):
     ai: str = None
 
 
+@router.get("/rooms", response_model=List[str])
+async def get_rooms():
+    print(dungeon.list_rooms())
+    return dungeon.list_rooms()
+
+
 @router.post("/rooms", response_model=str)
 async def create_room(room_content: List[Entity]):
     return dungeon.create_room([item.dict(exclude_none=True)

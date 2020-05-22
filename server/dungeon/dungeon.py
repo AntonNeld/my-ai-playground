@@ -35,6 +35,9 @@ class Dungeon:
         if room_id in self._rooms:
             del self._rooms[room_id]
 
+    def list_rooms(self):
+        return list(self._rooms.keys())
+
     def manual_set_move(self, room_id, agent_id, action):
         entity = next(
             agent for agent in self._rooms[room_id].get_agents()

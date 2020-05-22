@@ -52,8 +52,11 @@ def test_create_room():
     response = requests.post(f"{API_URL}/api/rooms/", json=TEST_ROOM)
     assert response.status_code == 200
     room_id = response.json()
-    # Check that it's a valid UUID
+    # Will throw an exception if it's not a valid UUID
     UUID(hex=room_id)
+
+    response = requests.get(f"{API_URL}/api/rooms/")
+    assert room_id in response.json()
 
     response = requests.get(f"{API_URL}/api/rooms/{room_id}/view")
     assert same_view(response.json(), TEST_ROOM_VIEW)
@@ -62,6 +65,11 @@ def test_create_room():
 def test_create_two_rooms():
     room_id = requests.post(f"{API_URL}/api/rooms/", json=TEST_ROOM).json()
     room_id_2 = requests.post(f"{API_URL}/api/rooms/", json=TEST_ROOM_2).json()
+
+    response = requests.get(f"{API_URL}/api/rooms/")
+    assert room_id in response.json()
+    assert room_id_2 in response.json()
+
     room_1 = requests.get(f"{API_URL}/api/rooms/{room_id}/view").json()
     room_2 = requests.get(f"{API_URL}/api/rooms/{room_id_2}/view").json()
     assert same_view(room_1, TEST_ROOM_VIEW)
