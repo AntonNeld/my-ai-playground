@@ -1,5 +1,5 @@
-from lib.perception import get_coordinates
-from lib.pathfinding import breadth_first
+from dungeon.lib.perception import get_coordinates
+from dungeon.lib.pathfinding import breadth_first
 
 actions = {}
 
@@ -37,14 +37,14 @@ def _helper(pos, coins, path, bestpath, walls, distances):
         return []
 
     if len(coins) == 1:
-        #print("End of the line")
+        # print("End of the line")
         (coin,) = coins
         return path + distances[(pos, coin)]
 
     for coin in coins:
         p = path + distances[(pos, coin)]
         if bestpath is not None and len(p) >= len(bestpath):
-            #print("This path stinks!")
+            # print("This path stinks!")
             continue
         p2 = _helper(coin, coins.difference(
             [coin]), p, bestpath, walls, distances)

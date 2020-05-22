@@ -3,12 +3,14 @@ from typing import Optional, List
 from fastapi import APIRouter, Body
 from pydantic import BaseModel
 
-import endpoint
+from dungeon import Dungeon
 
 router = APIRouter()
 
+dungeon = Dungeon()
 
 # Legacy API used by pyglet client
+
 
 class Entity(BaseModel):
     x: int
@@ -19,19 +21,19 @@ class Entity(BaseModel):
 
 @router.post("/room", response_model=str)
 async def create_room(room_content: List[Entity]):
-    return endpoint.create_room([item.dict(exclude_none=True)
-                                 for item in room_content])
+    return dungeon.create_room([item.dict(exclude_none=True)
+                                for item in room_content])
 
 
 @router.post("/room/{room}")
 async def create_room_with_id(room: str, room_content: List[Entity]):
-    return endpoint.create_room_with_id(room, [item.dict(exclude_none=True)
-                                               for item in room_content])
+    return dungeon.create_room_with_id(room, [item.dict(exclude_none=True)
+                                              for item in room_content])
 
 
 @router.delete("/room/{room}")
 async def delete_room(room: str):
-    return endpoint.delete_room(room)
+    return dungeon.delete_room(room)
 
 
 class EntityView(BaseModel):
@@ -43,7 +45,7 @@ class EntityView(BaseModel):
 
 @router.get("/room/{room}/view", response_model=List[EntityView])
 async def get_view(room: str):
-    return endpoint.get_view(room)
+    return dungeon.get_view(room)
 
 
 class Score(BaseModel):
@@ -53,19 +55,19 @@ class Score(BaseModel):
 
 @router.get("/room/{room}/score", response_model=List[Score])
 async def get_score(room: str, agent: Optional[str] = None):
-    return endpoint.get_score(room, agent)
+    return dungeon.get_score(room, agent)
 
 
 @router.post("/room/{room}/step")
 async def step_room(room: str):
-    return endpoint.step(room)
+    return dungeon.step(room)
 
 
 @router.get("/room/{room}/step", response_model=int)
 async def get_steps(room: str):
-    return endpoint.get_steps(room)
+    return dungeon.get_steps(room)
 
 
 @router.put("/manual/agent/{agent}/setmove")
 async def set_move(agent: str, action: str = Body(...)):
-    return endpoint.manual_set_move(agent, action)
+    return dungeon.manual_set_move(agent, action)

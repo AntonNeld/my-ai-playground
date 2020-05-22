@@ -1,7 +1,7 @@
-from ais import ai_types
-from entities.wall import Wall
-from entities.player import Player
-from entities.coin import Coin
+from dungeon.ais import ai_types
+from dungeon.entities.wall import Wall
+from dungeon.entities.player import Player
+from dungeon.entities.coin import Coin
 
 rooms = {}
 
