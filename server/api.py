@@ -68,6 +68,6 @@ async def get_steps(room: str):
     return dungeon.get_steps(room)
 
 
-@router.put("/manual/agent/{agent}/setmove")
-async def set_move(agent: str, action: str = Body(...)):
-    return dungeon.manual_set_move(agent, action)
+@router.put("/room/{room}/agent/{agent}/setmove")
+async def set_move(room: str, agent: str, action: str = Body(...)):
+    return dungeon.manual_set_move(room, agent, action)

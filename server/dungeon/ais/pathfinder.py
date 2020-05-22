@@ -3,24 +3,22 @@ import math
 from dungeon.lib.perception import get_coordinates
 from dungeon.lib.pathfinding import breadth_first
 
-actions = {}
 
+class PathfinderAI:
 
-def next_move(agent, percept):
-    if agent not in actions or not actions[agent]:
-        walls = get_coordinates(percept, "wall")
-        coins = get_coordinates(percept, "coin")
-        shortest = math.inf
-        for coin in coins:
-            new_actions = breadth_first((0, 0), coin, walls)
-            if new_actions and len(new_actions) < shortest:
-                actions[agent] = new_actions
-                shortest = len(new_actions)
-        if shortest == math.inf:
-            actions[agent] = ["none"]
-    return actions[agent].pop(0)
+    def __init__(self):
+        self._plan = []
 
-
-def delete(agent):
-    if agent in actions:
-        del actions[agent]
+    def next_move(self, percept):
+        if not self._plan:
+            walls = get_coordinates(percept, "wall")
+            coins = get_coordinates(percept, "coin")
+            shortest = math.inf
+            for coin in coins:
+                new_actions = breadth_first((0, 0), coin, walls)
+                if new_actions and len(new_actions) < shortest:
+                    self._plan = new_actions
+                    shortest = len(new_actions)
+            if shortest == math.inf:
+                self._plan = ["none"]
+        return self._plan.pop(0)

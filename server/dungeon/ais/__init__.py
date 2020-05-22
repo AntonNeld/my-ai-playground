@@ -1,11 +1,6 @@
-import importlib
-import os
-from os import path
+from dungeon.ais.pathfinder import PathfinderAI
+from dungeon.ais.manual import ManualAI
+from dungeon.ais.random import RandomAI
+from dungeon.ais.exhaustive import ExhaustiveAI
 
-# Dynamically import all modules from ai/ into ai_types
-ai_types = {}
-for f in os.listdir(path.dirname(__file__)):
-    module = f.replace(".py", "")
-    if module != "__init__":
-        ai_types[module] = importlib.import_module(
-            "dungeon.ais.{}".format(module))
+__all__ = ("PathfinderAI", "ManualAI", "RandomAI", "ExhaustiveAI")

@@ -1,33 +1,31 @@
 from dungeon.lib.perception import get_coordinates
 from dungeon.lib.pathfinding import breadth_first
 
-actions = {}
 
+class ExhaustiveAI:
 
-def next_move(agent, percept):
-    print("Starting up!")
+    def __init__(self):
+        self._plan = []
 
-    if agent not in actions or not actions[agent]:
-        walls = get_coordinates(percept, "wall")
-        coins = get_coordinates(percept, "coin")
+    def next_move(self, percept):
+        print("Starting up!")
 
-        distances = {}
-        pos = list(coins) + [(0, 0)]
+        if not self._plan:
+            walls = get_coordinates(percept, "wall")
+            coins = get_coordinates(percept, "coin")
 
-        for coin in pos:
-            for coin2 in pos:
-                if coin is not coin2:
-                    distances[(coin, coin2)] = breadth_first(
-                        coin, coin2, walls)
+            distances = {}
+            pos = list(coins) + [(0, 0)]
 
-        actions[agent] = _helper((0, 0), coins, [], None, walls, distances)
+            for coin in pos:
+                for coin2 in pos:
+                    if coin is not coin2:
+                        distances[(coin, coin2)] = breadth_first(
+                            coin, coin2, walls)
 
-    return actions[agent].pop(0)
+            self._plan = _helper((0, 0), coins, [], None, walls, distances)
 
-
-def delete(agent):
-    if agent in actions:
-        del actions[agent]
+        return self._plan.pop(0)
 
 
 def _helper(pos, coins, path, bestpath, walls, distances):

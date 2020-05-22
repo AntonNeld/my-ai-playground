@@ -8,7 +8,6 @@ Prerequisites:
 
 - [pipenv](https://pypi.org/project/pipenv/)
 - Add `export PIPENV_VENV_IN_PROJECT=1` to `.bashrc` or similar.
-- [docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
 - [tiled](https://www.mapeditor.org/), if you want to make new maps.
 
 Install and use dependencies:
@@ -52,7 +51,3 @@ Do this before committing
 ## Creating new maps
 
 Create a new map using Tiled. Each type of object should have its own layer, with a custom property `Type` signifying what it is.
-
-## Creating new AIs
-
-Add a file `<AI name>.py` under `dungeon/ais/`, containing the functions `next_move(agent, percept)` and `delete(agent)`.

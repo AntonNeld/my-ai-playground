@@ -1,7 +1,7 @@
 import uuid
 
 from dungeon import rooms
-from dungeon.ais import ai_types
+from dungeon.ais import ManualAI
 
 
 class Dungeon:
@@ -35,9 +35,13 @@ class Dungeon:
 
     def delete_room(self, room):
         if room in self._rooms:
-            for agent in self._rooms[room].get_agents():
-                ai_types[agent.ai].delete(agent.id)
             del self._rooms[room]
 
-    def manual_set_move(self, agent, action):
-        ai_types["manual"].set_move(agent, action)
+    def manual_set_move(self, room, agent_id, action):
+        entity = next(
+            agent for agent in self._rooms[room].get_agents()
+            if agent.id == agent_id)
+        if isinstance(entity.ai, ManualAI):
+            entity.ai.set_move(action)
+        else:
+            raise RuntimeError("Agent doesn't have manual AI")

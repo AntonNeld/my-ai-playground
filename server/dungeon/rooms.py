@@ -1,7 +1,7 @@
-from dungeon.ais import ai_types
 from dungeon.entities.wall import Wall
 from dungeon.entities.player import Player
 from dungeon.entities.coin import Coin
+from dungeon.ais import PathfinderAI, ManualAI, RandomAI, ExhaustiveAI
 
 
 class Room:
@@ -54,8 +54,8 @@ class Room:
     def step(self):
         actions = {}
         for agent in self._agents:
-            actions[agent] = ai_types[agent.ai].next_move(
-                agent.id, self.get_view(agent))
+            actions[agent] = agent.ai.next_move(
+                self.get_view(agent))
         for thing in self._things:
             if hasattr(thing, "step"):
                 if thing in actions:
@@ -79,7 +79,17 @@ def create_room_from_list(data):
         if thing["type"] == "block":
             new_room.add_things(Wall(new_room, x, y))
         elif thing["type"] == "player":
-            new_room.add_things(Player(new_room, x, y, thing["ai"]))
+            if thing["ai"] == "pathfinder":
+                ai = PathfinderAI()
+            elif thing["ai"] == "manual":
+                ai = ManualAI()
+            elif thing["ai"] == "random":
+                ai = RandomAI()
+            elif thing["ai"] == "exhaustive":
+                ai = ExhaustiveAI()
+            else:
+                raise RuntimeError(f"Unknown AI {thing['ai']}")
+            new_room.add_things(Player(new_room, x, y, ai))
         elif thing["type"] == "coin":
             new_room.add_things(Coin(new_room, x, y))
     return new_room

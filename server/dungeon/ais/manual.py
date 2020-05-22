@@ -1,18 +1,11 @@
 
-actions = {}
+class ManualAI:
 
+    def __init__(self):
+        self._plan = "none"
 
-def next_move(agent, percept):
-    try:
-        return actions[agent]
-    except KeyError:
-        return "none"
+    def next_move(self, percept):
+        return self._plan
 
-
-def set_move(agent, action):
-    actions[agent] = action
-
-
-def delete(agent):
-    if agent in actions:
-        del actions[agent]
+    def set_move(self, action):
+        self._plan = action

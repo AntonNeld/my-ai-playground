@@ -129,35 +129,40 @@ def test_manual_ai():
     player_id = player["id"]
 
     requests.put(
-        f"{API_URL}/api/manual/agent/{player_id}/setmove", json="move_up")
+        f"{API_URL}/api/room/testroom/agent/{player_id}/setmove",
+        json="move_up")
     requests.post(f"{API_URL}/api/room/testroom/step")
     player = requests.get(f"{API_URL}/api/room/testroom/view").json()[0]
     assert player["x"] == 0
     assert player["y"] == 1
 
     requests.put(
-        f"{API_URL}/api/manual/agent/{player_id}/setmove", json="move_down")
+        f"{API_URL}/api/room/testroom/agent/{player_id}/setmove",
+        json="move_down")
     requests.post(f"{API_URL}/api/room/testroom/step")
     player = requests.get(f"{API_URL}/api/room/testroom/view").json()[0]
     assert player["x"] == 0
     assert player["y"] == 0
 
     requests.put(
-        f"{API_URL}/api/manual/agent/{player_id}/setmove", json="move_left")
+        f"{API_URL}/api/room/testroom/agent/{player_id}/setmove",
+        json="move_left")
     requests.post(f"{API_URL}/api/room/testroom/step")
     player = requests.get(f"{API_URL}/api/room/testroom/view").json()[0]
     assert player["x"] == -1
     assert player["y"] == 0
 
     requests.put(
-        f"{API_URL}/api/manual/agent/{player_id}/setmove", json="move_right")
+        f"{API_URL}/api/room/testroom/agent/{player_id}/setmove",
+        json="move_right")
     requests.post(f"{API_URL}/api/room/testroom/step")
     player = requests.get(f"{API_URL}/api/room/testroom/view").json()[0]
     assert player["x"] == 0
     assert player["y"] == 0
 
     requests.put(
-        f"{API_URL}/api/manual/agent/{player_id}/setmove", json="none")
+        f"{API_URL}/api/room/testroom/agent/{player_id}/setmove",
+        json="none")
     requests.post(f"{API_URL}/api/room/testroom/step")
     player = requests.get(f"{API_URL}/api/room/testroom/view").json()[0]
     assert player["x"] == 0
