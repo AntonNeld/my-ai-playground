@@ -1,7 +1,7 @@
 import math
 
-from dungeon.lib.perception import get_coordinates
-from dungeon.lib.pathfinding import breadth_first
+from dungeon.ais.lib.perception import get_coordinates
+from dungeon.ais.lib.pathfinding import breadth_first
 
 
 class PathfinderAI:
