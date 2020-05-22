@@ -1,5 +1,5 @@
-from dungeon.ais.lib.perception import get_coordinates
-from dungeon.ais.lib.pathfinding import breadth_first
+from dungeon.ai.lib.perception import get_coordinates
+from dungeon.ai.lib.pathfinding import breadth_first
 
 
 class ExhaustiveAI:

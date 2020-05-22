@@ -1,7 +1,7 @@
 import uuid
 
 from dungeon import room
-from dungeon.ais import ManualAI
+from dungeon.ai import ManualAI
 
 
 class Dungeon:

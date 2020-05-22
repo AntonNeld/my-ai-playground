@@ -1,7 +1,7 @@
 from dungeon.entities.wall import Wall
 from dungeon.entities.player import Player
 from dungeon.entities.coin import Coin
-from dungeon.ais import PathfinderAI, ManualAI, RandomAI, ExhaustiveAI
+from dungeon.ai import PathfinderAI, ManualAI, RandomAI, ExhaustiveAI
 
 
 class Room:
