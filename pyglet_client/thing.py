@@ -2,7 +2,7 @@ import pyglet
 
 # Images go here
 IMAGES = {
-    "wall": pyglet.resource.image('res/img/block.png'),
+    "block": pyglet.resource.image('res/img/block.png'),
     "player": pyglet.resource.image('res/img/player.png'),
     "coin": pyglet.resource.image('res/img/coin.png')}
 DEFAULT_IMAGE = pyglet.resource.image('res/img/default.png')

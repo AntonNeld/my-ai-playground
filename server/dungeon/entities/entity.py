@@ -10,3 +10,10 @@ class Entity:
         self.looks_like = looks_like
         self.id = uuid.uuid4().hex
         self.solid = True
+
+    def to_json(self):
+        return {
+            "x": self.x,
+            "y": self.y,
+            "id": self.id
+        }

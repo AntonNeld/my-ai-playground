@@ -27,6 +27,9 @@ class ExhaustiveAI:
 
         return self._plan.pop(0)
 
+    def to_json(self):
+        return "exhaustive"
+
 
 def _helper(pos, coins, path, bestpath, walls, distances):
     print("Pos: " + str(pos) + "     Coins left: " + str(len(coins)))

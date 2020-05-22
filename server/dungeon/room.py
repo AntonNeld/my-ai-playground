@@ -62,6 +62,9 @@ class Room:
                 return False
         return True
 
+    def to_json(self):
+        return [entity.to_json() for entity in self._entities]
+
 
 def create_room_from_list(data):
     new_room = Room()

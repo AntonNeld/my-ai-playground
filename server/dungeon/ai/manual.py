@@ -9,3 +9,6 @@ class ManualAI:
 
     def set_move(self, action):
         self._plan = action
+
+    def to_json(self):
+        return "manual"

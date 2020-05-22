@@ -22,3 +22,6 @@ class PathfinderAI:
             if shortest == math.inf:
                 self._plan = ["none"]
         return self._plan.pop(0)
+
+    def to_json(self):
+        return "pathfinder"

@@ -20,14 +20,10 @@ TEST_ROOM_2 = [
     {"x": 0, "y": 0, "type": "player", "ai": "manual"}
 ]
 
-TEST_ROOM_2_VIEW = [
-    {"x": 0, "y": 0, "looks_like": "player"}
-]
 
-
-def same_view(first, second, strip_id=True):
+def same(first, second, strip_id=True):
     """
-    Tests if two views are equal.
+    Tests if two rooms/views are equal.
     Order doesn't matter, and id is optionally removed.
     """
     if len(first) != len(second):
@@ -43,9 +39,9 @@ def same_view(first, second, strip_id=True):
     return True
 
 
-def test_same_view():
-    assert same_view(TEST_ROOM_VIEW, TEST_ROOM_VIEW)
-    assert not same_view(TEST_ROOM_VIEW, TEST_ROOM_2_VIEW)
+def test_same_helper():
+    assert same(TEST_ROOM, TEST_ROOM)
+    assert not same(TEST_ROOM, TEST_ROOM_2)
 
 
 def test_create_room():
@@ -58,51 +54,60 @@ def test_create_room():
     response = requests.get(f"{API_URL}/api/rooms/")
     assert room_id in response.json()
 
-    response = requests.get(f"{API_URL}/api/rooms/{room_id}/view")
-    assert same_view(response.json(), TEST_ROOM_VIEW)
+    response = requests.get(f"{API_URL}/api/rooms/{room_id}")
+    assert same(response.json(), TEST_ROOM)
+    assert "id" in response.json()[0]
 
 
 def test_create_two_rooms():
-    room_id = requests.post(f"{API_URL}/api/rooms/", json=TEST_ROOM).json()
+    room_id_1 = requests.post(f"{API_URL}/api/rooms/", json=TEST_ROOM).json()
     room_id_2 = requests.post(f"{API_URL}/api/rooms/", json=TEST_ROOM_2).json()
 
     response = requests.get(f"{API_URL}/api/rooms/")
-    assert room_id in response.json()
+    assert room_id_1 in response.json()
     assert room_id_2 in response.json()
 
-    room_1 = requests.get(f"{API_URL}/api/rooms/{room_id}/view").json()
-    room_2 = requests.get(f"{API_URL}/api/rooms/{room_id_2}/view").json()
-    assert same_view(room_1, TEST_ROOM_VIEW)
-    assert same_view(room_2, TEST_ROOM_2_VIEW)
+    room_1 = requests.get(f"{API_URL}/api/rooms/{room_id_1}").json()
+    room_2 = requests.get(f"{API_URL}/api/rooms/{room_id_2}").json()
+    assert same(room_1, TEST_ROOM)
+    assert same(room_2, TEST_ROOM_2)
 
 
 def test_replace_room():
     requests.put(f"{API_URL}/api/rooms/testroom", json=TEST_ROOM)
-    room_1 = requests.get(f"{API_URL}/api/rooms/testroom/view").json()
-    assert same_view(room_1, TEST_ROOM_VIEW)
+    room_1 = requests.get(f"{API_URL}/api/rooms/testroom").json()
+    assert same(room_1, TEST_ROOM)
 
     requests.put(f"{API_URL}/api/rooms/testroom", json=TEST_ROOM_2)
-    room_2 = requests.get(f"{API_URL}/api/rooms/testroom/view").json()
-    assert same_view(room_2, TEST_ROOM_2_VIEW)
+    room_2 = requests.get(f"{API_URL}/api/rooms/testroom").json()
+    assert same(room_2, TEST_ROOM_2)
 
 
 def test_delete_room():
     requests.put(f"{API_URL}/api/rooms/testroom", json=TEST_ROOM)
     response = requests.delete(f"{API_URL}/api/rooms/testroom")
     assert response.status_code == 200
-    response = requests.get(f"{API_URL}/api/rooms/testroom/view")
+    response = requests.get(f"{API_URL}/api/rooms/testroom")
     assert response.status_code == 500  # TODO: Fix to 404
+
+
+def test_view():
+    requests.put(f"{API_URL}/api/rooms/testroom", json=TEST_ROOM)
+
+    response = requests.get(f"{API_URL}/api/rooms/testroom/view")
+    assert response.status_code == 200
+    assert same(response.json(), TEST_ROOM_VIEW)
 
 
 def test_step():
     requests.put(f"{API_URL}/api/rooms/testroom", json=TEST_ROOM)
-    room_before = requests.get(f"{API_URL}/api/rooms/testroom/view").json()
+    room_before = requests.get(f"{API_URL}/api/rooms/testroom").json()
 
     response = requests.post(f"{API_URL}/api/rooms/testroom/step")
     assert response.status_code == 200
 
-    room_after = requests.get(f"{API_URL}/api/rooms/testroom/view").json()
-    assert not same_view(room_before, room_after)
+    room_after = requests.get(f"{API_URL}/api/rooms/testroom").json()
+    assert not same(room_before, room_after)
 
 
 def test_get_step():
@@ -131,7 +136,7 @@ def test_score():
 
 def test_manual_ai():
     requests.put(f"{API_URL}/api/rooms/testroom", json=TEST_ROOM_2)
-    player = requests.get(f"{API_URL}/api/rooms/testroom/view").json()[0]
+    player = requests.get(f"{API_URL}/api/rooms/testroom").json()[0]
     assert player["x"] == 0
     assert player["y"] == 0
     player_id = player["id"]
@@ -140,7 +145,7 @@ def test_manual_ai():
         f"{API_URL}/api/rooms/testroom/agents/{player_id}/setmove",
         json="move_up")
     requests.post(f"{API_URL}/api/rooms/testroom/step")
-    player = requests.get(f"{API_URL}/api/rooms/testroom/view").json()[0]
+    player = requests.get(f"{API_URL}/api/rooms/testroom").json()[0]
     assert player["x"] == 0
     assert player["y"] == 1
 
@@ -148,7 +153,7 @@ def test_manual_ai():
         f"{API_URL}/api/rooms/testroom/agents/{player_id}/setmove",
         json="move_down")
     requests.post(f"{API_URL}/api/rooms/testroom/step")
-    player = requests.get(f"{API_URL}/api/rooms/testroom/view").json()[0]
+    player = requests.get(f"{API_URL}/api/rooms/testroom").json()[0]
     assert player["x"] == 0
     assert player["y"] == 0
 
@@ -156,7 +161,7 @@ def test_manual_ai():
         f"{API_URL}/api/rooms/testroom/agents/{player_id}/setmove",
         json="move_left")
     requests.post(f"{API_URL}/api/rooms/testroom/step")
-    player = requests.get(f"{API_URL}/api/rooms/testroom/view").json()[0]
+    player = requests.get(f"{API_URL}/api/rooms/testroom").json()[0]
     assert player["x"] == -1
     assert player["y"] == 0
 
@@ -164,7 +169,7 @@ def test_manual_ai():
         f"{API_URL}/api/rooms/testroom/agents/{player_id}/setmove",
         json="move_right")
     requests.post(f"{API_URL}/api/rooms/testroom/step")
-    player = requests.get(f"{API_URL}/api/rooms/testroom/view").json()[0]
+    player = requests.get(f"{API_URL}/api/rooms/testroom").json()[0]
     assert player["x"] == 0
     assert player["y"] == 0
 
@@ -172,6 +177,6 @@ def test_manual_ai():
         f"{API_URL}/api/rooms/testroom/agents/{player_id}/setmove",
         json="none")
     requests.post(f"{API_URL}/api/rooms/testroom/step")
-    player = requests.get(f"{API_URL}/api/rooms/testroom/view").json()[0]
+    player = requests.get(f"{API_URL}/api/rooms/testroom").json()[0]
     assert player["x"] == 0
     assert player["y"] == 0

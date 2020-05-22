@@ -59,7 +59,7 @@ class View:
             # Create new things
             if identity not in self.things:
                 self.things[identity] = Thing(
-                    thing["x"], thing["y"], thing["looks_like"],
+                    thing["x"], thing["y"], thing["type"],
                     offset=(self.min_x, self.min_y), scale=self.scale)
             # Update existing things
             else:

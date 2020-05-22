@@ -95,7 +95,7 @@ def on_window_close(window):
 
 def get_state():
     view_response = session.get(
-        "http://127.0.0.1:8300/api/rooms/{}/view".format(room_id))
+        "http://127.0.0.1:8300/api/rooms/{}".format(room_id))
     score_response = session.get(
         "http://127.0.0.1:8300/api/rooms/{}/score".format(room_id))
     step_response = session.get(

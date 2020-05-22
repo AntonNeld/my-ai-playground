@@ -31,6 +31,9 @@ class Dungeon:
         self._rooms[room_id] = room.create_room_from_list(data)
         return room_id
 
+    def get_room(self, room_id):
+        return self._rooms[room_id]
+
     def delete_room(self, room_id):
         if room_id in self._rooms:
             del self._rooms[room_id]

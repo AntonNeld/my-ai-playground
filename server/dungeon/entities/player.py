@@ -30,3 +30,9 @@ class Player(Entity):
                     and entity.y == self.y):
                 self.room.remove_entities(entity)
                 self.score += 1
+
+    def to_json(self):
+        json = super().to_json()
+        json["type"] = "player"
+        json["ai"] = self.ai.to_json()
+        return json
