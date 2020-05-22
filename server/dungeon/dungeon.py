@@ -7,34 +7,37 @@ from dungeon.ais import ai_types
 class Dungeon:
 
     def __init__(self):
-        pass
+        self._rooms = {}
 
     def get_view(self, room):
-        return rooms.get_room(room).get_view(include_id=True)
+        return self._rooms[room].get_view(include_id=True)
 
     def get_score(self, room, agents=None):
         scores = []
-        for agent in rooms.get_room(room).get_agents():
+        for agent in self._rooms[room].get_agents():
             if agents is None or agent in agents:
                 scores.append({"id": agent.id, "score": agent.score})
         return scores
 
     def get_steps(self, room):
-        return rooms.get_room(room).steps
+        return self._rooms[room].steps
 
     def step(self, room):
-        rooms.get_room(room).step()
+        self._rooms[room].step()
 
     def create_room(self, data):
-        room_id = uuid.uuid4().hex
-        rooms.init_room(room_id, data)
-        return room_id
+        room = uuid.uuid4().hex
+        self._rooms[room] = rooms.create_room_from_list(data)
+        return room
 
     def create_room_with_id(self, room, data):
-        rooms.init_room(room, data)
+        self._rooms[room] = rooms.create_room_from_list(data)
 
     def delete_room(self, room):
-        rooms.delete_room(room)
+        if room in self._rooms:
+            for agent in self._rooms[room].get_agents():
+                ai_types[agent.ai].delete(agent.id)
+            del self._rooms[room]
 
     def manual_set_move(self, agent, action):
         ai_types["manual"].set_move(agent, action)

@@ -3,8 +3,6 @@ from dungeon.entities.wall import Wall
 from dungeon.entities.player import Player
 from dungeon.entities.coin import Coin
 
-rooms = {}
-
 
 class Room:
 
@@ -85,23 +83,3 @@ def create_room_from_list(data):
         elif thing["type"] == "coin":
             new_room.add_things(Coin(new_room, x, y))
     return new_room
-
-
-def get_room(room_id):
-    try:
-        return rooms[room_id]
-    except KeyError:
-        return None
-
-
-def delete_room(room_id):
-    current = get_room(room_id)
-    if current:
-        for agent in current.get_agents():
-            ai_types[agent.ai].delete(agent.id)
-        del rooms[room_id]
-
-
-def init_room(room_id, data):
-    delete_room(room_id)
-    rooms[room_id] = create_room_from_list(data)
