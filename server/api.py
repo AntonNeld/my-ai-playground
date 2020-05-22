@@ -19,19 +19,19 @@ class Entity(BaseModel):
     ai: str = None
 
 
-@router.post("/room", response_model=str)
+@router.post("/rooms", response_model=str)
 async def create_room(room_content: List[Entity]):
     return dungeon.create_room([item.dict(exclude_none=True)
                                 for item in room_content])
 
 
-@router.post("/room/{room}")
+@router.put("/rooms/{room}")
 async def create_room_with_id(room: str, room_content: List[Entity]):
-    return dungeon.create_room_with_id(room, [item.dict(exclude_none=True)
-                                              for item in room_content])
+    return dungeon.create_room([item.dict(exclude_none=True)
+                                for item in room_content], room_id=room)
 
 
-@router.delete("/room/{room}")
+@router.delete("/rooms/{room}")
 async def delete_room(room: str):
     return dungeon.delete_room(room)
 
@@ -43,7 +43,7 @@ class EntityView(BaseModel):
     id: str
 
 
-@router.get("/room/{room}/view", response_model=List[EntityView])
+@router.get("/rooms/{room}/view", response_model=List[EntityView])
 async def get_view(room: str):
     return dungeon.get_view(room)
 
@@ -53,21 +53,21 @@ class Score(BaseModel):
     score: int
 
 
-@router.get("/room/{room}/score", response_model=List[Score])
+@router.get("/rooms/{room}/score", response_model=List[Score])
 async def get_score(room: str, agent: Optional[str] = None):
     return dungeon.get_score(room, agent)
 
 
-@router.post("/room/{room}/step")
+@router.post("/rooms/{room}/step")
 async def step_room(room: str):
     return dungeon.step(room)
 
 
-@router.get("/room/{room}/step", response_model=int)
+@router.get("/rooms/{room}/step", response_model=int)
 async def get_steps(room: str):
     return dungeon.get_steps(room)
 
 
-@router.put("/room/{room}/agent/{agent}/setmove")
+@router.put("/rooms/{room}/agents/{agent}/setmove")
 async def set_move(room: str, agent: str, action: str = Body(...)):
     return dungeon.manual_set_move(room, agent, action)

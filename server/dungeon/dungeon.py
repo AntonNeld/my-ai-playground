@@ -25,13 +25,11 @@ class Dungeon:
     def step(self, room_id):
         self._rooms[room_id].step()
 
-    def create_room(self, data):
-        room_id = uuid.uuid4().hex
+    def create_room(self, data, room_id=None):
+        if room_id is None:
+            room_id = uuid.uuid4().hex
         self._rooms[room_id] = room.create_room_from_list(data)
         return room_id
-
-    def create_room_with_id(self, room_id, data):
-        self._rooms[room_id] = room.create_room_from_list(data)
 
     def delete_room(self, room_id):
         if room_id in self._rooms:
