@@ -9,7 +9,6 @@ class Room:
     def __init__(self):
         self._things = []
         self.steps = 0
-        self._agents = []
 
     def add_things(self, *things):
         for thing in things:
@@ -17,20 +16,16 @@ class Room:
                 self._things.append(thing)
             else:
                 raise RuntimeError("Cannot add thing twice: " + str(thing))
-            if isinstance(thing, Player):
-                self._agents.append(thing)
 
     def remove_things(self, *things):
         for thing in things:
             self._things.remove(thing)
-            if thing in self._agents:
-                self._agents.remove(thing)
 
     def get_things(self):
         return self._things.copy()
 
     def get_agents(self):
-        return self._agents.copy()
+        return [thing for thing in self._things if hasattr(thing, "ai")]
 
     def get_view(self, perceptor=None, include_id=False):
         if perceptor:
@@ -52,14 +47,11 @@ class Room:
         return serializables
 
     def step(self):
-        actions = {}
-        for agent in self._agents:
-            actions[agent] = agent.ai.next_move(
-                self.get_view(agent))
         for thing in self._things:
             if hasattr(thing, "step"):
-                if thing in actions:
-                    thing.step(actions[thing])
+                if hasattr(thing, "ai"):
+                    action = thing.ai.next_move(self.get_view(thing))
+                    thing.step(action)
                 else:
                     thing.step()
         self.steps += 1
