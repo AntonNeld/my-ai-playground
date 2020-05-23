@@ -10,11 +10,6 @@ TEST_ROOM = [
     {"x": 1, "y": 0, "type": "coin"}
 ]
 
-TEST_ROOM_VIEW = [
-    {"x": 0, "y": 0, "looks_like": "player"},
-    {"x": 1, "y": 1, "looks_like": "wall"},
-    {"x": 1, "y": 0, "looks_like": "coin"}
-]
 
 TEST_ROOM_2 = [
     {"x": 0, "y": 0, "type": "player", "ai": "manual"}
@@ -89,14 +84,6 @@ def test_delete_room():
     assert response.status_code == 200
     response = requests.get(f"{API_URL}/api/rooms/testroom")
     assert response.status_code == 500  # TODO: Fix to 404
-
-
-def test_view():
-    requests.put(f"{API_URL}/api/rooms/testroom", json=TEST_ROOM)
-
-    response = requests.get(f"{API_URL}/api/rooms/testroom/view")
-    assert response.status_code == 200
-    assert same(response.json(), TEST_ROOM_VIEW)
 
 
 def test_step():

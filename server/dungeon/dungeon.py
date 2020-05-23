@@ -9,9 +9,6 @@ class Dungeon:
     def __init__(self):
         self._rooms = {}
 
-    def get_view(self, room_id):
-        return self._rooms[room_id].get_view(include_id=True)
-
     def get_score(self, room_id, agents=None):
         scores = []
         for agent in self._rooms[room_id].get_agents():

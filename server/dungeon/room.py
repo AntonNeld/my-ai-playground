@@ -27,24 +27,19 @@ class Room:
     def get_agents(self):
         return [entity for entity in self._entities if hasattr(entity, "ai")]
 
-    def get_view(self, perceptor=None, include_id=False):
-        if perceptor:
-            x = perceptor.x
-            y = perceptor.y
-        else:
-            x = y = 0
-        serializables = []
+    def get_view(self, perceptor):
+        x = perceptor.x
+        y = perceptor.y
+        percept = []
         entities = self.get_entities()
         for entity in entities:
             if entity != perceptor:
-                serializable = {"x":          entity.x - x,
-                                "y":          entity.y - y,
-                                "looks_like": entity.looks_like}
-                if include_id:
-                    serializable["id"] = entity.id
-                serializables.append(serializable)
+                entity_view = {"x":          entity.x - x,
+                               "y":          entity.y - y,
+                               "looks_like": entity.looks_like}
+                percept.append(entity_view)
 
-        return serializables
+        return percept
 
     def step(self):
         for entity in self._entities:

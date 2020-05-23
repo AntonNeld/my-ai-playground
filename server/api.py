@@ -49,18 +49,6 @@ async def delete_room(room: str):
     return dungeon.delete_room(room)
 
 
-class EntityView(BaseModel):
-    x: int
-    y: int
-    looks_like: str
-    id: str
-
-
-@router.get("/rooms/{room}/view", response_model=List[EntityView])
-async def get_view(room: str):
-    return dungeon.get_view(room)
-
-
 class Score(BaseModel):
     id: str
     score: int
