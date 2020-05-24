@@ -42,24 +42,13 @@ export class Room {
 
     svg
       .select("g")
-      .selectAll("rect")
+      .selectAll("image")
       .data(data)
-      .join("rect")
+      .join("image")
       .attr("x", (d) => d.x)
       .attr("y", (d) => d.y)
       .attr("width", 1)
       .attr("height", 1)
-      .attr("fill", (d) => {
-        switch (d.type) {
-          case "block":
-            return "dimgray";
-          case "player":
-            return "blue";
-          case "coin":
-            return "yellow";
-          default:
-            return "red";
-        }
-      });
+      .attr("href", (d) => `assets/${d.type}.svg`);
   }
 }
