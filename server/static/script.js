@@ -2,8 +2,11 @@ import { Room } from "./room.js";
 
 const testRoom = [
   { x: 0, y: 0, type: "player", ai: "pathfinder" },
+  { x: -1, y: 1, type: "block" },
+  { x: 0, y: 1, type: "block" },
   { x: 1, y: 1, type: "block" },
   { x: 1, y: 0, type: "coin" },
+  { x: -1, y: 0, type: "coin" },
 ];
 
 let room;
