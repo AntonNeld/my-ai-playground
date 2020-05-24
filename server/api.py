@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import List
 
 from fastapi import APIRouter, Body
 from pydantic import BaseModel
@@ -25,6 +25,7 @@ class Entity(BaseModel):
     type: str
     ai: str = None
     id: str
+    score: int = None
 
 
 @router.get("/rooms", response_model=List[str])
@@ -54,16 +55,6 @@ async def create_room_with_id(room: str, room_content: List[EntityTemplate]):
 @router.delete("/rooms/{room}")
 async def delete_room(room: str):
     return dungeon.delete_room(room)
-
-
-class Score(BaseModel):
-    id: str
-    score: int
-
-
-@router.get("/rooms/{room}/score", response_model=List[Score])
-async def get_score(room: str, agent: Optional[str] = None):
-    return dungeon.get_score(room, agent)
 
 
 @router.post("/rooms/{room}/step")

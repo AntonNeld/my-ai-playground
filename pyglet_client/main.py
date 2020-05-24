@@ -96,19 +96,16 @@ def on_window_close(window):
 def get_state():
     view_response = session.get(
         "http://127.0.0.1:8300/api/rooms/{}".format(room_id))
-    score_response = session.get(
-        "http://127.0.0.1:8300/api/rooms/{}/score".format(room_id))
     step_response = session.get(
         "http://127.0.0.1:8300/api/rooms/{}/step".format(room_id))
     return {"view": json.loads(view_response.text),
-            "score": json.loads(score_response.text),
             "steps": json.loads(step_response.text)}
 
 
 def set_action(action):
     for agent in config["manual_mode"]:
         requests.put(
-            "http://127.0.0.1:8300/api/rooms/{}/agent/{}/setmove".format(
+            "http://127.0.0.1:8300/api/rooms/{}/agents/{}/setmove".format(
                 room_id, agent),
             json=action)
 
@@ -135,7 +132,9 @@ def new_room():
     # temporary solution, will change how agent info is fetched,
     # and how manual mode is set
     if PLAYER_AI == "manual":
-        config["manual_mode"] = [item["id"] for item in state["score"]]
+        config["manual_mode"] = [item["id"]
+                                 for item in state["view"] if "ai" in item]
+        print(config)
 
 
 def animate(dt):

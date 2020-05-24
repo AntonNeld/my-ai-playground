@@ -47,13 +47,9 @@ class View:
             x = [thing["x"] for thing in new_things]
             y = [thing["y"] for thing in new_things]
             self.set_camera((min(x), max(x)+1, min(y), max(y)+1))
-        scores_list = state["score"]
         if self.steplabel:
             steps = state["steps"]
             self.steplabel.text = 'Steps: ' + str(steps)
-        scores = {}
-        for item in scores_list:
-            scores[item["id"]] = item["score"]
         for thing in new_things:
             identity = thing["id"]
             # Create new things
@@ -66,8 +62,8 @@ class View:
                 self.things[identity].set_pos(
                     thing["x"], thing["y"], duration=self.step_duration)
             # Set score label
-            if identity in scores:
-                self.things[identity].set_label(str(scores[identity]))
+            if "score" in thing:
+                self.things[identity].set_label(str(thing["score"]))
             else:
                 self.things[identity].set_label(None)
         # Remove nonexistent things

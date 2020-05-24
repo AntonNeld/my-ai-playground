@@ -16,18 +16,19 @@ TEST_ROOM_2 = [
 ]
 
 
-def same(first, second, strip_id=True):
+def same(first, second, strip_generated=True):
     """
     Tests if two rooms/views are equal.
-    Order doesn't matter, and id is optionally removed.
+    Order doesn't matter, and generated attributes are optionally removed.
     """
     if len(first) != len(second):
         return False
-    if strip_id:
-        first = [{key: entity[key] for key in entity if key != "id"}
-                 for entity in first]
-        second = [{key: entity[key] for key in entity if key != "id"}
-                  for entity in second]
+    if strip_generated:
+        generated_attributes = ["id", "score"]
+        first = [{key: entity[key] for key in entity if
+                  key not in generated_attributes} for entity in first]
+        second = [{key: entity[key] for key in entity if
+                   key not in generated_attributes} for entity in second]
     for entity in first:
         if entity not in second:
             return False
@@ -111,14 +112,14 @@ def test_get_step():
 
 def test_score():
     requests.put(f"{API_URL}/api/rooms/testroom", json=TEST_ROOM)
-    response = requests.get(f"{API_URL}/api/rooms/testroom/score")
-    assert response.status_code == 200
-    scores = response.json()
-    assert scores[0]["score"] == 0
+    room = requests.get(f"{API_URL}/api/rooms/testroom").json()
+    score = [entity["score"] for entity in room if "score" in entity][0]
+    assert score == 0
 
     requests.post(f"{API_URL}/api/rooms/testroom/step")
-    scores = requests.get(f"{API_URL}/api/rooms/testroom/score").json()
-    assert scores[0]["score"] != 0
+    room = requests.get(f"{API_URL}/api/rooms/testroom").json()
+    score = [entity["score"] for entity in room if "score" in entity][0]
+    assert score != 0
 
 
 def test_manual_ai():

@@ -35,4 +35,5 @@ class Player(Entity):
         json = super().to_json()
         json["type"] = "player"
         json["ai"] = self.ai.to_json()
+        json["score"] = self.score
         return json
