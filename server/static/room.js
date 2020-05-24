@@ -40,15 +40,35 @@ export class Room {
       .attr("viewBox", `${minX} ${minY} ${maxX - minX} ${maxY - minY}`);
     svg.select("#background").attr("x", minX).attr("y", minY);
 
+    const transition = svg.transition().duration(300).ease(d3.easeQuadOut);
     svg
       .select("g")
       .selectAll("image")
-      .data(data)
-      .join("image")
-      .attr("x", (d) => d.x)
-      .attr("y", (d) => d.y)
-      .attr("width", 1)
-      .attr("height", 1)
-      .attr("href", (d) => `assets/${d.type}.svg`);
+      .data(data, ({ id }) => id)
+      .join(
+        (enter) =>
+          enter
+            .append("image")
+            .attr("x", (d) => d.x)
+            .attr("y", (d) => d.y)
+            .attr("width", 1)
+            .attr("height", 1)
+            .attr("href", (d) => `assets/${d.type}.svg`)
+            .attr("opacity", 0)
+            .call((enter) => enter.transition(transition).attr("opacity", 1)),
+        (update) =>
+          update.call((update) =>
+            update
+              .transition(transition)
+              .attr("x", (d) => d.x)
+              .attr("y", (d) => d.y)
+          ),
+        (exit) =>
+          exit
+            .attr("opacity", 1)
+            .call((exit) =>
+              exit.transition(transition).attr("opacity", 0).remove()
+            )
+      );
   }
 }
