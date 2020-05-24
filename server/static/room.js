@@ -1,4 +1,4 @@
-class Room {
+export class Room {
   constructor(element) {
     this.element = element;
     this.init();

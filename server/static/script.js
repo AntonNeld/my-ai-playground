@@ -1,3 +1,5 @@
+import { Room } from "./room.js";
+
 const testRoom = [
   { x: 0, y: 0, type: "player", ai: "pathfinder" },
   { x: 1, y: 1, type: "block" },
@@ -30,3 +32,7 @@ async function step() {
 }
 
 init();
+document
+  .querySelector("#restart-button")
+  .addEventListener("click", () => init());
+document.querySelector("#step-button").addEventListener("click", () => step());
