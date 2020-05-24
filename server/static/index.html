@@ -2,8 +2,17 @@
 <html>
   <head>
     <title>AI dungeon</title>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    Hello world
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <div class="container">
+      <div class="room-area"></div>
+      <div class="controls">
+        <button onclick="init()">Restart</button>
+        <button onclick="step()">Step</button>
+      </div>
+    </div>
+    <script src="room.js"></script>
   </body>
 </html>

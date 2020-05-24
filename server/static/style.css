@@ -1,0 +1,16 @@
+html,
+body {
+  height: 100%;
+  margin: 0px;
+  background-color: gray;
+}
+
+.container {
+  display: grid;
+  height: 100%;
+  grid-template-columns: auto 200px;
+}
+
+.room-area {
+  height: 100%;
+}
