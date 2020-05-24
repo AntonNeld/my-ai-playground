@@ -12,12 +12,19 @@ dungeon = Dungeon()
 # Legacy API used by pyglet client
 
 
+class EntityTemplate(BaseModel):
+    x: int
+    y: int
+    type: str
+    ai: str = None
+
+
 class Entity(BaseModel):
     x: int
     y: int
     type: str
     ai: str = None
-    id: str = None
+    id: str
 
 
 @router.get("/rooms", response_model=List[str])
@@ -27,7 +34,7 @@ async def get_rooms():
 
 
 @router.post("/rooms", response_model=str)
-async def create_room(room_content: List[Entity]):
+async def create_room(room_content: List[EntityTemplate]):
     return dungeon.create_room([item.dict(exclude_none=True)
                                 for item in room_content])
 
@@ -38,8 +45,8 @@ async def get_room(room: str):
     return dungeon.get_room(room).to_json()
 
 
-@router.put("/rooms/{room}")
-async def create_room_with_id(room: str, room_content: List[Entity]):
+@router.put("/rooms/{room}", response_model=str)
+async def create_room_with_id(room: str, room_content: List[EntityTemplate]):
     return dungeon.create_room([item.dict(exclude_none=True)
                                 for item in room_content], room_id=room)
 
