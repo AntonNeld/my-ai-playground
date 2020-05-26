@@ -1,6 +1,8 @@
 export class Room {
   constructor(element) {
     this.element = element;
+    this.highlighted = null;
+    this.data = [];
     this.init();
   }
 
@@ -24,6 +26,12 @@ export class Room {
   }
 
   setData(data) {
+    this.data = data;
+    this.draw();
+  }
+
+  draw() {
+    const data = this.data;
     let minX = 0;
     let minY = 0;
     let maxX = 1;
@@ -43,32 +51,57 @@ export class Room {
     const transition = svg.transition().duration(300).ease(d3.easeQuadOut);
     svg
       .select("g")
-      .selectAll("image")
+      .selectAll("g")
       .data(data, ({ id }) => id)
       .join(
-        (enter) =>
-          enter
-            .append("image")
-            .attr("x", (d) => d.x)
-            .attr("y", (d) => d.y)
+        (enter) => {
+          const g = enter
+            .append("g")
+            .attr("transform", (d) => `translate(${d.x},${d.y})`)
+            .attr("opacity", 0)
+            .call((g) => g.transition(transition).attr("opacity", 1));
+          g.append("image")
             .attr("width", 1)
             .attr("height", 1)
-            .attr("href", (d) => `assets/${d.type}.svg`)
+            .attr("href", (d) => `assets/${d.type}.svg`);
+          g.append("rect")
+            .attr("width", 1)
+            .attr("height", 1)
+            .attr("stroke", "red")
+            .attr("fill-opacity", 0)
+            .attr("stroke-width", 0.02)
+            .attr("opacity", (d) => (d.id === this.highlighted ? 1 : 0));
+          g.append("rect")
+            .attr("width", 1)
+            .attr("height", 1)
             .attr("opacity", 0)
-            .call((enter) => enter.transition(transition).attr("opacity", 1)),
+            .on("click", (d) => {
+              if (this.highlighted === d.id) {
+                this.highlighted = null;
+              } else {
+                this.highlighted = d.id;
+              }
+              this.draw();
+            });
+          return g;
+        },
         (update) =>
-          update.call((update) =>
+          update.call((update) => {
             update
               .transition(transition)
-              .attr("x", (d) => d.x)
-              .attr("y", (d) => d.y)
-          ),
+              .attr("transform", (d) => `translate(${d.x},${d.y})`);
+            update
+              .select("rect")
+              .transition(transition)
+              .attr("opacity", (d) => (d.id === this.highlighted ? 1 : 0));
+            return update;
+          }),
         (exit) =>
           exit
             .attr("opacity", 1)
-            .call((exit) =>
-              exit.transition(transition).attr("opacity", 0).remove()
-            )
+            .transition(transition)
+            .attr("opacity", 0)
+            .remove()
       );
   }
 }
