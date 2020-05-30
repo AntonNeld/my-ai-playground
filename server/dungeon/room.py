@@ -21,6 +21,13 @@ class Room:
         for entity in entities:
             self._entities.remove(entity)
 
+    def list_entities(self):
+        return [entity.id for entity in self._entities]
+
+    def get_entity(self, entity_id):
+        return [entity for entity in self._entities
+                if entity.id == entity_id][0].to_json()
+
     def get_entities(self):
         return self._entities.copy()
 

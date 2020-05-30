@@ -35,17 +35,29 @@ def same(first, second, strip_generated=True):
     return True
 
 
-def test_same_helper():
+def valid_id(string):
+    try:
+        UUID(hex=string)
+        return True
+    except ValueError:
+        return False
+
+
+def test_helper_same():
     assert same(TEST_ROOM, TEST_ROOM)
     assert not same(TEST_ROOM, TEST_ROOM_2)
+
+
+def test_helper_valid_id():
+    assert valid_id("9f4118fe668843a3a1c847552a69b1db")
+    assert not valid_id("banana")
 
 
 def test_create_room():
     response = requests.post(f"{API_URL}/api/rooms/", json=TEST_ROOM)
     assert response.status_code == 200
     room_id = response.json()
-    # Will throw an exception if it's not a valid UUID
-    UUID(hex=room_id)
+    assert valid_id(room_id)
 
     response = requests.get(f"{API_URL}/api/rooms/")
     assert room_id in response.json()
@@ -120,6 +132,22 @@ def test_score():
     room = requests.get(f"{API_URL}/api/rooms/testroom").json()
     score = [entity["score"] for entity in room if "score" in entity][0]
     assert score != 0
+
+
+def test_list_get_entity():
+    requests.put(f"{API_URL}/api/rooms/testroom", json=TEST_ROOM)
+
+    response = requests.get(f"{API_URL}/api/rooms/testroom/entities")
+    assert response.status_code == 200
+    entity_id = response.json()[0]
+    assert valid_id(entity_id)
+
+    response = requests.get(
+        f"{API_URL}/api/rooms/testroom/entities/{entity_id}")
+    assert response.status_code == 200
+    entity = response.json()
+    assert {key: entity[key]
+            for key in entity if key not in ["id", "score"]} in TEST_ROOM
 
 
 def test_manual_ai():

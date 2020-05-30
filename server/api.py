@@ -67,6 +67,16 @@ async def get_steps(room: str):
     return dungeon.get_steps(room)
 
 
+@router.get("/rooms/{room}/entities", response_model=List[str])
+async def list_entities(room: str):
+    return dungeon.get_room(room).list_entities()
+
+
+@router.get("/rooms/{room}/entities/{entity}", response_model=Entity)
+async def get_entity(room: str, entity: str):
+    return dungeon.get_room(room).get_entity(entity)
+
+
 @router.put("/rooms/{room}/agents/{agent}/setmove")
 async def set_move(room: str, agent: str, action: str = Body(...)):
     return dungeon.manual_set_move(room, agent, action)
