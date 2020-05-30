@@ -76,11 +76,53 @@ async function setManualAI() {
   }
 }
 
+async function takeManualAction(action) {
+  if (highlighted) {
+    const response = await fetch(
+      `/api/rooms/testroom/agents/${highlighted}/setmove`,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(action),
+      }
+    );
+    if (response.ok) {
+      await step();
+    }
+  }
+}
+
 init();
 document
   .querySelector("#restart-button")
-  .addEventListener("click", () => init());
-document.querySelector("#step-button").addEventListener("click", () => step());
+  .addEventListener("click", function () {
+    init();
+    this.blur();
+  });
 document
   .querySelector("#manual-ai-button")
-  .addEventListener("click", () => setManualAI());
+  .addEventListener("click", function () {
+    setManualAI();
+    this.blur();
+  });
+document.addEventListener("keydown", ({ key }) => {
+  switch (key) {
+    case " ":
+      step();
+      break;
+    case "ArrowLeft":
+      takeManualAction("move_left");
+      break;
+    case "ArrowRight":
+      takeManualAction("move_right");
+      break;
+    case "ArrowDown":
+      takeManualAction("move_down");
+      break;
+    case "ArrowUp":
+      takeManualAction("move_up");
+      break;
+    default:
+      break;
+  }
+});
