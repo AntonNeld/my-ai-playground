@@ -1,4 +1,4 @@
-from uuid import UUID
+from test_utils import is_uuid
 
 import requests
 
@@ -35,29 +35,16 @@ def same(first, second, strip_generated=True):
     return True
 
 
-def valid_id(string):
-    try:
-        UUID(hex=string)
-        return True
-    except ValueError:
-        return False
-
-
 def test_helper_same():
     assert same(TEST_ROOM, TEST_ROOM)
     assert not same(TEST_ROOM, TEST_ROOM_2)
-
-
-def test_helper_valid_id():
-    assert valid_id("9f4118fe668843a3a1c847552a69b1db")
-    assert not valid_id("banana")
 
 
 def test_create_room():
     response = requests.post(f"{API_URL}/api/rooms/", json=TEST_ROOM)
     assert response.status_code == 200
     room_id = response.json()
-    assert valid_id(room_id)
+    assert is_uuid(room_id)
 
     response = requests.get(f"{API_URL}/api/rooms/")
     assert room_id in response.json()
@@ -140,7 +127,7 @@ def test_list_get_entity():
     response = requests.get(f"{API_URL}/api/rooms/testroom/entities")
     assert response.status_code == 200
     entity_id = response.json()[0]
-    assert valid_id(entity_id)
+    assert is_uuid(entity_id)
 
     response = requests.get(
         f"{API_URL}/api/rooms/testroom/entities/{entity_id}")
