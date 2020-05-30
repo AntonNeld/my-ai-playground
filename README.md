@@ -1,13 +1,15 @@
 # ai-dungeon
 
-Experimenting with AI. Very early phases so far.
+Experimenting with AI and web development. Very early phases so far, no actual AI included.
+
+The philosophy is to have a RESTful (with exceptions) backend, and going back to the basics in the frontend.
 
 ## Getting started
 
 Prerequisites:
 
 - [pipenv](https://pypi.org/project/pipenv/)
-- Add `export PIPENV_VENV_IN_PROJECT=1` to `.bashrc` or similar.
+- Add `export PIPENV_VENV_IN_PROJECT=1` to `.bashrc` or similar. Or don't, your choice.
 - [tiled](https://www.mapeditor.org/), if you want to make new maps.
 
 Install and use dependencies:
@@ -21,10 +23,10 @@ Run the backend:
 
 ```sh
 cd server
-uvicorn main:app --host 0.0.0.0 --port 8300 --reload
+uvicorn main:app --port 8300 --reload
 ```
 
-### pyglet frontend
+### pyglet frontend (to be deprecated)
 
 In another shell, connect with the scenario using the frontend:
 
@@ -35,7 +37,11 @@ python pyglet_client/main.py <PATH_TO_MAP>
 
 Instructions will be printed in the terminal.
 
-To use a different AI than the default, set the environment variable PLAYER_AI to the service name when starting the client. Default is `pathfinder`. (This config will change soon.)
+To use a different AI than the default, set the environment variable PLAYER_AI to the service name when starting the client. Default is `pathfinder`.
+
+### Web frontend
+
+In a web browser, connect to `localhost:8300`.
 
 ### Testing
 
@@ -46,7 +52,7 @@ pipenv shell
 pytest
 ```
 
-Do this before committing
+There is no CI, I just try to remember doing it before committing.
 
 ## Creating new maps
 
