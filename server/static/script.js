@@ -63,8 +63,24 @@ async function step() {
   update();
 }
 
+async function setManualAI() {
+  if (highlighted) {
+    const response = await fetch(`/api/rooms/testroom/entities/${highlighted}`);
+    const entity = await response.json();
+    await fetch(`/api/rooms/testroom/entities/${highlighted}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...entity, ai: "manual" }),
+    });
+    update();
+  }
+}
+
 init();
 document
   .querySelector("#restart-button")
   .addEventListener("click", () => init());
 document.querySelector("#step-button").addEventListener("click", () => step());
+document
+  .querySelector("#manual-ai-button")
+  .addEventListener("click", () => setManualAI());
