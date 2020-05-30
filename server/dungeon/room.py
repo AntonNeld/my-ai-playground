@@ -1,7 +1,4 @@
-from dungeon.entities.wall import Wall
-from dungeon.entities.player import Player
-from dungeon.entities.coin import Coin
-from dungeon.ai import PathfinderAI, ManualAI, RandomAI, ExhaustiveAI
+from dungeon.entities.entity_factories import entity_from_json
 
 
 class Room:
@@ -13,6 +10,7 @@ class Room:
     def add_entities(self, *entities):
         for entity in entities:
             if entity not in self._entities:
+                entity.set_room(self)
                 self._entities.append(entity)
             else:
                 raise RuntimeError("Cannot add entity twice: " + str(entity))
@@ -71,22 +69,5 @@ class Room:
 def create_room_from_list(data):
     new_room = Room()
     for entity in data:
-        x = entity["x"]
-        y = entity["y"]
-        if entity["type"] == "block":
-            new_room.add_entities(Wall(new_room, x, y))
-        elif entity["type"] == "player":
-            if entity["ai"] == "pathfinder":
-                ai = PathfinderAI()
-            elif entity["ai"] == "manual":
-                ai = ManualAI()
-            elif entity["ai"] == "random":
-                ai = RandomAI()
-            elif entity["ai"] == "exhaustive":
-                ai = ExhaustiveAI()
-            else:
-                raise RuntimeError(f"Unknown AI {entity['ai']}")
-            new_room.add_entities(Player(new_room, x, y, ai))
-        elif entity["type"] == "coin":
-            new_room.add_entities(Coin(new_room, x, y))
+        new_room.add_entities(entity_from_json(entity))
     return new_room

@@ -4,8 +4,8 @@ from .entity import Entity
 
 class Player(Entity):
 
-    def __init__(self, room, x, y, ai):
-        super().__init__(room, x, y, "player")
+    def __init__(self, x, y, ai):
+        super().__init__(x, y, "player")
         self.ai = ai
         self.score = 0
 
