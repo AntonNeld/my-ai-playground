@@ -5,7 +5,9 @@ class ManualAI:
         self._plan = "none"
 
     def next_move(self, percept):
-        return self._plan
+        action = self._plan
+        self._plan = "none"
+        return action
 
     def set_move(self, action):
         self._plan = action

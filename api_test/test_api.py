@@ -209,9 +209,7 @@ def test_manual_ai():
     assert player["x"] == 0
     assert player["y"] == 0
 
-    requests.put(
-        f"{API_URL}/api/rooms/testroom/agents/{player_id}/setmove",
-        json="none")
+    # Don't continue moving
     requests.post(f"{API_URL}/api/rooms/testroom/step")
     player = requests.get(f"{API_URL}/api/rooms/testroom").json()[0]
     assert player["x"] == 0
