@@ -1,12 +1,13 @@
-export class Room {
+export class Room extends EventTarget {
   constructor(element) {
+    super();
     this.element = element;
     this.highlighted = null;
     this.data = [];
     this.init();
   }
 
-  init(data) {
+  init() {
     d3.select(this.element).select("svg").remove();
     const svg = d3
       .select(this.element)
@@ -20,7 +21,16 @@ export class Room {
       .attr("id", "background")
       .attr("fill", "black")
       .attr("width", "100%")
-      .attr("height", "100%");
+      .attr("height", "100%")
+      .on("click", () => {
+        this.highlighted = null;
+        this.dispatchEvent(
+          new CustomEvent("highlighted", {
+            detail: { id: this.highlighted },
+          })
+        );
+        this.draw();
+      });
 
     svg.append("g");
   }
@@ -81,6 +91,11 @@ export class Room {
               } else {
                 this.highlighted = d.id;
               }
+              this.dispatchEvent(
+                new CustomEvent("highlighted", {
+                  detail: { id: this.highlighted },
+                })
+              );
               this.draw();
             });
           return g;

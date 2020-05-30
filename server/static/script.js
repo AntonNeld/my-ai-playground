@@ -10,6 +10,7 @@ const testRoom = [
 ];
 
 let room;
+let highlighted;
 
 async function init() {
   await fetch("/api/rooms/testroom", {
@@ -18,15 +19,43 @@ async function init() {
     body: JSON.stringify(testRoom),
   });
   room = new Room(document.querySelector(".room-area"));
+  highlighted = null;
+  room.addEventListener("highlighted", ({ detail: { id } }) => {
+    highlighted = id;
+    update();
+  });
 
   await update();
 }
 
 async function update() {
+  const [roomData, entityData] = await Promise.all([
+    getRoomData(),
+    getEntityData(),
+  ]);
+  room.setData(roomData);
+  document.querySelector("#details-area").innerHTML = entityData
+    ? JSON.stringify(entityData, null, 2)
+    : "";
+}
+
+async function getRoomData() {
   const response = await fetch("/api/rooms/testroom");
   const data = await response.json();
+  return data;
+}
 
-  room.setData(data);
+async function getEntityData() {
+  if (highlighted) {
+    const response = await fetch(`/api/rooms/testroom/entities/${highlighted}`);
+    if (!response.ok) {
+      return null;
+    }
+    const entity = await response.json();
+    return entity;
+  } else {
+    return null;
+  }
 }
 
 async function step() {

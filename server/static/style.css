@@ -8,9 +8,15 @@ body {
 .container {
   display: grid;
   height: 100%;
-  grid-template-columns: auto 200px;
+  grid-template-columns: auto 350px;
 }
 
 .room-area {
   height: 100%;
+}
+
+.details-text {
+  white-space: pre;
+  font-size: 10pt;
+  font-family: monospace;
 }
