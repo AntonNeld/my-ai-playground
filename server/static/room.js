@@ -48,9 +48,9 @@ export class Room extends EventTarget {
     let maxY = 1;
     if (data.length > 0) {
       minX = d3.min(data.map((d) => d.x));
-      minY = d3.min(data.map((d) => d.y));
+      minY = d3.min(data.map((d) => -d.y));
       maxX = d3.max(data.map((d) => d.x)) + 1;
-      maxY = d3.max(data.map((d) => d.y)) + 1;
+      maxY = d3.max(data.map((d) => -d.y)) + 1;
     }
     const svg = d3
       .select(this.element)
@@ -67,7 +67,7 @@ export class Room extends EventTarget {
         (enter) => {
           const g = enter
             .append("g")
-            .attr("transform", (d) => `translate(${d.x},${d.y})`)
+            .attr("transform", (d) => `translate(${d.x},${-d.y})`)
             .attr("opacity", 0)
             .call((g) => g.transition(transition).attr("opacity", 1));
           g.append("image")
@@ -104,7 +104,7 @@ export class Room extends EventTarget {
           update.call((update) => {
             update
               .transition(transition)
-              .attr("transform", (d) => `translate(${d.x},${d.y})`);
+              .attr("transform", (d) => `translate(${d.x},${-d.y})`);
             update
               .select("rect")
               .transition(transition)
