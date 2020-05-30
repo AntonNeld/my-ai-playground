@@ -4,39 +4,38 @@ from dungeon.entities.entity_factories import entity_from_json
 class Room:
 
     def __init__(self):
-        self._entities = []
+        self._entities = {}
         self.steps = 0
 
     def add_entities(self, *entities):
         for entity in entities:
-            if entity not in self._entities:
+            if entity.id not in self._entities:
                 entity.set_room(self)
-                self._entities.append(entity)
+                self._entities[entity.id] = entity
             else:
                 raise RuntimeError("Cannot add entity twice: " + str(entity))
 
     def remove_entities(self, *entities):
         for entity in entities:
-            self._entities.remove(entity)
+            del self._entities[entity.id]
 
     def update_entity(self, entity_id, entity):
-        old_entity = [old_entity for old_entity in self._entities
-                      if old_entity.id == entity_id][0]
+        old_entity = self._entities[entity_id]
         self.remove_entities(old_entity)
         self.add_entities(entity)
 
     def list_entities(self):
-        return [entity.id for entity in self._entities]
+        return list(self._entities.keys())
 
     def get_entity(self, entity_id):
-        return [entity for entity in self._entities
-                if entity.id == entity_id][0].to_json()
+        return self._entities[entity_id]
 
     def get_entities(self):
-        return self._entities.copy()
+        return list(self._entities.values())
 
     def get_agents(self):
-        return [entity for entity in self._entities if hasattr(entity, "ai")]
+        return [self._entities[entity_id] for entity_id in self._entities
+                if hasattr(self._entities[entity_id], "ai")]
 
     def get_view(self, perceptor):
         x = perceptor.x
@@ -53,7 +52,7 @@ class Room:
         return percept
 
     def step(self):
-        for entity in self._entities:
+        for entity in self.get_entities():
             if hasattr(entity, "step"):
                 if hasattr(entity, "ai"):
                     action = entity.ai.next_move(self.get_view(entity))
@@ -69,7 +68,7 @@ class Room:
         return True
 
     def to_json(self):
-        return [entity.to_json() for entity in self._entities]
+        return [entity.to_json() for entity in self._entities.values()]
 
 
 def create_room_from_list(data):

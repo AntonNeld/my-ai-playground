@@ -81,7 +81,7 @@ async def update_entity(room: str, entity_id: str, entity: Entity):
 
 @router.get("/rooms/{room}/entities/{entity}", response_model=Entity)
 async def get_entity(room: str, entity: str):
-    return dungeon.get_room(room).get_entity(entity)
+    return dungeon.get_room(room).get_entity(entity).to_json()
 
 
 @router.put("/rooms/{room}/agents/{agent}/setmove")
