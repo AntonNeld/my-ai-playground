@@ -150,6 +150,26 @@ def test_list_get_entity():
             for key in entity if key not in ["id", "score"]} in TEST_ROOM
 
 
+def test_update_entity():
+    requests.put(f"{API_URL}/api/rooms/testroom", json=TEST_ROOM)
+    entity_id = requests.get(
+        f"{API_URL}/api/rooms/testroom/entities").json()[0]
+    # Take a step to increase the score
+    requests.post(f"{API_URL}/api/rooms/testroom/step")
+
+    entity = requests.get(
+        f"{API_URL}/api/rooms/testroom/entities/{entity_id}").json()
+    entity["ai"] = "manual"
+    response = requests.put(
+        f"{API_URL}/api/rooms/testroom/entities/{entity_id}", json=entity)
+    assert response.status_code == 200
+    response = requests.get(
+        f"{API_URL}/api/rooms/testroom/entities/{entity_id}")
+    assert response.status_code == 200
+    new_entity = response.json()
+    assert new_entity == entity
+
+
 def test_manual_ai():
     requests.put(f"{API_URL}/api/rooms/testroom", json=TEST_ROOM_2)
     player = requests.get(f"{API_URL}/api/rooms/testroom").json()[0]

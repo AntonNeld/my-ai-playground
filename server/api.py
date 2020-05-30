@@ -4,6 +4,7 @@ from fastapi import APIRouter, Body
 from pydantic import BaseModel
 
 from dungeon import Dungeon
+from dungeon.entities.entity_factories import entity_from_json
 
 router = APIRouter()
 
@@ -70,6 +71,12 @@ async def get_steps(room: str):
 @router.get("/rooms/{room}/entities", response_model=List[str])
 async def list_entities(room: str):
     return dungeon.get_room(room).list_entities()
+
+
+@router.put("/rooms/{room}/entities/{entity_id}")
+async def update_entity(room: str, entity_id: str, entity: Entity):
+    return dungeon.get_room(room).update_entity(
+        entity_id, entity_from_json(entity.dict()))
 
 
 @router.get("/rooms/{room}/entities/{entity}", response_model=Entity)

@@ -19,6 +19,12 @@ class Room:
         for entity in entities:
             self._entities.remove(entity)
 
+    def update_entity(self, entity_id, entity):
+        old_entity = [old_entity for old_entity in self._entities
+                      if old_entity.id == entity_id][0]
+        self.remove_entities(old_entity)
+        self.add_entities(entity)
+
     def list_entities(self):
         return [entity.id for entity in self._entities]
 
