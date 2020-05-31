@@ -9,19 +9,14 @@ class Room:
 
     def add_entities(self, *entities):
         for entity in entities:
-            if entity.id not in self._entities:
-                entity.set_room(self)
-                self._entities[entity.id] = entity
-            else:
-                raise RuntimeError("Cannot add entity twice: " + str(entity))
+            entity.set_room(self)
+            self._entities[entity.id] = entity
 
     def remove_entities(self, *entities):
         for entity in entities:
             del self._entities[entity.id]
 
     def update_entity(self, entity_id, entity):
-        old_entity = self._entities[entity_id]
-        self.remove_entities(old_entity)
         self.add_entities(entity)
 
     def list_entities(self):
