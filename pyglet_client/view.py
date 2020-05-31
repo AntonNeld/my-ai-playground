@@ -42,7 +42,9 @@ class View:
             self.steplabel.draw()
 
     def set_state(self, state):
-        new_things = state["view"]
+        new_things = [{"id": entity_id, **entity}
+                      for entity_id, entity
+                      in state["view"]["entities"].items()]
         if self.autoscale:
             x = [thing["x"] for thing in new_things]
             y = [thing["y"] for thing in new_things]

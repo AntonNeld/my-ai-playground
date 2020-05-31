@@ -1,35 +1,36 @@
 from test_utils import is_uuid
 
 
-TEST_ROOM = [
-    {"x": 0, "y": 0, "type": "player", "ai": "pathfinder"},
-    {"x": 1, "y": 1, "type": "block"},
-    {"x": 1, "y": 0, "type": "coin"}
-]
+TEST_ROOM = {"entities": {
+    "a": {"x": 0, "y": 0, "type": "player", "ai": "pathfinder"},
+    "b": {"x": 1, "y": 1, "type": "block"},
+    "c": {"x": 1, "y": 0, "type": "coin"}
+}}
 
 
-TEST_ROOM_2 = [
-    {"x": 0, "y": 0, "type": "player", "ai": "manual"}
-]
+TEST_ROOM_2 = {"entities": {
+    "d": {"x": 0, "y": 0, "type": "player", "ai": "manual"}
+}}
 
 
 def same(first, second, strip_generated=True):
     """
     Tests if two rooms/views are equal.
-    Order doesn't matter, and generated attributes are optionally removed.
+    Generated attributes are optionally removed.
     """
-    if len(first) != len(second):
-        return False
     if strip_generated:
-        generated_attributes = ["id", "score"]
-        first = [{key: entity[key] for key in entity if
-                  key not in generated_attributes} for entity in first]
-        second = [{key: entity[key] for key in entity if
-                   key not in generated_attributes} for entity in second]
-    for entity in first:
-        if entity not in second:
-            return False
-    return True
+        generated_attributes = ["score"]
+        first = {"entities": {entity_id: {
+            key: first["entities"][entity_id][key]
+            for key in first["entities"][entity_id] if
+            key not in generated_attributes
+        } for entity_id in first["entities"]}}
+        second = {"entities": {entity_id: {
+            key: second["entities"][entity_id][key]
+            for key in second["entities"][entity_id] if
+            key not in generated_attributes
+        } for entity_id in second["entities"]}}
+    return first == second
 
 
 def test_helper_same():
@@ -48,7 +49,6 @@ def test_create_room(client):
 
     response = client.get(f"/api/rooms/{room_id}")
     assert same(response.json(), TEST_ROOM)
-    assert "id" in response.json()[0]
 
 
 def test_create_two_rooms(client):
@@ -109,12 +109,14 @@ def test_get_step(client):
 def test_score(client):
     client.put("/api/rooms/testroom", json=TEST_ROOM)
     room = client.get("/api/rooms/testroom").json()
-    score = [entity["score"] for entity in room if "score" in entity][0]
+    score = [entity["score"]
+             for entity in room["entities"].values() if "score" in entity][0]
     assert score == 0
 
     client.post("/api/rooms/testroom/step")
     room = client.get("/api/rooms/testroom").json()
-    score = [entity["score"] for entity in room if "score" in entity][0]
+    score = [entity["score"]
+             for entity in room["entities"].values() if "score" in entity][0]
     assert score != 0
 
 
@@ -124,14 +126,14 @@ def test_list_get_entity(client):
     response = client.get("/api/rooms/testroom/entities")
     assert response.status_code == 200
     entity_id = response.json()[0]
-    assert is_uuid(entity_id)
 
     response = client.get(
         f"/api/rooms/testroom/entities/{entity_id}")
     assert response.status_code == 200
     entity = response.json()
     assert {key: entity[key]
-            for key in entity if key not in ["id", "score"]} in TEST_ROOM
+            for key in entity
+            if key not in ["id", "score"]} in TEST_ROOM["entities"].values()
 
 
 def test_update_entity(client):
@@ -156,45 +158,44 @@ def test_update_entity(client):
 
 def test_manual_ai(client):
     client.put("/api/rooms/testroom", json=TEST_ROOM_2)
-    player = client.get("/api/rooms/testroom").json()[0]
+    player = client.get("/api/rooms/testroom/entities/d").json()
     assert player["x"] == 0
     assert player["y"] == 0
-    player_id = player["id"]
 
     client.put(
-        f"/api/rooms/testroom/agents/{player_id}/setmove",
+        "/api/rooms/testroom/agents/d/setmove",
         json="move_up")
     client.post("/api/rooms/testroom/step")
-    player = client.get("/api/rooms/testroom").json()[0]
+    player = client.get("/api/rooms/testroom/entities/d").json()
     assert player["x"] == 0
     assert player["y"] == 1
 
     client.put(
-        f"/api/rooms/testroom/agents/{player_id}/setmove",
+        "/api/rooms/testroom/agents/d/setmove",
         json="move_down")
     client.post("/api/rooms/testroom/step")
-    player = client.get("/api/rooms/testroom").json()[0]
+    player = client.get("/api/rooms/testroom/entities/d").json()
     assert player["x"] == 0
     assert player["y"] == 0
 
     client.put(
-        f"/api/rooms/testroom/agents/{player_id}/setmove",
+        "/api/rooms/testroom/agents/d/setmove",
         json="move_left")
     client.post("/api/rooms/testroom/step")
-    player = client.get("/api/rooms/testroom").json()[0]
+    player = client.get("/api/rooms/testroom/entities/d").json()
     assert player["x"] == -1
     assert player["y"] == 0
 
     client.put(
-        f"/api/rooms/testroom/agents/{player_id}/setmove",
+        "/api/rooms/testroom/agents/d/setmove",
         json="move_right")
     client.post("/api/rooms/testroom/step")
-    player = client.get("/api/rooms/testroom").json()[0]
+    player = client.get("/api/rooms/testroom/entities/d").json()
     assert player["x"] == 0
     assert player["y"] == 0
 
     # Don't continue moving
     client.post("/api/rooms/testroom/step")
-    player = client.get("/api/rooms/testroom").json()[0]
+    player = client.get("/api/rooms/testroom/entities/d").json()
     assert player["x"] == 0
     assert player["y"] == 0

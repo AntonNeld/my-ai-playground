@@ -1,13 +1,15 @@
 import { Room } from "./room.js";
 
-const testRoom = [
-  { x: 0, y: 0, type: "player", ai: "pathfinder" },
-  { x: -1, y: 1, type: "block" },
-  { x: 0, y: 1, type: "block" },
-  { x: 1, y: 1, type: "block" },
-  { x: 1, y: 0, type: "coin" },
-  { x: -1, y: 0, type: "coin" },
-];
+const testRoom = {
+  entities: {
+    a: { x: 0, y: 0, type: "player", ai: "pathfinder" },
+    b: { x: -1, y: 1, type: "block" },
+    c: { x: 0, y: 1, type: "block" },
+    d: { x: 1, y: 1, type: "block" },
+    e: { x: 1, y: 0, type: "coin" },
+    f: { x: -1, y: 0, type: "coin" },
+  },
+};
 
 let room;
 let highlighted;
@@ -33,7 +35,9 @@ async function update() {
     getRoomData(),
     getEntityData(),
   ]);
-  room.setData(roomData);
+  room.setData(
+    Object.entries(roomData.entities).map(([id, entity]) => ({ id, ...entity }))
+  );
   document.querySelector("#details-area").innerHTML = entityData
     ? JSON.stringify(entityData, null, 2)
     : "";

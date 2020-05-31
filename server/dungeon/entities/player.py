@@ -4,8 +4,8 @@ from .entity import Entity
 
 class Player(Entity):
 
-    def __init__(self, x, y, ai, entity_id=None, score=None):
-        super().__init__(x, y, "player", entity_id=entity_id)
+    def __init__(self, x, y, ai, score=None):
+        super().__init__(x, y, "player")
         self.ai = ai
         self.score = 0 if score is None else score
 
@@ -28,7 +28,7 @@ class Player(Entity):
         for entity in self.room.get_entities():
             if (isinstance(entity, Coin) and entity.x == self.x
                     and entity.y == self.y):
-                self.room.remove_entities(entity)
+                self.room.remove_entity(entity)
                 self.score += 1
 
     def to_json(self):

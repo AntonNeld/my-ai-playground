@@ -129,12 +129,10 @@ def new_room():
     state = get_state()
     for view in views:
         view.set_state(state)
-    # temporary solution, will change how agent info is fetched,
-    # and how manual mode is set
-    if PLAYER_AI == "manual":
-        config["manual_mode"] = [item["id"]
-                                 for item in state["view"] if "ai" in item]
-        print(config)
+    for entity_id, entity in state["view"]["entities"].items():
+        if "ai" in entity and entity["ai"] == "manual":
+            config["manual_mode"].append(entity_id)
+    print(config)
 
 
 def animate(dt):

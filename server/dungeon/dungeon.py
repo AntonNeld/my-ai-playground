@@ -2,6 +2,7 @@ import uuid
 
 from dungeon import room
 from dungeon.ai import ManualAI
+from dungeon.entities.player import Player
 from errors import ResourceNotFoundError
 
 
@@ -26,7 +27,7 @@ class Dungeon:
     def create_room(self, data, room_id=None):
         if room_id is None:
             room_id = uuid.uuid4().hex
-        self._rooms[room_id] = room.create_room_from_list(data)
+        self._rooms[room_id] = room.create_room_from_json(data)
         return room_id
 
     def get_room(self, room_id):
@@ -43,10 +44,8 @@ class Dungeon:
         return list(self._rooms.keys())
 
     def manual_set_move(self, room_id, agent_id, action):
-        entity = next(
-            agent for agent in self._rooms[room_id].get_agents()
-            if agent.id == agent_id)
-        if isinstance(entity.ai, ManualAI):
+        entity = self._rooms[room_id].get_entity(agent_id)
+        if isinstance(entity, Player) and isinstance(entity.ai, ManualAI):
             entity.ai.set_move(action)
         else:
             raise RuntimeError("Agent doesn't have manual AI")

@@ -1,3 +1,5 @@
+import uuid
+
 import pytmx
 
 
@@ -13,4 +15,4 @@ def load(path, player_ai):
                 if thing_type == "player":
                     thing["ai"] = player_ai
                 things.append(thing)
-    return things
+    return {"entities": {uuid.uuid4().hex: thing for thing in things}}

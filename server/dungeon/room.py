@@ -1,3 +1,5 @@
+import uuid
+
 from dungeon.entities.entity_factories import entity_from_json
 
 
@@ -7,17 +9,22 @@ class Room:
         self._entities = {}
         self.steps = 0
 
-    def add_entities(self, *entities):
-        for entity in entities:
-            entity.set_room(self)
-            self._entities[entity.id] = entity
+    def add_entity(self, entity, entity_id=None):
+        entity.set_room(self)
+        if entity_id is None:
+            entity_id = uuid.uuid4().hex
+        self._entities[entity_id] = entity
+        return entity_id
 
-    def remove_entities(self, *entities):
-        for entity in entities:
-            del self._entities[entity.id]
+    def remove_entity(self, entity):
+        id_to_remove = None
+        for entity_id, entity_object in self._entities.items():
+            if entity_object == entity:
+                id_to_remove = entity_id
+        del self._entities[id_to_remove]
 
     def update_entity(self, entity_id, entity):
-        self.add_entities(entity)
+        self.add_entity(entity, entity_id=entity_id)
 
     def list_entities(self):
         return list(self._entities.keys())
@@ -63,11 +70,15 @@ class Room:
         return True
 
     def to_json(self):
-        return [entity.to_json() for entity in self._entities.values()]
+        return {
+            "entities": {
+                key: value.to_json() for key, value in self._entities.items()
+            }
+        }
 
 
-def create_room_from_list(data):
+def create_room_from_json(data):
     new_room = Room()
-    for entity in data:
-        new_room.add_entities(entity_from_json(entity))
+    for entity_id, entity in data["entities"].items():
+        new_room.add_entity(entity_from_json(entity), entity_id=entity_id)
     return new_room

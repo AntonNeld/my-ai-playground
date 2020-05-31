@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict
 
 from fastapi import APIRouter, Body
 from pydantic import BaseModel
@@ -7,20 +7,16 @@ from dungeon import Dungeon
 from dungeon.entities.entity_factories import entity_from_json
 
 
-class EntityTemplate(BaseModel):
-    x: int
-    y: int
-    type: str
-    ai: str = None
-
-
 class Entity(BaseModel):
     x: int
     y: int
     type: str
     ai: str = None
-    id: str = None  # Temporary, will remove id from entity later
     score: int = None
+
+
+class Room(BaseModel):
+    entities: Dict[str, Entity]
 
 
 def create_api():
@@ -30,58 +26,56 @@ def create_api():
 
     @router.get("/rooms", response_model=List[str])
     async def get_rooms():
-        print(dungeon.list_rooms())
         return dungeon.list_rooms()
 
     @router.post("/rooms", response_model=str)
-    async def create_room(room_content: List[EntityTemplate]):
-        return dungeon.create_room([item.dict(exclude_none=True)
-                                    for item in room_content])
+    async def create_room(room: Room):
+        return dungeon.create_room(room.dict(exclude_none=True))
 
-    @router.get("/rooms/{room}", response_model=List[Entity],
+    @router.get("/rooms/{room_id}", response_model=Room,
                 response_model_exclude_none=True)
-    async def get_room(room: str):
-        return dungeon.get_room(room).to_json()
+    async def get_room(room_id: str):
+        return dungeon.get_room(room_id).to_json()
 
-    @router.put("/rooms/{room}", response_model=str)
-    async def create_room_with_id(room: str,
-                                  room_content: List[EntityTemplate]):
-        return dungeon.create_room([item.dict(exclude_none=True)
-                                    for item in room_content], room_id=room)
+    @router.put("/rooms/{room_id}", response_model=str)
+    async def create_room_with_id(room_id: str,
+                                  room: Room):
+        return dungeon.create_room(room.dict(exclude_none=True),
+                                   room_id=room_id)
 
-    @router.delete("/rooms/{room}")
-    async def delete_room(room: str):
-        return dungeon.delete_room(room)
+    @router.delete("/rooms/{room_id}")
+    async def delete_room(room_id: str):
+        return dungeon.delete_room(room_id)
 
-    @router.post("/rooms/{room}/step")
-    async def step_room(room: str):
-        return dungeon.step(room)
+    @router.post("/rooms/{room_id}/step")
+    async def step_room(room_id: str):
+        return dungeon.step(room_id)
 
-    @router.get("/rooms/{room}/step", response_model=int)
-    async def get_steps(room: str):
-        return dungeon.get_steps(room)
+    @router.get("/rooms/{room_id}/step", response_model=int)
+    async def get_steps(room_id: str):
+        return dungeon.get_steps(room_id)
 
-    @router.post("/rooms/{room}/entities", response_model=str)
-    async def post_entity(room: str, entity: Entity):
+    @router.post("/rooms/{room_id}/entities", response_model=str)
+    async def post_entity(room_id: str, entity: Entity):
         entity_obj = entity_from_json(entity.dict(exclude_none=True))
-        dungeon.get_room(room).add_entities(entity_obj)
-        return entity_obj.id
+        entity_id = dungeon.get_room(room_id).add_entity(entity_obj)
+        return entity_id
 
-    @router.get("/rooms/{room}/entities", response_model=List[str])
-    async def list_entities(room: str):
-        return dungeon.get_room(room).list_entities()
+    @router.get("/rooms/{room_id}/entities", response_model=List[str])
+    async def list_entities(room_id: str):
+        return dungeon.get_room(room_id).list_entities()
 
-    @router.get("/rooms/{room}/entities/{entity_id}", response_model=Entity)
-    async def get_entity(room: str, entity_id: str):
-        return dungeon.get_room(room).get_entity(entity_id).to_json()
+    @router.get("/rooms/{room_id}/entities/{entity_id}", response_model=Entity)
+    async def get_entity(room_id: str, entity_id: str):
+        return dungeon.get_room(room_id).get_entity(entity_id).to_json()
 
-    @router.put("/rooms/{room}/entities/{entity_id}")
-    async def update_entity(room: str, entity_id: str, entity: Entity):
-        return dungeon.get_room(room).update_entity(
-            entity_id, entity_from_json(entity.dict()))
+    @router.put("/rooms/{room_id}/entities/{entity_id}")
+    async def update_entity(room_id: str, entity_id: str, entity: Entity):
+        return dungeon.get_room(room_id).update_entity(
+            entity_id, entity_from_json(entity.dict(exclude_none=True)))
 
-    @router.put("/rooms/{room}/agents/{agent}/setmove")
-    async def set_move(room: str, agent: str, action: str = Body(...)):
-        return dungeon.manual_set_move(room, agent, action)
+    @router.put("/rooms/{room_id}/agents/{agent_id}/setmove")
+    async def set_move(room_id: str, agent_id: str, action: str = Body(...)):
+        return dungeon.manual_set_move(room_id, agent_id, action)
 
     return router
