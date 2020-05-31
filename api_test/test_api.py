@@ -49,20 +49,6 @@ def test_score(client):
     assert score != 0
 
 
-def test_list_get_entity(client):
-    client.put("/api/rooms/testroom", json=TEST_ROOM)
-
-    response = client.get("/api/rooms/testroom/entities")
-    assert response.status_code == 200
-    entity_id = response.json()[0]
-
-    response = client.get(
-        f"/api/rooms/testroom/entities/{entity_id}")
-    assert response.status_code == 200
-    entity = response.json()
-    assert entity in TEST_ROOM["entities"].values()
-
-
 def test_manual_ai(client):
     client.put("/api/rooms/testroom", json=TEST_ROOM_2)
     player = client.get("/api/rooms/testroom/entities/d").json()

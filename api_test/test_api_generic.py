@@ -85,6 +85,20 @@ class TestResource:
         resource_id = response.json()
         assert is_uuid(resource_id)
 
+    def test_list_resource(self, client, base_url,
+                           resource, existing_resource):
+        response = client.get(base_url)
+        assert response.status_code == 200
+        resource_list = response.json()
+        assert resource_list == [existing_resource["id"]]
+
+    def test_list_empty_resource(self, client, base_url,
+                                 resource, nonexistent_resource):
+        response = client.get(base_url)
+        assert response.status_code == 200
+        resource_list = response.json()
+        assert resource_list == []
+
     def test_put_resource(self, client, base_url, resource):
         response = client.put(
             f'{base_url}/someid', json=resource["example"])
