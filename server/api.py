@@ -70,10 +70,14 @@ def create_api():
         return dungeon.get_room(room_id).get_entity(entity_id).to_json()
 
     @router.put("/rooms/{room_id}/entities/{entity_id}")
-    async def update_entity(room_id: str, entity_id: str, entity: Entity):
+    async def put_entity(room_id: str, entity_id: str, entity: Entity):
         return dungeon.get_room(room_id).add_entity(
             entity_from_json(entity.dict(exclude_none=True)),
             entity_id=entity_id)
+
+    @router.delete("/rooms/{room_id}/entities/{entity_id}")
+    async def delete_entity(room_id: str, entity_id: str):
+        return dungeon.get_room(room_id).remove_entity_by_id(entity_id)
 
     @router.put("/rooms/{room_id}/agents/{agent_id}/setmove")
     async def set_move(room_id: str, agent_id: str, action: str = Body(...)):

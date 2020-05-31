@@ -1,5 +1,6 @@
 import uuid
 
+from errors import ResourceNotFoundError
 from dungeon.entities.entity_factories import entity_from_json
 
 
@@ -23,11 +24,18 @@ class Room:
                 id_to_remove = entity_id
         del self._entities[id_to_remove]
 
+    def remove_entity_by_id(self, entity_id):
+        if entity_id in self._entities:
+            del self._entities[entity_id]
+
     def list_entities(self):
         return list(self._entities.keys())
 
     def get_entity(self, entity_id):
-        return self._entities[entity_id]
+        try:
+            return self._entities[entity_id]
+        except KeyError:
+            raise ResourceNotFoundError
 
     def get_entities(self):
         return list(self._entities.values())

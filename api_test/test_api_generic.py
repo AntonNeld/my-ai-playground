@@ -53,6 +53,16 @@ class TestResource:
                 f"{base_url}/someid", json=resource["example"]).json()
         return {"id": resource_id, "resource": resource["example"]}
 
+    @pytest.fixture(params=["clean", "deleted"])
+    def nonexistent_resource(self, client, base_url, resource, request):
+        if request.param == "clean":
+            resource_id = "someid"
+        elif request.param == "deleted":
+            resource_id = client.post(
+                base_url, json=resource["example"]).json()
+            client.delete(f"{base_url}/{resource_id}")
+        return {"id": resource_id}
+
     def test_post_resource(self, client, base_url, resource):
         response = client.post(base_url, json=resource["example"])
         assert response.status_code == 200
@@ -69,3 +79,14 @@ class TestResource:
         response = client.get(f'{base_url}/{existing_resource["id"]}')
         assert response.status_code == 200
         assert response.json() == existing_resource["resource"]
+
+    def test_delete_resource(self, client, base_url, resource,
+                             existing_resource):
+        response = client.delete(f'{base_url}/{existing_resource["id"]}')
+        assert response.status_code == 200
+
+    def test_get_nonexistent_resource(self, client, base_url,
+                                      resource, nonexistent_resource):
+        response = client.get(f'{base_url}/{nonexistent_resource["id"]}')
+        assert response.status_code == 404
+        assert response.json() == {"message": "Resource not found"}

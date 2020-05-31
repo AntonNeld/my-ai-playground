@@ -36,14 +36,6 @@ def test_replace_room(client):
     assert room_2 == TEST_ROOM_2
 
 
-def test_delete_room(client):
-    client.put("/api/rooms/testroom", json=TEST_ROOM)
-    response = client.delete("/api/rooms/testroom")
-    assert response.status_code == 200
-    response = client.get("/api/rooms/testroom")
-    assert response.status_code == 404
-
-
 def test_step(client):
     client.put("/api/rooms/testroom", json=TEST_ROOM)
     room_before = client.get("/api/rooms/testroom").json()
