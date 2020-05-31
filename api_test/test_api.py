@@ -2,40 +2,15 @@ from test_utils import is_uuid
 
 
 TEST_ROOM = {"entities": {
-    "a": {"x": 0, "y": 0, "type": "player", "ai": "pathfinder"},
+    "a": {"x": 0, "y": 0, "type": "player", "ai": "pathfinder", "score": 0},
     "b": {"x": 1, "y": 1, "type": "block"},
     "c": {"x": 1, "y": 0, "type": "coin"}
 }}
 
 
 TEST_ROOM_2 = {"entities": {
-    "d": {"x": 0, "y": 0, "type": "player", "ai": "manual"}
+    "d": {"x": 0, "y": 0, "type": "player", "ai": "manual", "score": 0}
 }}
-
-
-def same(first, second, strip_generated=True):
-    """
-    Tests if two rooms/views are equal.
-    Generated attributes are optionally removed.
-    """
-    if strip_generated:
-        generated_attributes = ["score"]
-        first = {"entities": {entity_id: {
-            key: first["entities"][entity_id][key]
-            for key in first["entities"][entity_id] if
-            key not in generated_attributes
-        } for entity_id in first["entities"]}}
-        second = {"entities": {entity_id: {
-            key: second["entities"][entity_id][key]
-            for key in second["entities"][entity_id] if
-            key not in generated_attributes
-        } for entity_id in second["entities"]}}
-    return first == second
-
-
-def test_helper_same():
-    assert same(TEST_ROOM, TEST_ROOM)
-    assert not same(TEST_ROOM, TEST_ROOM_2)
 
 
 def test_create_room(client):
@@ -48,7 +23,7 @@ def test_create_room(client):
     assert room_id in response.json()
 
     response = client.get(f"/api/rooms/{room_id}")
-    assert same(response.json(), TEST_ROOM)
+    assert response.json() == TEST_ROOM
 
 
 def test_create_two_rooms(client):
@@ -61,18 +36,18 @@ def test_create_two_rooms(client):
 
     room_1 = client.get(f"/api/rooms/{room_id_1}").json()
     room_2 = client.get(f"/api/rooms/{room_id_2}").json()
-    assert same(room_1, TEST_ROOM)
-    assert same(room_2, TEST_ROOM_2)
+    assert room_1 == TEST_ROOM
+    assert room_2 == TEST_ROOM_2
 
 
 def test_replace_room(client):
     client.put("/api/rooms/testroom", json=TEST_ROOM)
     room_1 = client.get("/api/rooms/testroom").json()
-    assert same(room_1, TEST_ROOM)
+    assert room_1 == TEST_ROOM
 
     client.put("/api/rooms/testroom", json=TEST_ROOM_2)
     room_2 = client.get("/api/rooms/testroom").json()
-    assert same(room_2, TEST_ROOM_2)
+    assert room_2 == TEST_ROOM_2
 
 
 def test_delete_room(client):
@@ -91,7 +66,7 @@ def test_step(client):
     assert response.status_code == 200
 
     room_after = client.get("/api/rooms/testroom").json()
-    assert not same(room_before, room_after)
+    assert not room_before == room_after
 
 
 def test_get_step(client):
@@ -131,9 +106,7 @@ def test_list_get_entity(client):
         f"/api/rooms/testroom/entities/{entity_id}")
     assert response.status_code == 200
     entity = response.json()
-    assert {key: entity[key]
-            for key in entity
-            if key not in ["id", "score"]} in TEST_ROOM["entities"].values()
+    assert entity in TEST_ROOM["entities"].values()
 
 
 def test_update_entity(client):

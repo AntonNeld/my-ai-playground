@@ -14,7 +14,13 @@ RESOURCE_TYPES = [
         "resource": "entities",
         "parents": [{"resource": "rooms", "id": "testroom",
                      "body": {"entities": {}}}],
-        "example": {"x": 0, "y": 0, "type": "player", "ai": "pathfinder"}
+        "example": {
+            "x": 0,
+            "y": 0,
+            "type": "player",
+            "ai": "pathfinder",
+            "score": 0
+        }
     }
 ]
 

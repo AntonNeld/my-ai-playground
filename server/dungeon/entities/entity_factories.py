@@ -7,7 +7,6 @@ from dungeon.ai import PathfinderAI, ManualAI, RandomAI, ExhaustiveAI
 def entity_from_json(entity):
     x = entity["x"]
     y = entity["y"]
-    score = entity["score"] if "score" in entity else None
     if entity["type"] == "block":
         return Wall(x, y)
     elif entity["type"] == "player":
@@ -21,6 +20,6 @@ def entity_from_json(entity):
             ai = ExhaustiveAI()
         else:
             raise RuntimeError(f"Unknown AI {entity['ai']}")
-        return Player(x, y, ai, score=score)
+        return Player(x, y, ai, entity["score"])
     elif entity["type"] == "coin":
         return Coin(x, y)

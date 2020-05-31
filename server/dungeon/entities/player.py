@@ -4,10 +4,10 @@ from .entity import Entity
 
 class Player(Entity):
 
-    def __init__(self, x, y, ai, score=None):
+    def __init__(self, x, y, ai, score):
         super().__init__(x, y, "player")
         self.ai = ai
-        self.score = 0 if score is None else score
+        self.score = score
 
     def step(self, action="none"):
         dx = dy = 0

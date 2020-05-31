@@ -14,5 +14,6 @@ def load(path, player_ai):
                 thing = {"type": thing_type, "x": x, "y": y}
                 if thing_type == "player":
                     thing["ai"] = player_ai
+                    thing["score"] = 0
                 things.append(thing)
     return {"entities": {uuid.uuid4().hex: thing for thing in things}}
