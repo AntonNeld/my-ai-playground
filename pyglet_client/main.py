@@ -105,7 +105,7 @@ def get_state():
 def set_action(action):
     for agent in config["manual_mode"]:
         requests.put(
-            "http://127.0.0.1:8300/api/rooms/{}/agents/{}/setmove".format(
+            "http://127.0.0.1:8300/api/rooms/{}/entities/{}/setmove".format(
                 room_id, agent),
             json=action)
 

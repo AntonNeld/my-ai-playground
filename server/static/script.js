@@ -83,7 +83,7 @@ async function setManualAI() {
 async function takeManualAction(action) {
   if (highlighted) {
     const response = await fetch(
-      `/api/rooms/testroom/agents/${highlighted}/setmove`,
+      `/api/rooms/testroom/entities/${highlighted}/setmove`,
       {
         method: "PUT",
         headers: { "Content-Type": "application/json" },

@@ -40,10 +40,6 @@ class Room:
     def get_entities(self):
         return list(self._entities.values())
 
-    def get_agents(self):
-        return [self._entities[entity_id] for entity_id in self._entities
-                if hasattr(self._entities[entity_id], "ai")]
-
     def get_view(self, perceptor):
         x = perceptor.x
         y = perceptor.y
@@ -82,7 +78,7 @@ class Room:
         }
 
 
-def create_room_from_json(data):
+def room_from_json(data):
     new_room = Room()
     for entity_id, entity in data["entities"].items():
         new_room.add_entity(entity_from_json(entity), entity_id=entity_id)

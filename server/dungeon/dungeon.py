@@ -1,6 +1,5 @@
 import uuid
 
-from dungeon import room
 from dungeon.ai import ManualAI
 from dungeon.entities.player import Player
 from errors import ResourceNotFoundError
@@ -11,23 +10,10 @@ class Dungeon:
     def __init__(self):
         self._rooms = {}
 
-    def get_score(self, room_id, agents=None):
-        scores = []
-        for agent in self._rooms[room_id].get_agents():
-            if agents is None or agent in agents:
-                scores.append({"id": agent.id, "score": agent.score})
-        return scores
-
-    def get_steps(self, room_id):
-        return self._rooms[room_id].steps
-
-    def step(self, room_id):
-        self._rooms[room_id].step()
-
-    def create_room(self, data, room_id=None):
+    def add_room(self, room, room_id=None):
         if room_id is None:
             room_id = uuid.uuid4().hex
-        self._rooms[room_id] = room.create_room_from_json(data)
+        self._rooms[room_id] = room
         return room_id
 
     def get_room(self, room_id):
@@ -36,7 +22,7 @@ class Dungeon:
         except KeyError:
             raise ResourceNotFoundError
 
-    def delete_room(self, room_id):
+    def remove_room_by_id(self, room_id):
         if room_id in self._rooms:
             del self._rooms[room_id]
 

@@ -56,7 +56,7 @@ def test_manual_ai(client):
     assert player["y"] == 0
 
     client.put(
-        "/api/rooms/testroom/agents/d/setmove",
+        "/api/rooms/testroom/entities/d/setmove",
         json="move_up")
     client.post("/api/rooms/testroom/step")
     player = client.get("/api/rooms/testroom/entities/d").json()
@@ -64,7 +64,7 @@ def test_manual_ai(client):
     assert player["y"] == 1
 
     client.put(
-        "/api/rooms/testroom/agents/d/setmove",
+        "/api/rooms/testroom/entities/d/setmove",
         json="move_down")
     client.post("/api/rooms/testroom/step")
     player = client.get("/api/rooms/testroom/entities/d").json()
@@ -72,7 +72,7 @@ def test_manual_ai(client):
     assert player["y"] == 0
 
     client.put(
-        "/api/rooms/testroom/agents/d/setmove",
+        "/api/rooms/testroom/entities/d/setmove",
         json="move_left")
     client.post("/api/rooms/testroom/step")
     player = client.get("/api/rooms/testroom/entities/d").json()
@@ -80,7 +80,7 @@ def test_manual_ai(client):
     assert player["y"] == 0
 
     client.put(
-        "/api/rooms/testroom/agents/d/setmove",
+        "/api/rooms/testroom/entities/d/setmove",
         json="move_right")
     client.post("/api/rooms/testroom/step")
     player = client.get("/api/rooms/testroom/entities/d").json()
