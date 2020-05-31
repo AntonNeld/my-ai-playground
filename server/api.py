@@ -19,7 +19,7 @@ class Entity(BaseModel):
     y: int
     type: str
     ai: str = None
-    id: str
+    id: str = None  # Temporary, will remove id from entity later
     score: int = None
 
 
@@ -60,6 +60,12 @@ def create_api():
     @router.get("/rooms/{room}/step", response_model=int)
     async def get_steps(room: str):
         return dungeon.get_steps(room)
+
+    @router.post("/rooms/{room}/entities", response_model=str)
+    async def post_entity(room: str, entity: Entity):
+        entity_obj = entity_from_json(entity.dict(exclude_none=True))
+        dungeon.get_room(room).add_entities(entity_obj)
+        return entity_obj.id
 
     @router.get("/rooms/{room}/entities", response_model=List[str])
     async def list_entities(room: str):
