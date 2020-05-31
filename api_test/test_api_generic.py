@@ -7,7 +7,12 @@ RESOURCE_TYPES = [
         "resource": "rooms",
         "parents": [],
         "example": {
-            "entities": {}
+            "entities": {
+                "a": {"x": 0, "y": 0, "type": "player",
+                      "ai": "pathfinder", "score": 0},
+                "b": {"x": 1, "y": 1, "type": "block"},
+                "c": {"x": 1, "y": 0, "type": "coin"}
+            }
         }
     },
     {
@@ -25,7 +30,8 @@ RESOURCE_TYPES = [
 ]
 
 
-@pytest.mark.parametrize("resource", RESOURCE_TYPES)
+@pytest.mark.parametrize("resource", RESOURCE_TYPES,
+                         ids=[r["resource"] for r in RESOURCE_TYPES])
 class TestResource:
 
     @pytest.fixture
@@ -37,6 +43,16 @@ class TestResource:
             client.put(parent_url, json=parent["body"])
         return f'{parent_url}/{resource["resource"]}'
 
+    @pytest.fixture(params=["post", "put"])
+    def existing_resource(self, client, base_url, resource, request):
+        if request.param == "post":
+            resource_id = client.post(
+                base_url, json=resource["example"]).json()
+        elif request.param == "put":
+            resource_id = client.put(
+                f"{base_url}/someid", json=resource["example"]).json()
+        return {"id": resource_id, "resource": resource["example"]}
+
     def test_post_resource(self, client, base_url, resource):
         response = client.post(base_url, json=resource["example"])
         assert response.status_code == 200
@@ -47,3 +63,9 @@ class TestResource:
         response = client.put(
             f'{base_url}/someid', json=resource["example"])
         assert response.status_code == 200
+        assert response.json() == 'someid'
+
+    def test_get_resource(self, client, base_url, resource, existing_resource):
+        response = client.get(f'{base_url}/{existing_resource["id"]}')
+        assert response.status_code == 200
+        assert response.json() == existing_resource["resource"]

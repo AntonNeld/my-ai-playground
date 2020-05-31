@@ -23,9 +23,6 @@ class Room:
                 id_to_remove = entity_id
         del self._entities[id_to_remove]
 
-    def update_entity(self, entity_id, entity):
-        self.add_entity(entity, entity_id=entity_id)
-
     def list_entities(self):
         return list(self._entities.keys())
 

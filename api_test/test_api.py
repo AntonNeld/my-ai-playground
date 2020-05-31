@@ -1,4 +1,3 @@
-from test_utils import is_uuid
 
 
 TEST_ROOM = {"entities": {
@@ -11,19 +10,6 @@ TEST_ROOM = {"entities": {
 TEST_ROOM_2 = {"entities": {
     "d": {"x": 0, "y": 0, "type": "player", "ai": "manual", "score": 0}
 }}
-
-
-def test_create_room(client):
-    response = client.post("/api/rooms", json=TEST_ROOM)
-    assert response.status_code == 200
-    room_id = response.json()
-    assert is_uuid(room_id)
-
-    response = client.get("/api/rooms")
-    assert room_id in response.json()
-
-    response = client.get(f"/api/rooms/{room_id}")
-    assert response.json() == TEST_ROOM
 
 
 def test_create_two_rooms(client):
