@@ -2,6 +2,7 @@ import uuid
 
 from dungeon import room
 from dungeon.ai import ManualAI
+from errors import ResourceNotFoundError
 
 
 class Dungeon:
@@ -29,7 +30,10 @@ class Dungeon:
         return room_id
 
     def get_room(self, room_id):
-        return self._rooms[room_id]
+        try:
+            return self._rooms[room_id]
+        except KeyError:
+            raise ResourceNotFoundError
 
     def delete_room(self, room_id):
         if room_id in self._rooms:

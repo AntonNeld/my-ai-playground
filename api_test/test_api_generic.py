@@ -1,8 +1,6 @@
 import pytest
-from fastapi.testclient import TestClient
 
 from test_utils import is_uuid
-from main import create_app
 
 RESOURCE_TYPES = [
     {
@@ -16,13 +14,6 @@ RESOURCE_TYPES = [
         "example": {"x": 0, "y": 0, "type": "player", "ai": "pathfinder"}
     }
 ]
-
-
-@pytest.fixture
-def client():
-    # Create a new app for each test to avoid complicated cleanup
-    app = create_app()
-    return TestClient(app)
 
 
 @pytest.mark.parametrize("resource", RESOURCE_TYPES)

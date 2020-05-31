@@ -43,16 +43,16 @@ To use a different AI than the default, set the environment variable PLAYER_AI t
 
 In a web browser, connect to `localhost:8300`.
 
-### Testing
+## Testing
 
-In another shell, run:
+Run:
 
 ```sh
 pipenv shell
 pytest
 ```
 
-There is no CI, I just try to remember doing it before committing.
+The server does not need to be running for this. There is no CI, I just try to remember doing it before committing.
 
 ## Creating new maps
 
