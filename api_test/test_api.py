@@ -12,30 +12,6 @@ TEST_ROOM_2 = {"entities": {
 }}
 
 
-def test_create_two_rooms(client):
-    room_id_1 = client.post("/api/rooms", json=TEST_ROOM).json()
-    room_id_2 = client.post("/api/rooms", json=TEST_ROOM_2).json()
-
-    response = client.get("/api/rooms")
-    assert room_id_1 in response.json()
-    assert room_id_2 in response.json()
-
-    room_1 = client.get(f"/api/rooms/{room_id_1}").json()
-    room_2 = client.get(f"/api/rooms/{room_id_2}").json()
-    assert room_1 == TEST_ROOM
-    assert room_2 == TEST_ROOM_2
-
-
-def test_replace_room(client):
-    client.put("/api/rooms/testroom", json=TEST_ROOM)
-    room_1 = client.get("/api/rooms/testroom").json()
-    assert room_1 == TEST_ROOM
-
-    client.put("/api/rooms/testroom", json=TEST_ROOM_2)
-    room_2 = client.get("/api/rooms/testroom").json()
-    assert room_2 == TEST_ROOM_2
-
-
 def test_step(client):
     client.put("/api/rooms/testroom", json=TEST_ROOM)
     room_before = client.get("/api/rooms/testroom").json()
@@ -85,26 +61,6 @@ def test_list_get_entity(client):
     assert response.status_code == 200
     entity = response.json()
     assert entity in TEST_ROOM["entities"].values()
-
-
-def test_update_entity(client):
-    client.put("/api/rooms/testroom", json=TEST_ROOM)
-    entity_id = client.get(
-        "/api/rooms/testroom/entities").json()[0]
-    # Take a step to increase the score
-    client.post("/api/rooms/testroom/step")
-
-    entity = client.get(
-        f"/api/rooms/testroom/entities/{entity_id}").json()
-    entity["ai"] = "manual"
-    response = client.put(
-        f"/api/rooms/testroom/entities/{entity_id}", json=entity)
-    assert response.status_code == 200
-    response = client.get(
-        f"/api/rooms/testroom/entities/{entity_id}")
-    assert response.status_code == 200
-    new_entity = response.json()
-    assert new_entity == entity
 
 
 def test_manual_ai(client):

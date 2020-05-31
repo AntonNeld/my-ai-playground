@@ -13,6 +13,12 @@ RESOURCE_TYPES = [
                 "b": {"x": 1, "y": 1, "type": "block"},
                 "c": {"x": 1, "y": 0, "type": "coin"}
             }
+        },
+        "example_two": {
+            "entities": {
+                "d": {"x": 0, "y": 0, "type": "player",
+                      "ai": "manual", "score": 0}
+            }
         }
     },
     {
@@ -25,6 +31,11 @@ RESOURCE_TYPES = [
             "type": "player",
             "ai": "pathfinder",
             "score": 0
+        },
+        "example_two": {
+            "x": 1,
+            "y": -4,
+            "type": "block"
         }
     }
 ]
@@ -43,12 +54,17 @@ class TestResource:
             client.put(parent_url, json=parent["body"])
         return f'{parent_url}/{resource["resource"]}'
 
-    @pytest.fixture(params=["post", "put"])
+    @pytest.fixture(params=["post", "put", "replaced"])
     def existing_resource(self, client, base_url, resource, request):
         if request.param == "post":
             resource_id = client.post(
                 base_url, json=resource["example"]).json()
         elif request.param == "put":
+            resource_id = client.put(
+                f"{base_url}/someid", json=resource["example"]).json()
+        elif request.param == "replaced":
+            resource_id = client.put(
+                f"{base_url}/someid", json=resource["example_two"]).json()
             resource_id = client.put(
                 f"{base_url}/someid", json=resource["example"]).json()
         return {"id": resource_id, "resource": resource["example"]}
@@ -74,6 +90,14 @@ class TestResource:
             f'{base_url}/someid', json=resource["example"])
         assert response.status_code == 200
         assert response.json() == 'someid'
+
+    def test_replace_resource(self, client, base_url,
+                              resource, existing_resource):
+        response = client.put(
+            f'{base_url}/{existing_resource["id"]}',
+            json=resource["example_two"])
+        assert response.status_code == 200
+        assert response.json() == existing_resource["id"]
 
     def test_get_resource(self, client, base_url, resource, existing_resource):
         response = client.get(f'{base_url}/{existing_resource["id"]}')
