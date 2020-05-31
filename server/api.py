@@ -1,22 +1,11 @@
-from typing import List, Dict
+from typing import List
 
 from fastapi import APIRouter, Body
-from pydantic import BaseModel
+
 
 from dungeon import Dungeon
 from dungeon.entities.entity_factories import entity_from_json
-
-
-class Entity(BaseModel):
-    x: int
-    y: int
-    type: str
-    ai: str = None
-    score: int = None
-
-
-class Room(BaseModel):
-    entities: Dict[str, Entity]
+from models import Room, Entity
 
 
 def create_api():
