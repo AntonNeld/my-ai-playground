@@ -7,6 +7,7 @@ RESOURCE_TYPES = [
         "resource": "rooms",
         "parents": [],
         "example": {
+            "steps": 0,
             "entities": {
                 "a": {"x": 0, "y": 0, "type": "player",
                       "ai": "pathfinder", "score": 0},
@@ -15,6 +16,7 @@ RESOURCE_TYPES = [
             }
         },
         "example_two": {
+            "steps": 1,
             "entities": {
                 "d": {"x": 0, "y": 0, "type": "player",
                       "ai": "manual", "score": 0}
@@ -24,7 +26,10 @@ RESOURCE_TYPES = [
     {
         "resource": "entities",
         "parents": [{"resource": "rooms", "id": "testroom",
-                     "body": {"entities": {}}}],
+                     "body": {
+                         "steps": 0,
+                         "entities": {}
+                     }}],
         "example": {
             "x": 0,
             "y": 0,

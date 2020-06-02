@@ -28,4 +28,5 @@ Entity = Union[Player, Wall, Coin]
 
 
 class Room(BaseModel):
+    steps: int
     entities: Dict[str, Entity]

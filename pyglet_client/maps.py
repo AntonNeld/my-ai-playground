@@ -16,4 +16,7 @@ def load(path, player_ai):
                     thing["ai"] = player_ai
                     thing["score"] = 0
                 things.append(thing)
-    return {"entities": {uuid.uuid4().hex: thing for thing in things}}
+    return {
+        "steps": 0,
+        "entities": {uuid.uuid4().hex: thing for thing in things}
+    }

@@ -6,9 +6,9 @@ from dungeon.entities.entity_factories import entity_from_json
 
 class Room:
 
-    def __init__(self):
+    def __init__(self, steps):
         self._entities = {}
-        self.steps = 0
+        self.steps = steps
 
     def add_entity(self, entity, entity_id=None):
         entity.set_room(self)
@@ -72,6 +72,7 @@ class Room:
 
     def to_json(self):
         return {
+            "steps": self.steps,
             "entities": {
                 key: value.to_json() for key, value in self._entities.items()
             }
@@ -79,7 +80,7 @@ class Room:
 
 
 def room_from_json(data):
-    new_room = Room()
+    new_room = Room(data["steps"])
     for entity_id, entity in data["entities"].items():
         new_room.add_entity(entity_from_json(entity), entity_id=entity_id)
     return new_room

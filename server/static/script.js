@@ -1,6 +1,7 @@
 import { Room } from "./room.js";
 
 const testRoom = {
+  steps: 0,
   entities: {
     a: { x: 0, y: 0, type: "player", ai: "pathfinder", score: 0 },
     b: { x: -1, y: 1, type: "block" },

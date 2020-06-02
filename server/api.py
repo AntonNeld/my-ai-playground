@@ -41,10 +41,6 @@ def create_api():
     async def step_room(room_id: str):
         return dungeon.get_room(room_id).step()
 
-    @router.get("/rooms/{room_id}/step", response_model=int)
-    async def get_steps(room_id: str):
-        return dungeon.get_room(room_id).steps
-
     @router.post("/rooms/{room_id}/entities", response_model=str)
     async def post_entity(room_id: str, entity: Entity):
         entity_obj = entity_from_json(entity.dict())

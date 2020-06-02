@@ -1,15 +1,22 @@
 
 
-TEST_ROOM = {"entities": {
-    "a": {"x": 0, "y": 0, "type": "player", "ai": "pathfinder", "score": 0},
-    "b": {"x": 1, "y": 1, "type": "block"},
-    "c": {"x": 1, "y": 0, "type": "coin"}
-}}
+TEST_ROOM = {
+    "steps": 0,
+    "entities": {
+        "a": {"x": 0, "y": 0, "type": "player",
+              "ai": "pathfinder", "score": 0},
+        "b": {"x": 1, "y": 1, "type": "block"},
+        "c": {"x": 1, "y": 0, "type": "coin"}
+    }
+}
 
 
-TEST_ROOM_2 = {"entities": {
-    "d": {"x": 0, "y": 0, "type": "player", "ai": "manual", "score": 0}
-}}
+TEST_ROOM_2 = {
+    "steps": 1,
+    "entities": {
+        "d": {"x": 0, "y": 0, "type": "player", "ai": "manual", "score": 0}
+    }
+}
 
 
 def test_step(client):
@@ -21,18 +28,6 @@ def test_step(client):
 
     room_after = client.get("/api/rooms/testroom").json()
     assert not room_before == room_after
-
-
-def test_get_step(client):
-    client.put("/api/rooms/testroom", json=TEST_ROOM)
-    response = client.get("/api/rooms/testroom/step")
-    assert response.status_code == 200
-    step = response.json()
-    assert step == 0
-
-    client.post("/api/rooms/testroom/step")
-    step = client.get("/api/rooms/testroom/step").json()
-    assert step == 1
 
 
 def test_score(client):
