@@ -4,6 +4,23 @@ from test_utils import is_uuid
 
 RESOURCE_TYPES = [
     {
+        "resource": "templates",
+        "parents": [],
+        "example": {
+            "entities": [
+                {"x": 0, "y": 0, "type": "player", "ai": "pathfinder"},
+                {"x": 1, "y": 1, "type": "block"},
+                {"x": 1, "y": 0, "type": "coin"}
+            ]
+        },
+        "example_two": {
+            "entities": [
+                {"x": 0, "y": 0, "type": "player",
+                 "ai": "manual"}
+            ]
+        }
+    },
+    {
         "resource": "rooms",
         "parents": [],
         "example": {
