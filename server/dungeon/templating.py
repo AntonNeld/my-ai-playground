@@ -1,6 +1,9 @@
 import uuid
 
+
 from errors import ResourceNotFoundError
+from dungeon.entities.entity_factories import entity_from_dict
+from dungeon.room import Room
 
 
 class TemplateKeeper:
@@ -26,3 +29,10 @@ class TemplateKeeper:
 
     def list_templates(self):
         return list(self._templates.keys())
+
+    def create_room(self, template_id):
+        template = self.get_template(template_id)
+        new_room = Room(0)
+        for entity in template["entities"]:
+            new_room.add_entity(entity_from_dict(entity, autofill=True))
+        return new_room

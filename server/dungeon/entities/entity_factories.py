@@ -4,7 +4,7 @@ from .wall import Wall
 from dungeon.ai import PathfinderAI, ManualAI, RandomAI, ExhaustiveAI
 
 
-def entity_from_dict(entity):
+def entity_from_dict(entity, autofill=False):
     x = entity["x"]
     y = entity["y"]
     if entity["type"] == "block":
@@ -20,6 +20,12 @@ def entity_from_dict(entity):
             ai = ExhaustiveAI()
         else:
             raise RuntimeError(f"Unknown AI {entity['ai']}")
-        return Player(x, y, ai, entity["score"])
+        if "score" in entity:
+            score = entity["score"]
+        elif autofill:
+            score = 0
+        else:
+            raise RuntimeError("Missing fields while autofill=False")
+        return Player(x, y, ai, score)
     elif entity["type"] == "coin":
         return Coin(x, y)

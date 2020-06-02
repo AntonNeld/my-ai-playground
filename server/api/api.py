@@ -9,7 +9,7 @@ def create_api(dungeon, template_keeper):
 
     router = APIRouter()
     router.include_router(templates_routes(template_keeper))
-    router.include_router(rooms_routes(dungeon))
+    router.include_router(rooms_routes(dungeon, template_keeper))
     router.include_router(entities_routes(dungeon))
 
     return router
