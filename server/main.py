@@ -5,6 +5,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse, JSONResponse
 
 from api import create_api
+from dungeon import Dungeon
 from errors import ResourceNotFoundError
 
 
@@ -12,7 +13,9 @@ def create_app():
     app = FastAPI()
     app.mount("/static", StaticFiles(directory=os.path.join(
         os.path.dirname(__file__), "static")), name="static")
-    app.include_router(create_api(), prefix="/api")
+
+    dungeon = Dungeon()
+    app.include_router(create_api(dungeon), prefix="/api")
 
     @app.get("/")
     async def redirect_static():
