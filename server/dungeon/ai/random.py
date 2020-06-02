@@ -6,5 +6,5 @@ class RandomAI:
         return random.choice(["move_up", "move_down",
                               "move_left", "move_right"])
 
-    def to_json(self):
+    def to_dict(self):
         return "random"

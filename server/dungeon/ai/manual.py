@@ -12,5 +12,5 @@ class ManualAI:
     def set_move(self, action):
         self._plan = action
 
-    def to_json(self):
+    def to_dict(self):
         return "manual"

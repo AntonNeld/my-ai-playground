@@ -23,5 +23,5 @@ class PathfinderAI:
                 self._plan = ["none"]
         return self._plan.pop(0)
 
-    def to_json(self):
+    def to_dict(self):
         return "pathfinder"

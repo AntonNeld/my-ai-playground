@@ -1,7 +1,7 @@
 import uuid
 
 from errors import ResourceNotFoundError
-from dungeon.entities.entity_factories import entity_from_json
+from dungeon.entities.entity_factories import entity_from_dict
 
 
 class Room:
@@ -70,17 +70,17 @@ class Room:
                 return False
         return True
 
-    def to_json(self):
+    def to_dict(self):
         return {
             "steps": self.steps,
             "entities": {
-                key: value.to_json() for key, value in self._entities.items()
+                key: value.to_dict() for key, value in self._entities.items()
             }
         }
 
 
-def room_from_json(data):
+def room_from_dict(data):
     new_room = Room(data["steps"])
     for entity_id, entity in data["entities"].items():
-        new_room.add_entity(entity_from_json(entity), entity_id=entity_id)
+        new_room.add_entity(entity_from_dict(entity), entity_id=entity_id)
     return new_room

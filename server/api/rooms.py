@@ -2,7 +2,7 @@ from typing import List
 
 from fastapi import APIRouter
 
-from dungeon.room import room_from_json
+from dungeon.room import room_from_dict
 from models import Room
 
 
@@ -16,17 +16,17 @@ def rooms_routes(dungeon):
 
     @router.post("/rooms", response_model=str)
     async def create_room(room: Room):
-        room_obj = room_from_json(room.dict())
+        room_obj = room_from_dict(room.dict())
         return dungeon.add_room(room_obj)
 
     @router.get("/rooms/{room_id}", response_model=Room)
     async def get_room(room_id: str):
-        return dungeon.get_room(room_id).to_json()
+        return dungeon.get_room(room_id).to_dict()
 
     @router.put("/rooms/{room_id}", response_model=str)
     async def create_room_with_id(room_id: str,
                                   room: Room):
-        room_obj = room_from_json(room.dict())
+        room_obj = room_from_dict(room.dict())
         return dungeon.add_room(room_obj, room_id=room_id)
 
     @router.delete("/rooms/{room_id}")

@@ -4,7 +4,7 @@ from .wall import Wall
 from dungeon.ai import PathfinderAI, ManualAI, RandomAI, ExhaustiveAI
 
 
-def entity_from_json(entity):
+def entity_from_dict(entity):
     x = entity["x"]
     y = entity["y"]
     if entity["type"] == "block":

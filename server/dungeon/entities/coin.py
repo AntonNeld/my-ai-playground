@@ -7,7 +7,7 @@ class Coin(Entity):
         super().__init__(x, y, "coin")
         self.solid = False
 
-    def to_json(self):
-        json = super().to_json()
-        json["type"] = "coin"
-        return json
+    def to_dict(self):
+        entity = super().to_dict()
+        entity["type"] = "coin"
+        return entity

@@ -10,7 +10,7 @@ class Entity:
     def set_room(self, room):
         self.room = room
 
-    def to_json(self):
+    def to_dict(self):
         return {
             "x": self.x,
             "y": self.y
