@@ -1,3 +1,5 @@
+import json
+from pathlib import Path
 import uuid
 
 
@@ -36,3 +38,9 @@ class TemplateKeeper:
         for entity in template["entities"]:
             new_room.add_entity(entity_from_dict(entity, autofill=True))
         return new_room
+
+    def load_directory(self, directory):
+        parent_dir = Path(directory)
+        for p in parent_dir.glob("./*.json"):
+            with p.open() as f:
+                self.add_template(json.load(f), template_id=p.stem)

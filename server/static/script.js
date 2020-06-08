@@ -1,25 +1,11 @@
 import { Room } from "./room.js";
 
-const testRoom = {
-  steps: 0,
-  entities: {
-    a: { x: 0, y: 0, type: "player", ai: "pathfinder", score: 0 },
-    b: { x: -1, y: 1, type: "block" },
-    c: { x: 0, y: 1, type: "block" },
-    d: { x: 1, y: 1, type: "block" },
-    e: { x: 1, y: 0, type: "coin" },
-    f: { x: -1, y: 0, type: "coin" },
-  },
-};
-
 let room;
 let highlighted;
 
 async function init() {
-  await fetch("/api/rooms/testroom", {
+  await fetch("/api/rooms/testroom?from_template=small_room", {
     method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(testRoom),
   });
   room = new Room(document.querySelector(".room-area"));
   highlighted = null;
