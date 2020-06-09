@@ -2,8 +2,11 @@ import { Room } from "./room.js";
 
 let room;
 let highlighted;
+let autoStepTimer = null;
 
 async function init() {
+  clearInterval(autoStepTimer);
+  autoStepTimer = null;
   await fetch("/api/rooms/testroom?from_template=maze", {
     method: "PUT",
   });
@@ -83,6 +86,15 @@ async function takeManualAction(action) {
   }
 }
 
+function toggleAutoStep() {
+  if (autoStepTimer) {
+    clearInterval(autoStepTimer);
+    autoStepTimer = null;
+  } else {
+    autoStepTimer = setInterval(step, 400);
+  }
+}
+
 init();
 document
   .querySelector("#restart-button")
@@ -112,6 +124,9 @@ document.addEventListener("keydown", ({ key }) => {
       break;
     case "ArrowUp":
       takeManualAction("move_up");
+      break;
+    case "a":
+      toggleAutoStep();
       break;
     default:
       break;
