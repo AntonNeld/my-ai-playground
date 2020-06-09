@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+import re
 import uuid
 
 
@@ -44,3 +45,63 @@ class TemplateKeeper:
         for p in parent_dir.glob("./*.json"):
             with p.open() as f:
                 self.add_template(json.load(f), template_id=p.stem)
+        for p in parent_dir.glob("./*.txt"):
+            with p.open() as f:
+                self.add_template(template_from_txt(
+                    f.read()), template_id=p.stem)
+
+
+class ParseError(Exception):
+    pass
+
+
+def template_from_txt(txt):
+    """
+    Create a template from a string of the following format:
+
+    The string begins with a header defining the symbols, each
+    on its own line:
+    <symbol>=<definition>
+
+    All whitespace except newlines are ignored in the header.
+    A symbol is one unicode character, a definition is one of:
+    player
+    coin
+    block
+
+    Between the header and the body is an empty line, then the
+    layout of the room is defined, with a symbol's location
+    defining its entity's coordinates. 0,0 is to the lower left.
+    """
+    header = txt.strip().split("\n\n", 1)[0]
+    definitions = {}
+    for line in header.split("\n"):
+        without_whitespace = re.sub(r"\s+", "", line)
+        symbol = without_whitespace[0]
+        if without_whitespace[1] != "=":
+            raise ParseError(f"Malformed header:\n{header}")
+        definition = without_whitespace[2:]
+        definitions[symbol] = definition
+
+    entities = []
+    body = txt.strip().split("\n\n", 1)[1]
+    lines = [line for line in body.split("\n") if line and not line.isspace()]
+    for y, line in enumerate(lines):
+        for x, symbol in enumerate(line):
+            if symbol == " ":
+                pass
+            elif symbol in definitions:
+                definition = definitions[symbol]
+                if definition not in ["player", "coin", "block"]:
+                    raise ParseError(f"Unknown definition: {definition}")
+                entity = {
+                    "type": definition,
+                    "x": x,
+                    "y": len(lines) - y - 1
+                }
+                if definition == "player":
+                    entity["ai"] = "pathfinder"
+                entities.append(entity)
+            else:
+                raise ParseError(f"Unknown symbol: {symbol}")
+    return {"entities": entities}

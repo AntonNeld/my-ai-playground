@@ -1,0 +1,6 @@
+p = player
+c = coin
+# = block
+
+ #
+pc

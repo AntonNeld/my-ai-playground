@@ -4,7 +4,7 @@ let room;
 let highlighted;
 
 async function init() {
-  await fetch("/api/rooms/testroom?from_template=small_room", {
+  await fetch("/api/rooms/testroom?from_template=maze", {
     method: "PUT",
   });
   room = new Room(document.querySelector(".room-area"));
