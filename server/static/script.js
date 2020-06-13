@@ -1,13 +1,31 @@
 import { Room } from "./room.js";
 
+const roomId = "testroom";
+
 let room;
 let highlighted;
+let currentTemplate = "maze";
 let autoStepTimer = null;
 
-async function init() {
+async function getTemplates() {
+  const response = await fetch("/api/templates");
+  const templates = await response.json();
+  const select = document.querySelector("#template-dropdown");
+  select.childNodes.forEach((child) => select.removeChild(child));
+  templates.forEach((template) => {
+    const option = document.createElement("option");
+    option.textContent = template;
+    option.value = template;
+    select.appendChild(option);
+  });
+  select.value = currentTemplate;
+}
+
+async function initRoom(template) {
+  currentTemplate = template;
   clearInterval(autoStepTimer);
   autoStepTimer = null;
-  await fetch("/api/rooms/testroom?from_template=maze", {
+  await fetch(`/api/rooms/${roomId}?from_template=${template}`, {
     method: "PUT",
   });
   room = new Room(document.querySelector(".room-area"));
@@ -34,14 +52,16 @@ async function update() {
 }
 
 async function getRoomData() {
-  const response = await fetch("/api/rooms/testroom");
+  const response = await fetch(`/api/rooms/${roomId}`);
   const data = await response.json();
   return data;
 }
 
 async function getEntityData() {
   if (highlighted) {
-    const response = await fetch(`/api/rooms/testroom/entities/${highlighted}`);
+    const response = await fetch(
+      `/api/rooms/${roomId}/entities/${highlighted}`
+    );
     if (!response.ok) {
       return null;
     }
@@ -53,15 +73,17 @@ async function getEntityData() {
 }
 
 async function step() {
-  await fetch("/api/rooms/testroom/step", { method: "POST" });
+  await fetch(`/api/rooms/${roomId}/step`, { method: "POST" });
   update();
 }
 
 async function setManualAI() {
   if (highlighted) {
-    const response = await fetch(`/api/rooms/testroom/entities/${highlighted}`);
+    const response = await fetch(
+      `/api/rooms/${roomId}/entities/${highlighted}`
+    );
     const entity = await response.json();
-    await fetch(`/api/rooms/testroom/entities/${highlighted}`, {
+    await fetch(`/api/rooms/${roomId}/entities/${highlighted}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ...entity, ai: "manual" }),
@@ -73,7 +95,7 @@ async function setManualAI() {
 async function takeManualAction(action) {
   if (highlighted) {
     const response = await fetch(
-      `/api/rooms/testroom/entities/${highlighted}/setmove`,
+      `/api/rooms/${roomId}/entities/${highlighted}/setmove`,
       {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -95,17 +117,25 @@ function toggleAutoStep() {
   }
 }
 
-init();
+getTemplates();
+initRoom(currentTemplate);
 document
   .querySelector("#restart-button")
   .addEventListener("click", function () {
-    init();
+    initRoom(currentTemplate);
     this.blur();
   });
 document
   .querySelector("#manual-ai-button")
   .addEventListener("click", function () {
     setManualAI();
+    this.blur();
+  });
+document
+  .querySelector("#template-dropdown")
+  .addEventListener("change", function (event) {
+    const template = event.target.value;
+    initRoom(template);
     this.blur();
   });
 document.addEventListener("keydown", ({ key }) => {
