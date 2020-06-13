@@ -81,6 +81,12 @@ export class Room extends EventTarget {
             .attr("fill-opacity", 0)
             .attr("stroke-width", 0.02)
             .attr("opacity", (d) => (d.id === this.highlighted ? 1 : 0));
+          g.append("text")
+            .attr("x", 0.38)
+            .attr("y", 0.6)
+            .attr("font-size", 0.4)
+            .attr("fill", "white")
+            .text((d) => d.score);
           g.append("rect")
             .attr("width", 1)
             .attr("height", 1)
@@ -109,6 +115,7 @@ export class Room extends EventTarget {
               .select("rect")
               .transition(transition)
               .attr("opacity", (d) => (d.id === this.highlighted ? 1 : 0));
+            update.select("text").text((d) => d.score);
             return update;
           }),
         (exit) =>
