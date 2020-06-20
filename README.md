@@ -10,7 +10,6 @@ Prerequisites:
 
 - [pipenv](https://pypi.org/project/pipenv/)
 - Add `export PIPENV_VENV_IN_PROJECT=1` to `.bashrc` or similar. Or don't, your choice.
-- [tiled](https://www.mapeditor.org/), if you want to make new maps.
 
 Install and use dependencies:
 
@@ -26,21 +25,6 @@ cd server
 uvicorn main:app --port 8300 --reload
 ```
 
-### pyglet frontend (to be deprecated)
-
-In another shell, connect with the scenario using the frontend:
-
-```sh
-pipenv shell
-python pyglet_client/main.py <PATH_TO_MAP>
-```
-
-Instructions will be printed in the terminal.
-
-To use a different AI than the default, set the environment variable PLAYER_AI to the service name when starting the client. Default is `pathfinder`.
-
-### Web frontend
-
 In a web browser, connect to `localhost:8300`.
 
 ## Testing
@@ -53,7 +37,3 @@ pytest
 ```
 
 The server does not need to be running for this. There is no CI, I just try to remember doing it before committing.
-
-## Creating new maps
-
-Create a new map using Tiled. Each type of object should have its own layer, with a custom property `Type` signifying what it is.
