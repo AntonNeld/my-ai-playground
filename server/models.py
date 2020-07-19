@@ -1,7 +1,14 @@
+from enum import Enum
 from typing import Dict, List, Union
 
 from typing_extensions import Literal
 from pydantic import BaseModel
+
+
+class LooksLike(str, Enum):
+    player = "player"
+    coin = "coin"
+    wall = "wall"
 
 
 class Player(BaseModel):
@@ -10,6 +17,8 @@ class Player(BaseModel):
     type: Literal["player"]
     ai: str
     score: int
+    solid: bool
+    looksLike: LooksLike
 
 
 class PlayerTemplate(BaseModel):
@@ -17,18 +26,24 @@ class PlayerTemplate(BaseModel):
     y: int
     type: Literal["player"]
     ai: str
+    solid: bool
+    looksLike: LooksLike
 
 
 class Wall(BaseModel):
     x: int
     y: int
     type: Literal["block"]
+    solid: bool
+    looksLike: LooksLike
 
 
 class Coin(BaseModel):
     x: int
     y: int
     type: Literal["coin"]
+    solid: bool
+    looksLike: LooksLike
 
 
 Entity = Union[Player, Wall, Coin]

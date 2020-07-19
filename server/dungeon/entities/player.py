@@ -5,7 +5,7 @@ from .entity import Entity
 class Player(Entity):
 
     def __init__(self, x, y, ai, score):
-        super().__init__(x, y, "player")
+        super().__init__(x, y, "player", True)
         self.ai = ai
         self.score = score
 

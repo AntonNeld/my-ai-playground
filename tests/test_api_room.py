@@ -4,8 +4,10 @@ import pytest
 @pytest.mark.parametrize("method", ["post", "put"])
 def test_create_room_from_template(client, method):
     client.put("/api/templates/testtemplate", json={
-        "entities": [{"x": 0, "y": 0, "type": "player", "ai": "manual"},
-                     {"x": 1, "y": 0, "type": "coin"}]
+        "entities": [{"x": 0, "y": 0, "type": "player", "ai": "manual",
+                      "solid": True, "looksLike": "player"},
+                     {"x": 1, "y": 0, "type": "coin",
+                      "solid": False, "looksLike": "coin"}]
     })
     if method == "post":
         response = client.post("/api/rooms?from_template=testtemplate")
@@ -19,8 +21,10 @@ def test_create_room_from_template(client, method):
     assert response.status_code == 200
     room = response.json()
     assert {"x": 0, "y": 0, "type": "player", "ai": "manual",
-            "score": 0} in room["entities"].values()
-    assert {"x": 1, "y": 0, "type": "coin"} in room["entities"].values()
+            "score": 0, "solid": True,
+            "looksLike": "player"} in room["entities"].values()
+    assert {"x": 1, "y": 0, "type": "coin", "solid": False,
+            "looksLike": "coin"} in room["entities"].values()
     assert room["steps"] == 0
 
 
@@ -39,8 +43,10 @@ def test_step(client):
         "steps": 0,
         "entities": {
             "a": {"x": 0, "y": 0, "type": "player",
-                  "ai": "pathfinder", "score": 0},
-            "b": {"x": 1, "y": 0, "type": "coin"}
+                  "ai": "pathfinder", "score": 0,
+                  "solid": True, "looksLike": "player"},
+            "b": {"x": 1, "y": 0, "type": "coin",
+                  "solid": False, "looksLike": "coin"}
         }
     })
 
@@ -52,7 +58,8 @@ def test_step(client):
         "steps": 1,
         "entities": {
             "a": {"x": 1, "y": 0, "type": "player",
-                  "ai": "pathfinder", "score": 1}
+                  "ai": "pathfinder", "score": 1,
+                  "solid": True, "looksLike": "player"}
         }
     }
 
@@ -61,7 +68,8 @@ def test_manual_ai(client):
     client.put("/api/rooms/testroom", json={
         "steps": 0,
         "entities": {
-            "a": {"x": 0, "y": 0, "type": "player", "ai": "manual", "score": 0}
+            "a": {"x": 0, "y": 0, "type": "player", "ai": "manual", "score": 0,
+                  "solid": True, "looksLike": "player"}
         }
     })
     player = client.get("/api/rooms/testroom/entities/a").json()

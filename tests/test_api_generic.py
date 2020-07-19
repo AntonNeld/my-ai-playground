@@ -8,15 +8,18 @@ RESOURCE_TYPES = [
         "parents": [],
         "example": {
             "entities": [
-                {"x": 0, "y": 0, "type": "player", "ai": "pathfinder"},
-                {"x": 1, "y": 1, "type": "block"},
-                {"x": 1, "y": 0, "type": "coin"}
+                {"x": 0, "y": 0, "type": "player", "ai": "pathfinder",
+                    "solid": True, "looksLike": "player"},
+                {"x": 1, "y": 1, "type": "block",
+                    "solid": True, "looksLike": "wall"},
+                {"x": 1, "y": 0, "type": "coin", "solid": False,
+                    "looksLike": "coin"}
             ]
         },
         "example_two": {
             "entities": [
                 {"x": 0, "y": 0, "type": "player",
-                 "ai": "manual"}
+                 "ai": "manual", "solid": True, "looksLike": "player"}
             ]
         }
     },
@@ -27,16 +30,20 @@ RESOURCE_TYPES = [
             "steps": 0,
             "entities": {
                 "a": {"x": 0, "y": 0, "type": "player",
-                      "ai": "pathfinder", "score": 0},
-                "b": {"x": 1, "y": 1, "type": "block"},
-                "c": {"x": 1, "y": 0, "type": "coin"}
+                      "ai": "pathfinder", "score": 0,
+                      "solid": True, "looksLike": "player"},
+                "b": {"x": 1, "y": 1, "type": "block",
+                      "solid": True, "looksLike": "wall"},
+                "c": {"x": 1, "y": 0, "type": "coin",
+                      "solid": False, "looksLike": "coin"}
             }
         },
         "example_two": {
             "steps": 1,
             "entities": {
                 "d": {"x": 0, "y": 0, "type": "player",
-                      "ai": "manual", "score": 0}
+                      "ai": "manual", "score": 0,
+                      "solid": True, "looksLike": "player"}
             }
         }
     },
@@ -52,12 +59,16 @@ RESOURCE_TYPES = [
             "y": 0,
             "type": "player",
             "ai": "pathfinder",
-            "score": 0
+            "score": 0,
+            "solid": True,
+            "looksLike": "player"
         },
         "example_two": {
             "x": 1,
             "y": -4,
-            "type": "block"
+            "type": "block",
+            "solid": True,
+            "looksLike": "wall"
         }
     }
 ]
