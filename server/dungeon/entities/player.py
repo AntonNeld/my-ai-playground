@@ -29,6 +29,8 @@ class Player(Entity):
             if (isinstance(entity, Coin) and entity.x == self.x
                     and entity.y == self.y):
                 self.room.remove_entity(entity)
+                if self.score is None:
+                    self.score = 0
                 self.score += 1
 
     def to_dict(self):

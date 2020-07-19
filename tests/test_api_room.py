@@ -21,7 +21,7 @@ def test_create_room_from_template(client, method):
     assert response.status_code == 200
     room = response.json()
     assert {"x": 0, "y": 0, "type": "player", "ai": "manual",
-            "score": 0, "solid": True,
+            "solid": True,
             "looksLike": "player"} in room["entities"].values()
     assert {"x": 1, "y": 0, "type": "coin", "solid": False,
             "looksLike": "coin"} in room["entities"].values()

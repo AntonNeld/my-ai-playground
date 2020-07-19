@@ -37,7 +37,7 @@ class TemplateKeeper:
         template = self.get_template(template_id)
         new_room = Room(0)
         for entity in template["entities"]:
-            new_room.add_entity(entity_from_dict(entity, autofill=True))
+            new_room.add_entity(entity_from_dict(entity))
         return new_room
 
     def load_directory(self, directory):
@@ -45,12 +45,14 @@ class TemplateKeeper:
         for p in parent_dir.glob("./*.json"):
             with p.open() as f:
                 template = Template(**json.load(f))
-                self.add_template(template.dict(), template_id=p.stem)
+                self.add_template(template.dict(
+                    exclude_none=True), template_id=p.stem)
         for p in parent_dir.glob("./*.txt"):
             with p.open() as f:
                 template = Template(**template_from_txt(
                     f.read()))
-                self.add_template(template.dict(), template_id=p.stem)
+                self.add_template(template.dict(
+                    exclude_none=True), template_id=p.stem)
 
 
 class ParseError(Exception):

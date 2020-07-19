@@ -19,12 +19,13 @@ def rooms_routes(dungeon, template_keeper):
         if from_template:
             room_obj = template_keeper.create_room(from_template)
         elif room:
-            room_obj = room_from_dict(room.dict())
+            room_obj = room_from_dict(room.dict(exclude_none=True))
         else:
             raise HTTPException(status_code=422, detail="Unprocessable entity")
         return dungeon.add_room(room_obj)
 
-    @router.get("/rooms/{room_id}", response_model=Room)
+    @router.get("/rooms/{room_id}", response_model=Room,
+                response_model_exclude_none=True)
     async def get_room(room_id: str):
         return dungeon.get_room(room_id).to_dict()
 
@@ -35,7 +36,7 @@ def rooms_routes(dungeon, template_keeper):
         if from_template:
             room_obj = template_keeper.create_room(from_template)
         elif room:
-            room_obj = room_from_dict(room.dict())
+            room_obj = room_from_dict(room.dict(exclude_none=True))
         else:
             raise HTTPException(status_code=422, detail="Unprocessable entity")
         return dungeon.add_room(room_obj, room_id=room_id)

@@ -1,4 +1,4 @@
-from typing import Dict, List, Union
+from typing import Dict, List, Optional, Union
 
 from typing_extensions import Literal
 from pydantic import BaseModel
@@ -12,16 +12,7 @@ class Player(BaseModel):
     y: int
     type: Literal["player"]
     ai: str
-    score: int
-    solid: bool
-    looksLike: LooksLike
-
-
-class PlayerTemplate(BaseModel):
-    x: int
-    y: int
-    type: Literal["player"]
-    ai: str
+    score: Optional[int]
     solid: bool
     looksLike: LooksLike
 
@@ -43,7 +34,6 @@ class Coin(BaseModel):
 
 
 Entity = Union[Player, Wall, Coin]
-EntityTemplate = Union[PlayerTemplate, Wall, Coin]
 
 
 class Room(BaseModel):
@@ -52,4 +42,4 @@ class Room(BaseModel):
 
 
 class Template(BaseModel):
-    entities: List[EntityTemplate]
+    entities: List[Entity]
