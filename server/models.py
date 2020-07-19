@@ -1,14 +1,10 @@
-from enum import Enum
 from typing import Dict, List, Union
 
 from typing_extensions import Literal
 from pydantic import BaseModel
 
 
-class LooksLike(str, Enum):
-    player = "player"
-    coin = "coin"
-    wall = "wall"
+LooksLike = Union[Literal["player"], Literal["coin"], Literal["wall"]]
 
 
 class Player(BaseModel):

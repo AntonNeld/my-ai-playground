@@ -3,7 +3,7 @@ from pathlib import Path
 import re
 import uuid
 
-
+from models import Template
 from errors import ResourceNotFoundError
 from dungeon.entities.entity_factories import entity_from_dict
 from dungeon.room import Room
@@ -44,11 +44,13 @@ class TemplateKeeper:
         parent_dir = Path(directory)
         for p in parent_dir.glob("./*.json"):
             with p.open() as f:
-                self.add_template(json.load(f), template_id=p.stem)
+                template = Template(**json.load(f))
+                self.add_template(template.dict(), template_id=p.stem)
         for p in parent_dir.glob("./*.txt"):
             with p.open() as f:
-                self.add_template(template_from_txt(
-                    f.read()), template_id=p.stem)
+                template = Template(**template_from_txt(
+                    f.read()))
+                self.add_template(template.dict(), template_id=p.stem)
 
 
 class ParseError(Exception):
@@ -92,15 +94,19 @@ def template_from_txt(txt):
                 pass
             elif symbol in definitions:
                 definition = definitions[symbol]
-                if definition not in ["player", "coin", "block"]:
-                    raise ParseError(f"Unknown definition: {definition}")
-                entity = {
-                    "type": definition,
-                    "x": x,
-                    "y": len(lines) - y - 1
-                }
                 if definition == "player":
-                    entity["ai"] = "pathfinder"
+                    entity = {"type": "player", "solid": True,
+                              "looksLike": "player", "ai": "pathfinder"}
+                elif definition == "block":
+                    entity = {"type": "block",
+                              "solid": True, "looksLike": "wall"}
+                elif definition == "coin":
+                    entity = {"type": "coin",
+                              "solid": False, "looksLike": "coin"}
+                else:
+                    raise ParseError(f"Unknown definition: {definition}")
+                entity["x"] = x
+                entity["y"] = len(lines) - y - 1
                 entities.append(entity)
             else:
                 raise ParseError(f"Unknown symbol: {symbol}")
