@@ -8,33 +8,14 @@ LooksLike = Union[Literal["player"], Literal["coin"], Literal["wall"]]
 CollisionBehavior = Union[Literal["block"], Literal["vanish"]]
 
 
-class Player(BaseModel):
+class Entity(BaseModel):
     x: int
     y: int
-    type: Literal["player"]
-    ai: str
+    ai: Optional[str]
     score: Optional[int]
     collisionBehavior: Optional[CollisionBehavior]
+    scoreOnDestroy: Optional[int]
     looksLike: LooksLike
-
-
-class Wall(BaseModel):
-    x: int
-    y: int
-    type: Literal["block"]
-    collisionBehavior: Optional[CollisionBehavior]
-    looksLike: LooksLike
-
-
-class Coin(BaseModel):
-    x: int
-    y: int
-    type: Literal["coin"]
-    collisionBehavior: Optional[CollisionBehavior]
-    looksLike: LooksLike
-
-
-Entity = Union[Player, Wall, Coin]
 
 
 class Room(BaseModel):

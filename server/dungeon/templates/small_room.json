@@ -3,15 +3,25 @@
     {
       "x": 0,
       "y": 0,
-      "type": "player",
       "ai": "pathfinder",
-      "solid": true,
       "looksLike": "player"
     },
-    { "x": -1, "y": 1, "type": "block", "solid": true, "looksLike": "wall" },
-    { "x": 0, "y": 1, "type": "block", "solid": true, "looksLike": "wall" },
-    { "x": 1, "y": 1, "type": "block", "solid": true, "looksLike": "wall" },
-    { "x": 1, "y": 0, "type": "coin", "solid": false, "looksLike": "coin" },
-    { "x": -1, "y": 0, "type": "coin", "solid": false, "looksLike": "coin" }
+    { "x": -1, "y": 1, "collisionBehavior": "block", "looksLike": "wall" },
+    { "x": 0, "y": 1, "collisionBehavior": "block", "looksLike": "wall" },
+    { "x": 1, "y": 1, "collisionBehavior": "block", "looksLike": "wall" },
+    {
+      "x": 1,
+      "y": 0,
+      "collisionBehavior": "vanish",
+      "looksLike": "coin",
+      "scoreOnDestroy": 1
+    },
+    {
+      "x": -1,
+      "y": 0,
+      "collisionBehavior": "vanish",
+      "looksLike": "coin",
+      "scoreOnDestroy": 1
+    }
   ]
 }

@@ -1,4 +1,3 @@
-from .coin import Coin
 from .entity import Entity
 
 
@@ -29,14 +28,13 @@ class Player(Entity):
             if entity.x == self.x and entity.y == self.y:
                 if entity.collision_behavior == "vanish":
                     self.room.remove_entity(entity)
-                if isinstance(entity, Coin):
-                    if self.score is None:
-                        self.score = 0
-                    self.score += 1
+                    if entity.score_on_destroy is not None:
+                        if self.score is None:
+                            self.score = 0
+                        self.score += entity.score_on_destroy
 
     def to_dict(self):
         entity = super().to_dict()
-        entity["type"] = "player"
         entity["ai"] = self.ai.to_dict()
         entity["score"] = self.score
         return entity

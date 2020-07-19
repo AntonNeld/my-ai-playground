@@ -8,17 +8,17 @@ RESOURCE_TYPES = [
         "parents": [],
         "example": {
             "entities": [
-                {"x": 0, "y": 0, "type": "player", "ai": "pathfinder",
+                {"x": 0, "y": 0, "ai": "pathfinder",
                  "looksLike": "player"},
-                {"x": 1, "y": 1, "type": "block",
+                {"x": 1, "y": 1,
                     "collisionBehavior": "block", "looksLike": "wall"},
-                {"x": 1, "y": 0, "type": "coin", "collisionBehavior": "vanish",
-                    "looksLike": "coin"}
+                {"x": 1, "y": 0, "collisionBehavior": "vanish",
+                    "looksLike": "coin", "scoreOnDestroy": 1}
             ]
         },
         "example_two": {
             "entities": [
-                {"x": 0, "y": 0, "type": "player",
+                {"x": 0, "y": 0,
                  "ai": "manual", "looksLike": "player"}
             ]
         }
@@ -29,19 +29,19 @@ RESOURCE_TYPES = [
         "example": {
             "steps": 0,
             "entities": {
-                "a": {"x": 0, "y": 0, "type": "player",
+                "a": {"x": 0, "y": 0,
                       "ai": "pathfinder", "score": 0,
                       "looksLike": "player"},
-                "b": {"x": 1, "y": 1, "type": "block",
+                "b": {"x": 1, "y": 1,
                       "collisionBehavior": "block", "looksLike": "wall"},
-                "c": {"x": 1, "y": 0, "type": "coin",
+                "c": {"x": 1, "y": 0, "scoreOnDestroy": 1,
                       "collisionBehavior": "vanish", "looksLike": "coin"}
             }
         },
         "example_two": {
             "steps": 1,
             "entities": {
-                "d": {"x": 0, "y": 0, "type": "player",
+                "d": {"x": 0, "y": 0,
                       "ai": "manual", "score": 0,
                       "looksLike": "player"}
             }
@@ -57,7 +57,6 @@ RESOURCE_TYPES = [
         "example": {
             "x": 0,
             "y": 0,
-            "type": "player",
             "ai": "pathfinder",
             "score": 0,
             "looksLike": "player"
@@ -65,7 +64,6 @@ RESOURCE_TYPES = [
         "example_two": {
             "x": 1,
             "y": -4,
-            "type": "block",
             "collisionBehavior": "block",
             "looksLike": "wall"
         }

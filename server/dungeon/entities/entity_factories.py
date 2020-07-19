@@ -1,15 +1,12 @@
-from .coin import Coin
+from .entity import Entity
 from .player import Player
-from .wall import Wall
 from dungeon.ai import PathfinderAI, ManualAI, RandomAI, ExhaustiveAI
 
 
 def entity_from_dict(entity):
     x = entity["x"]
     y = entity["y"]
-    if entity["type"] == "block":
-        return Wall(x, y)
-    elif entity["type"] == "player":
+    if "ai" in entity:
         if entity["ai"] == "pathfinder":
             ai = PathfinderAI()
         elif entity["ai"] == "manual":
@@ -22,6 +19,5 @@ def entity_from_dict(entity):
             raise RuntimeError(f"Unknown AI {entity['ai']}")
         score = entity["score"] if "score" in entity else None
         return Player(x, y, ai, score)
-
-    elif entity["type"] == "coin":
-        return Coin(x, y)
+    else:
+        return Entity(**entity)
