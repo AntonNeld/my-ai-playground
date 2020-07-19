@@ -1,11 +1,11 @@
 
 class Entity:
 
-    def __init__(self, x, y, looks_like, solid):
+    def __init__(self, x, y, looks_like, collision_behavior=None):
         self.x = x
         self.y = y
         self.looks_like = looks_like
-        self.solid = solid
+        self.collision_behavior = collision_behavior
 
     def set_room(self, room):
         self.room = room
@@ -15,5 +15,5 @@ class Entity:
             "x": self.x,
             "y": self.y,
             "looksLike": self.looks_like,
-            "solid": self.solid
+            "collisionBehavior": self.collision_behavior
         }

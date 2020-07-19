@@ -10,10 +10,10 @@ PARENT_DIR = Path(__file__).parent
 RAW_TEMPLATE = {
     "entities": [
         {"x": 0, "y": 0, "type": "player", "ai": "pathfinder",
-         "solid": True, "looksLike": "player"},
-        {"x": 1, "y": 1, "type": "block", "solid": True,
+         "looksLike": "player"},
+        {"x": 1, "y": 1, "type": "block", "collisionBehavior": "block",
          "looksLike": "wall"},
-        {"x": 1, "y": 0, "type": "coin", "solid": False,
+        {"x": 1, "y": 0, "type": "coin", "collisionBehavior": "vanish",
          "looksLike": "coin"}
     ]
 }
@@ -61,10 +61,10 @@ pc
     assert equal_templates(template, {
         "entities": [
             {"x": 0, "y": 0, "type": "player", "ai": "pathfinder",
-             "solid": True, "looksLike": "player"},
-            {"x": 1, "y": 1, "type": "block", "solid": True,
+             "looksLike": "player"},
+            {"x": 1, "y": 1, "type": "block", "collisionBehavior": "block",
              "looksLike": "wall"},
-            {"x": 1, "y": 0, "type": "coin", "solid": False,
+            {"x": 1, "y": 0, "type": "coin", "collisionBehavior": "vanish",
              "looksLike": "coin"}
         ]
     })

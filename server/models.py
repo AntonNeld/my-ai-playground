@@ -5,6 +5,7 @@ from pydantic import BaseModel
 
 
 LooksLike = Union[Literal["player"], Literal["coin"], Literal["wall"]]
+CollisionBehavior = Union[Literal["block"], Literal["vanish"]]
 
 
 class Player(BaseModel):
@@ -13,7 +14,7 @@ class Player(BaseModel):
     type: Literal["player"]
     ai: str
     score: Optional[int]
-    solid: bool
+    collisionBehavior: Optional[CollisionBehavior]
     looksLike: LooksLike
 
 
@@ -21,7 +22,7 @@ class Wall(BaseModel):
     x: int
     y: int
     type: Literal["block"]
-    solid: bool
+    collisionBehavior: Optional[CollisionBehavior]
     looksLike: LooksLike
 
 
@@ -29,7 +30,7 @@ class Coin(BaseModel):
     x: int
     y: int
     type: Literal["coin"]
-    solid: bool
+    collisionBehavior: Optional[CollisionBehavior]
     looksLike: LooksLike
 
 

@@ -66,7 +66,8 @@ class Room:
 
     def passable(self, x, y):
         for entity in self.get_entities():
-            if entity.x == x and entity.y == y and entity.solid:
+            if (entity.x == x and entity.y == y
+                    and entity.collision_behavior == "block"):
                 return False
         return True
 

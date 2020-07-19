@@ -9,17 +9,17 @@ RESOURCE_TYPES = [
         "example": {
             "entities": [
                 {"x": 0, "y": 0, "type": "player", "ai": "pathfinder",
-                    "solid": True, "looksLike": "player"},
+                 "looksLike": "player"},
                 {"x": 1, "y": 1, "type": "block",
-                    "solid": True, "looksLike": "wall"},
-                {"x": 1, "y": 0, "type": "coin", "solid": False,
+                    "collisionBehavior": "block", "looksLike": "wall"},
+                {"x": 1, "y": 0, "type": "coin", "collisionBehavior": "vanish",
                     "looksLike": "coin"}
             ]
         },
         "example_two": {
             "entities": [
                 {"x": 0, "y": 0, "type": "player",
-                 "ai": "manual", "solid": True, "looksLike": "player"}
+                 "ai": "manual", "looksLike": "player"}
             ]
         }
     },
@@ -31,11 +31,11 @@ RESOURCE_TYPES = [
             "entities": {
                 "a": {"x": 0, "y": 0, "type": "player",
                       "ai": "pathfinder", "score": 0,
-                      "solid": True, "looksLike": "player"},
+                      "looksLike": "player"},
                 "b": {"x": 1, "y": 1, "type": "block",
-                      "solid": True, "looksLike": "wall"},
+                      "collisionBehavior": "block", "looksLike": "wall"},
                 "c": {"x": 1, "y": 0, "type": "coin",
-                      "solid": False, "looksLike": "coin"}
+                      "collisionBehavior": "vanish", "looksLike": "coin"}
             }
         },
         "example_two": {
@@ -43,7 +43,7 @@ RESOURCE_TYPES = [
             "entities": {
                 "d": {"x": 0, "y": 0, "type": "player",
                       "ai": "manual", "score": 0,
-                      "solid": True, "looksLike": "player"}
+                      "looksLike": "player"}
             }
         }
     },
@@ -60,14 +60,13 @@ RESOURCE_TYPES = [
             "type": "player",
             "ai": "pathfinder",
             "score": 0,
-            "solid": True,
             "looksLike": "player"
         },
         "example_two": {
             "x": 1,
             "y": -4,
             "type": "block",
-            "solid": True,
+            "collisionBehavior": "block",
             "looksLike": "wall"
         }
     }
