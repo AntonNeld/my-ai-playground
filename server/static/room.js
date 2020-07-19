@@ -73,7 +73,7 @@ export class Room extends EventTarget {
           g.append("image")
             .attr("width", 1)
             .attr("height", 1)
-            .attr("href", (d) => `assets/${d.type}.svg`);
+            .attr("href", (d) => `assets/${d.looksLike}.svg`);
           g.append("rect")
             .attr("width", 1)
             .attr("height", 1)
