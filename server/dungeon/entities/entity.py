@@ -9,9 +9,6 @@ class Entity:
         self.collision_behavior = collisionBehavior
         self.score_on_destroy = scoreOnDestroy
 
-    def set_room(self, room):
-        self.room = room
-
     def to_dict(self):
         return {
             "x": self.x,
