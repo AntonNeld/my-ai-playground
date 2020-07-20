@@ -1,6 +1,5 @@
 import uuid
 
-from dungeon.ai import ManualAI
 from errors import ResourceNotFoundError
 
 
@@ -30,7 +29,7 @@ class Dungeon:
 
     def manual_set_move(self, room_id, agent_id, action):
         entity = self._rooms[room_id].get_entity(agent_id)
-        if isinstance(entity.ai, ManualAI):
+        try:
             entity.ai.set_move(action)
-        else:
+        except AttributeError:
             raise RuntimeError("Agent doesn't have manual AI")

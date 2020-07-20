@@ -1,6 +1,3 @@
-from dungeon.ai.pathfinder import PathfinderAI
-from dungeon.ai.manual import ManualAI
-from dungeon.ai.random import RandomAI
-from dungeon.ai.exhaustive import ExhaustiveAI
+from dungeon.ai.ai_factory import ai_from_dict
 
-__all__ = ("PathfinderAI", "ManualAI", "RandomAI", "ExhaustiveAI")
+__all__ = ("ai_from_dict",)
