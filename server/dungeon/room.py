@@ -57,7 +57,7 @@ class Room:
         for entity in self.get_entities():
             # Find next action
             action = entity.ai.next_move(self.get_view(
-                entity)) if hasattr(entity, "ai") else "none"
+                entity)) if entity.ai is not None else "none"
             # Move and handle collisions
             dx = dy = 0
 
