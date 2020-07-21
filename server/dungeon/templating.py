@@ -7,7 +7,7 @@ import uuid
 from pydantic import BaseModel
 
 from errors import ResourceNotFoundError
-from dungeon.entities.entity import Entity
+from dungeon.entity import Entity
 from dungeon.room import Room
 
 

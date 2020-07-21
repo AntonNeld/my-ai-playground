@@ -3,7 +3,7 @@ from typing import List
 from fastapi import APIRouter, Body
 
 
-from dungeon.entities.entity import Entity
+from dungeon.entity import Entity
 
 
 def entities_routes(dungeon):

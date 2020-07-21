@@ -5,7 +5,7 @@ from typing_extensions import Literal
 
 from dungeon.ai.lib.perception import get_coordinates
 from dungeon.ai.lib.pathfinding import breadth_first
-from models import Move
+from dungeon.consts import Move
 
 
 class ExhaustiveAI(BaseModel):

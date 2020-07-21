@@ -4,7 +4,7 @@ from typing import Optional
 from pydantic import BaseModel
 from typing_extensions import Literal
 
-from models import Move
+from dungeon.consts import Move
 
 
 class ManualAI(BaseModel):
