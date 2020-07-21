@@ -43,7 +43,7 @@ class TemplateKeeper:
         template = self.get_template(template_id)
         new_room = Room(steps=0, entities={})
         for entity in template.entities:
-            new_room.add_entity(entity)
+            new_room.add_entity(entity.copy(deep=True))
         return new_room
 
     def load_directory(self, directory):

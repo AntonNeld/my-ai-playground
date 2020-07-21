@@ -75,3 +75,30 @@ def test_included_templates_validate():
     root_dir = Path(__file__).parent.parent.parent
     template_keeper.load_directory(
         root_dir / "server" / "dungeon" / "templates")
+
+
+def test_template_not_modified_by_room():
+    template_keeper = TemplateKeeper()
+    template = Template(**{
+        "entities": [
+            {"x": 0, "y": 0, "ai": {"kind": "pathfinder"},
+             "looksLike": "player"},
+            {"x": 1, "y": 1, "collisionBehavior": "block",
+             "looksLike": "wall"},
+            {"x": 1, "y": 0, "collisionBehavior": "vanish",
+             "looksLike": "coin", "scoreOnDestroy": 1}
+        ]
+    })
+    template_keeper.add_template(template, template_id="testtemplate")
+    room = template_keeper.create_room("testtemplate")
+    room.step()
+    assert equal_templates(template, Template(**{
+        "entities": [
+            {"x": 0, "y": 0, "ai": {"kind": "pathfinder"},
+             "looksLike": "player"},
+            {"x": 1, "y": 1, "collisionBehavior": "block",
+             "looksLike": "wall"},
+            {"x": 1, "y": 0, "collisionBehavior": "vanish",
+             "looksLike": "coin", "scoreOnDestroy": 1}
+        ]
+    }))
