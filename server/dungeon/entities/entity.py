@@ -18,6 +18,6 @@ class Entity:
             "looksLike": self.looks_like,
             "collisionBehavior": self.collision_behavior,
             "scoreOnDestroy": self.score_on_destroy,
-            "ai": self.ai.to_dict() if self.ai is not None else None,
+            "ai": self.ai.dict() if self.ai is not None else None,
             "score": self.score
         }

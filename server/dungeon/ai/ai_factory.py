@@ -6,12 +6,12 @@ from .exhaustive import ExhaustiveAI
 
 def ai_from_dict(ai):
     if ai["kind"] == "manual":
-        return ManualAI(ai["plan"] if "plan" in ai else None)
+        return ManualAI(**ai)
     elif ai["kind"] == "pathfinder":
-        return PathfinderAI(ai["plan"] if "plan" in ai else None)
+        return PathfinderAI(**ai)
     elif ai["kind"] == "exhaustive":
-        return ExhaustiveAI(ai["plan"] if "plan" in ai else None)
+        return ExhaustiveAI(**ai)
     elif ai["kind"] == "random":
-        return RandomAI()
+        return RandomAI(**ai)
     else:
-        raise RuntimeError(f"Unknown ai {ai}")
+        raise RuntimeError(f"Unknown ai {ai['kind']}")

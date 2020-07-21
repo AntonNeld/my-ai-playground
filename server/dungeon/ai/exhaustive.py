@@ -1,16 +1,21 @@
+from typing import List, Optional
+
+from pydantic import BaseModel
+from typing_extensions import Literal
+
 from dungeon.ai.lib.perception import get_coordinates
 from dungeon.ai.lib.pathfinding import breadth_first
+from models import Move
 
 
-class ExhaustiveAI:
-
-    def __init__(self, plan):
-        self._plan = plan
+class ExhaustiveAI(BaseModel):
+    kind: Literal["exhaustive"]
+    plan: Optional[List[Move]]
 
     def next_move(self, percept):
         print("Starting up!")
 
-        if not self._plan:
+        if not self.plan:
             walls = get_coordinates(percept, "wall")
             coins = get_coordinates(percept, "coin")
 
@@ -23,12 +28,9 @@ class ExhaustiveAI:
                         distances[(coin, coin2)] = breadth_first(
                             coin, coin2, walls)
 
-            self._plan = _helper((0, 0), coins, [], None, walls, distances)
+            self.plan = _helper((0, 0), coins, [], None, walls, distances)
 
-        return self._plan.pop(0)
-
-    def to_dict(self):
-        return {"kind": "exhaustive", "plan": self._plan}
+        return self.plan.pop(0)
 
 
 def _helper(pos, coins, path, bestpath, walls, distances):

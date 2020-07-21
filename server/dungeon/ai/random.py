@@ -1,10 +1,12 @@
 import random
 
+from pydantic import BaseModel
+from typing_extensions import Literal
 
-class RandomAI:
+
+class RandomAI(BaseModel):
+    kind: Literal["random"]
+
     def next_move(agent, percept):
         return random.choice(["move_up", "move_down",
                               "move_left", "move_right"])
-
-    def to_dict(self):
-        return {"kind": "random"}
