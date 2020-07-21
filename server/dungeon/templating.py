@@ -41,7 +41,7 @@ class TemplateKeeper:
 
     def create_room(self, template_id):
         template = self.get_template(template_id)
-        new_room = Room(0)
+        new_room = Room(steps=0, entities={})
         for entity in template.entities:
             new_room.add_entity(entity)
         return new_room

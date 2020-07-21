@@ -1,43 +1,44 @@
 import uuid
+from typing import Dict
+
+from pydantic import BaseModel
 
 from errors import ResourceNotFoundError
-from dungeon.entities.entity_factories import entity_from_dict
+from dungeon.entities.entity import Entity
 
 
-class Room:
-
-    def __init__(self, steps):
-        self._entities = {}
-        self.steps = steps
+class Room(BaseModel):
+    steps: int
+    entities: Dict[str, Entity]
 
     def add_entity(self, entity, entity_id=None):
         if entity_id is None:
             entity_id = uuid.uuid4().hex
-        self._entities[entity_id] = entity
+        self.entities[entity_id] = entity
         return entity_id
 
     def remove_entity(self, entity):
         id_to_remove = None
-        for entity_id, entity_object in self._entities.items():
+        for entity_id, entity_object in self.entities.items():
             if entity_object == entity:
                 id_to_remove = entity_id
-        del self._entities[id_to_remove]
+        del self.entities[id_to_remove]
 
     def remove_entity_by_id(self, entity_id):
-        if entity_id in self._entities:
-            del self._entities[entity_id]
+        if entity_id in self.entities:
+            del self.entities[entity_id]
 
     def list_entities(self):
-        return list(self._entities.keys())
+        return list(self.entities.keys())
 
     def get_entity(self, entity_id):
         try:
-            return self._entities[entity_id]
+            return self.entities[entity_id]
         except KeyError:
             raise ResourceNotFoundError
 
     def get_entities(self):
-        return list(self._entities.values())
+        return list(self.entities.values())
 
     def get_view(self, perceptor):
         x = perceptor.x
@@ -85,18 +86,3 @@ class Room:
                             entity.score += colliding_entity.scoreOnDestroy
 
         self.steps += 1
-
-    def to_dict(self):
-        return {
-            "steps": self.steps,
-            "entities": {
-                key: value.dict() for key, value in self._entities.items()
-            }
-        }
-
-
-def room_from_dict(data):
-    new_room = Room(data["steps"])
-    for entity_id, entity in data["entities"].items():
-        new_room.add_entity(entity_from_dict(entity), entity_id=entity_id)
-    return new_room
