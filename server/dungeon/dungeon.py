@@ -26,10 +26,3 @@ class Dungeon:
 
     def list_rooms(self):
         return list(self._rooms.keys())
-
-    def manual_set_move(self, room_id, agent_id, action):
-        entity = self._rooms[room_id].get_entity(agent_id)
-        try:
-            entity.ai.set_move(action)
-        except AttributeError:
-            raise RuntimeError("Agent doesn't have manual AI")

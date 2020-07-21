@@ -77,34 +77,28 @@ async function step() {
   update();
 }
 
-async function setManualAI() {
+async function takeManualAction(action) {
   if (highlighted) {
     const response = await fetch(
       `/api/rooms/${roomId}/entities/${highlighted}`
     );
-    const entity = await response.json();
+    const { ai: oldAi, ...rest } = await response.json();
     await fetch(`/api/rooms/${roomId}/entities/${highlighted}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...entity, ai: { kind: "manual" } }),
+      body: JSON.stringify({ ai: { kind: "singular", move: action }, ...rest }),
+    });
+    await fetch(`/api/rooms/${roomId}/step`, { method: "POST" });
+    const newResponse = await fetch(
+      `/api/rooms/${roomId}/entities/${highlighted}`
+    );
+    const entity = await newResponse.json();
+    await fetch(`/api/rooms/${roomId}/entities/${highlighted}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...entity, ai: oldAi }),
     });
     update();
-  }
-}
-
-async function takeManualAction(action) {
-  if (highlighted) {
-    const response = await fetch(
-      `/api/rooms/${roomId}/entities/${highlighted}/setmove`,
-      {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(action),
-      }
-    );
-    if (response.ok) {
-      await step();
-    }
   }
 }
 
@@ -123,12 +117,6 @@ document
   .querySelector("#restart-button")
   .addEventListener("click", function () {
     initRoom(currentTemplate);
-    this.blur();
-  });
-document
-  .querySelector("#manual-ai-button")
-  .addEventListener("click", function () {
-    setManualAI();
     this.blur();
   });
 document

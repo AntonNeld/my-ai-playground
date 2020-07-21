@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter, Body
+from fastapi import APIRouter
 
 
 from dungeon.entity import Entity
@@ -31,9 +31,5 @@ def entities_routes(dungeon):
     @router.delete("/rooms/{room_id}/entities/{entity_id}")
     async def delete_entity(room_id: str, entity_id: str):
         return dungeon.get_room(room_id).remove_entity_by_id(entity_id)
-
-    @router.put("/rooms/{room_id}/entities/{agent_id}/setmove")
-    async def set_move(room_id: str, agent_id: str, action: str = Body(...)):
-        return dungeon.manual_set_move(room_id, agent_id, action)
 
     return router

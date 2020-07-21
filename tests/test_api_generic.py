@@ -19,7 +19,7 @@ RESOURCE_TYPES = [
         "example_two": {
             "entities": [
                 {"x": 0, "y": 0,
-                 "ai": {"kind": "manual"}, "looksLike": "player"}
+                 "ai": {"kind": "random"}, "looksLike": "player"}
             ]
         }
     },
@@ -42,7 +42,7 @@ RESOURCE_TYPES = [
             "steps": 1,
             "entities": {
                 "d": {"x": 0, "y": 0,
-                      "ai": {"kind": "manual"}, "score": 0,
+                      "ai": {"kind": "random"}, "score": 0,
                       "looksLike": "player"}
             }
         }
