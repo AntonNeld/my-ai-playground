@@ -48,7 +48,7 @@ class Room:
             if entity != perceptor:
                 entity_view = {"x":          entity.x - x,
                                "y":          entity.y - y,
-                               "looks_like": entity.looks_like}
+                               "looks_like": entity.looksLike}
                 percept.append(entity_view)
 
         return percept
@@ -72,17 +72,17 @@ class Room:
 
             colliding_entities = [e for e in self.get_entities(
             ) if e.x == entity.x+dx and e.y == entity.y+dy and e != entity]
-            if "block" not in map(lambda e: e.collision_behavior,
+            if "block" not in map(lambda e: e.collisionBehavior,
                                   colliding_entities):
                 entity.x += dx
                 entity.y += dy
                 for colliding_entity in colliding_entities:
-                    if colliding_entity.collision_behavior == "vanish":
+                    if colliding_entity.collisionBehavior == "vanish":
                         self.remove_entity(colliding_entity)
-                        if colliding_entity.score_on_destroy is not None:
+                        if colliding_entity.scoreOnDestroy is not None:
                             if entity.score is None:
                                 entity.score = 0
-                            entity.score += colliding_entity.score_on_destroy
+                            entity.score += colliding_entity.scoreOnDestroy
 
         self.steps += 1
 
@@ -90,7 +90,7 @@ class Room:
         return {
             "steps": self.steps,
             "entities": {
-                key: value.to_dict() for key, value in self._entities.items()
+                key: value.dict() for key, value in self._entities.items()
             }
         }
 

@@ -1,23 +1,19 @@
+from typing import Optional, Union
 
-class Entity:
+from pydantic import BaseModel
+from typing_extensions import Literal
 
-    def __init__(self, x, y, looksLike, collisionBehavior=None,
-                 scoreOnDestroy=None, ai=None, score=None):
-        self.x = x
-        self.y = y
-        self.looks_like = looksLike
-        self.collision_behavior = collisionBehavior
-        self.score_on_destroy = scoreOnDestroy
-        self.ai = ai
-        self.score = score
+from dungeon.ai import AI
 
-    def to_dict(self):
-        return {
-            "x": self.x,
-            "y": self.y,
-            "looksLike": self.looks_like,
-            "collisionBehavior": self.collision_behavior,
-            "scoreOnDestroy": self.score_on_destroy,
-            "ai": self.ai.dict() if self.ai is not None else None,
-            "score": self.score
-        }
+LooksLike = Union[Literal["player"], Literal["coin"], Literal["wall"]]
+CollisionBehavior = Union[Literal["block"], Literal["vanish"]]
+
+
+class Entity(BaseModel):
+    x: int
+    y: int
+    ai: Optional[AI]
+    score: Optional[int]
+    collisionBehavior: Optional[CollisionBehavior]
+    scoreOnDestroy: Optional[int]
+    looksLike: LooksLike
