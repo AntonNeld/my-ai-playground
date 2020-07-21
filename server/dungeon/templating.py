@@ -97,7 +97,8 @@ def template_from_txt(txt):
             elif symbol in definitions:
                 definition = definitions[symbol]
                 if definition == "player":
-                    entity = {"looksLike": "player", "ai": "pathfinder"}
+                    entity = {"looksLike": "player",
+                              "ai": {"kind": "pathfinder"}}
                 elif definition == "block":
                     entity = {"collisionBehavior": "block",
                               "looksLike": "wall"}

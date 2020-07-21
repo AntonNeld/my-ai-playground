@@ -86,7 +86,7 @@ async function setManualAI() {
     await fetch(`/api/rooms/${roomId}/entities/${highlighted}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...entity, ai: "manual" }),
+      body: JSON.stringify({ ...entity, ai: { kind: "manual" } }),
     });
     update();
   }

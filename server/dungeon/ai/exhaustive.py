@@ -4,8 +4,8 @@ from dungeon.ai.lib.pathfinding import breadth_first
 
 class ExhaustiveAI:
 
-    def __init__(self):
-        self._plan = []
+    def __init__(self, plan):
+        self._plan = plan
 
     def next_move(self, percept):
         print("Starting up!")
@@ -28,7 +28,7 @@ class ExhaustiveAI:
         return self._plan.pop(0)
 
     def to_dict(self):
-        return "exhaustive"
+        return {"kind": "exhaustive", "plan": self._plan}
 
 
 def _helper(pos, coins, path, bestpath, walls, distances):

@@ -4,14 +4,14 @@ from .random import RandomAI
 from .exhaustive import ExhaustiveAI
 
 
-def ai_from_dict(ai):  # Not a dict yet
-    if ai == "manual":
-        return ManualAI()
-    elif ai == "pathfinder":
-        return PathfinderAI()
-    elif ai == "exhaustive":
-        return ExhaustiveAI()
-    elif ai == "random":
+def ai_from_dict(ai):
+    if ai["kind"] == "manual":
+        return ManualAI(ai["plan"] if "plan" in ai else None)
+    elif ai["kind"] == "pathfinder":
+        return PathfinderAI(ai["plan"] if "plan" in ai else None)
+    elif ai["kind"] == "exhaustive":
+        return ExhaustiveAI(ai["plan"] if "plan" in ai else None)
+    elif ai["kind"] == "random":
         return RandomAI()
     else:
         raise RuntimeError(f"Unknown ai {ai}")

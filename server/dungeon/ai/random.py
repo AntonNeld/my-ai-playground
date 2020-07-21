@@ -7,4 +7,4 @@ class RandomAI:
                               "move_left", "move_right"])
 
     def to_dict(self):
-        return "random"
+        return {"kind": "random"}

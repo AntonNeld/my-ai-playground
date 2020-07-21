@@ -8,7 +8,7 @@ RESOURCE_TYPES = [
         "parents": [],
         "example": {
             "entities": [
-                {"x": 0, "y": 0, "ai": "pathfinder",
+                {"x": 0, "y": 0, "ai": {"kind": "pathfinder"},
                  "looksLike": "player"},
                 {"x": 1, "y": 1,
                     "collisionBehavior": "block", "looksLike": "wall"},
@@ -19,7 +19,7 @@ RESOURCE_TYPES = [
         "example_two": {
             "entities": [
                 {"x": 0, "y": 0,
-                 "ai": "manual", "looksLike": "player"}
+                 "ai": {"kind": "manual"}, "looksLike": "player"}
             ]
         }
     },
@@ -30,7 +30,7 @@ RESOURCE_TYPES = [
             "steps": 0,
             "entities": {
                 "a": {"x": 0, "y": 0,
-                      "ai": "pathfinder", "score": 0,
+                      "ai": {"kind": "pathfinder"}, "score": 0,
                       "looksLike": "player"},
                 "b": {"x": 1, "y": 1,
                       "collisionBehavior": "block", "looksLike": "wall"},
@@ -42,7 +42,7 @@ RESOURCE_TYPES = [
             "steps": 1,
             "entities": {
                 "d": {"x": 0, "y": 0,
-                      "ai": "manual", "score": 0,
+                      "ai": {"kind": "manual"}, "score": 0,
                       "looksLike": "player"}
             }
         }
@@ -57,7 +57,7 @@ RESOURCE_TYPES = [
         "example": {
             "x": 0,
             "y": 0,
-            "ai": "pathfinder",
+            "ai": {"kind": "pathfinder"},
             "score": 0,
             "looksLike": "player"
         },

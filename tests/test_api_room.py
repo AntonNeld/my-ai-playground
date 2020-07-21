@@ -4,7 +4,7 @@ import pytest
 @pytest.mark.parametrize("method", ["post", "put"])
 def test_create_room_from_template(client, method):
     client.put("/api/templates/testtemplate", json={
-        "entities": [{"x": 0, "y": 0, "ai": "manual",
+        "entities": [{"x": 0, "y": 0, "ai": {"kind": "manual"},
                       "looksLike": "player"},
                      {"x": 1, "y": 0,
                       "collisionBehavior": "vanish", "scoreOnDestroy": 1,
@@ -21,7 +21,7 @@ def test_create_room_from_template(client, method):
     response = client.get(f"/api/rooms/{room_id}")
     assert response.status_code == 200
     room = response.json()
-    assert {"x": 0, "y": 0, "ai": "manual",
+    assert {"x": 0, "y": 0, "ai": {"kind": "manual"},
             "looksLike": "player"} in room["entities"].values()
     assert {"x": 1, "y": 0,
             "collisionBehavior": "vanish",
@@ -45,7 +45,7 @@ def test_step(client):
         "steps": 0,
         "entities": {
             "a": {"x": 0, "y": 0,
-                  "ai": "pathfinder", "score": 0,
+                  "ai": {"kind": "pathfinder"}, "score": 0,
                   "looksLike": "player"},
             "b": {"x": 1, "y": 0, "type": "coin", "scoreOnDestroy": 1,
                   "collisionBehavior": "vanish", "looksLike": "coin"}
@@ -60,7 +60,7 @@ def test_step(client):
         "steps": 1,
         "entities": {
             "a": {"x": 1, "y": 0,
-                  "ai": "pathfinder", "score": 1,
+                  "ai": {"kind": "pathfinder", "plan": []}, "score": 1,
                   "looksLike": "player"}
         }
     }
@@ -70,7 +70,7 @@ def test_manual_ai(client):
     client.put("/api/rooms/testroom", json={
         "steps": 0,
         "entities": {
-            "a": {"x": 0, "y": 0, "ai": "manual", "score": 0,
+            "a": {"x": 0, "y": 0, "ai": {"kind": "manual"}, "score": 0,
                   "looksLike": "player"}
         }
     })
