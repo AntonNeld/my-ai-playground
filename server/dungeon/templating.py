@@ -1,12 +1,18 @@
 import json
 from pathlib import Path
 import re
+from typing import List
 import uuid
 
-from models import Template
+from pydantic import BaseModel
+
 from errors import ResourceNotFoundError
-from dungeon.entities.entity_factories import entity_from_dict
+from dungeon.entities.entity import Entity
 from dungeon.room import Room
+
+
+class Template(BaseModel):
+    entities: List[Entity]
 
 
 class TemplateKeeper:
@@ -36,8 +42,8 @@ class TemplateKeeper:
     def create_room(self, template_id):
         template = self.get_template(template_id)
         new_room = Room(0)
-        for entity in template["entities"]:
-            new_room.add_entity(entity_from_dict(entity))
+        for entity in template.entities:
+            new_room.add_entity(entity)
         return new_room
 
     def load_directory(self, directory):
@@ -45,14 +51,11 @@ class TemplateKeeper:
         for p in parent_dir.glob("./*.json"):
             with p.open() as f:
                 template = Template(**json.load(f))
-                self.add_template(template.dict(
-                    exclude_none=True), template_id=p.stem)
+                self.add_template(template, template_id=p.stem)
         for p in parent_dir.glob("./*.txt"):
             with p.open() as f:
-                template = Template(**template_from_txt(
-                    f.read()))
-                self.add_template(template.dict(
-                    exclude_none=True), template_id=p.stem)
+                template = template_from_txt(f.read())
+                self.add_template(template, template_id=p.stem)
 
 
 class ParseError(Exception):
@@ -113,4 +116,4 @@ def template_from_txt(txt):
                 entities.append(entity)
             else:
                 raise ParseError(f"Unknown symbol: {symbol}")
-    return {"entities": entities}
+    return Template(entities=entities)

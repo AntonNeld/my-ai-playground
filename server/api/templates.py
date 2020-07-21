@@ -2,7 +2,7 @@ from typing import List
 
 from fastapi import APIRouter
 
-from models import Template
+from dungeon.templating import Template
 
 
 def templates_routes(template_keeper):
@@ -15,7 +15,7 @@ def templates_routes(template_keeper):
 
     @router.post("/templates", response_model=str)
     async def create_template(template: Template):
-        return template_keeper.add_template(template.dict(exclude_none=True))
+        return template_keeper.add_template(template)
 
     @router.get("/templates/{template_id}", response_model=Template,
                 response_model_exclude_none=True)
@@ -25,8 +25,7 @@ def templates_routes(template_keeper):
     @router.put("/templates/{template_id}", response_model=str)
     async def create_template_with_id(template_id: str,
                                       template: Template):
-        return template_keeper.add_template(template.dict(exclude_none=True),
-                                            template_id=template_id)
+        return template_keeper.add_template(template, template_id=template_id)
 
     @router.delete("/templates/{template_id}")
     async def delete_template(template_id: str):

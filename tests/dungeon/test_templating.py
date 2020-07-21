@@ -1,13 +1,12 @@
-import json
 from pathlib import Path
 
 import pytest
 
-from dungeon.templating import TemplateKeeper, template_from_txt
+from dungeon.templating import TemplateKeeper, template_from_txt, Template
 
 PARENT_DIR = Path(__file__).parent
 
-RAW_TEMPLATE = {
+RAW_TEMPLATE = Template(**{
     "entities": [
         {"x": 0, "y": 0, "ai": {"kind": "pathfinder"},
          "looksLike": "player"},
@@ -16,17 +15,18 @@ RAW_TEMPLATE = {
         {"x": 1, "y": 0, "collisionBehavior": "vanish",
          "looksLike": "coin", "scoreOnDestroy": 1}
     ]
-}
+})
 
 
 def equal_templates(one, two):
-    if ({key: value for key, value in one.items() if key != "entities"} !=
-            {key: value for key, value in two.items() if key != "entities"}):
+    if ({key: value for key, value in one.dict().items()
+         if key != "entities"} != {key: value for key, value in
+                                   two.dict().items() if key != "entities"}):
         return False
-    return (sorted(one["entities"],
-                   key=lambda x: json.dumps(x, sort_keys=True))
-            == sorted(two["entities"],
-                      key=lambda x: json.dumps(x, sort_keys=True)))
+    return (sorted(one.entities,
+                   key=lambda x: x.json(sort_keys=True))
+            == sorted(two.entities,
+                      key=lambda x: x.json(sort_keys=True)))
 
 
 @ pytest.fixture
@@ -58,7 +58,7 @@ pc
 
 """
     )
-    assert equal_templates(template, {
+    assert equal_templates(template, Template(**{
         "entities": [
             {"x": 0, "y": 0, "ai": {"kind": "pathfinder"},
              "looksLike": "player"},
@@ -67,7 +67,7 @@ pc
             {"x": 1, "y": 0, "collisionBehavior": "vanish",
              "looksLike": "coin", "scoreOnDestroy": 1}
         ]
-    })
+    }))
 
 
 def test_included_templates_validate():
