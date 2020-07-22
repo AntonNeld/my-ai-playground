@@ -9,11 +9,11 @@ PARENT_DIR = Path(__file__).parent
 RAW_TEMPLATE = Template(**{
     "entities": [
         {"x": 0, "y": 0, "ai": {"kind": "pathfinder"},
-         "looksLike": "player"},
-        {"x": 1, "y": 1, "collisionBehavior": "block",
+         "looksLike": "player", "canPickup": True},
+        {"x": 1, "y": 1, "blocksMovement": True,
          "looksLike": "wall"},
-        {"x": 1, "y": 0, "collisionBehavior": "vanish",
-         "looksLike": "coin", "scoreOnDestroy": 1}
+        {"x": 1, "y": 0, "pickup": {"kind": "addScore", "score": 1},
+         "looksLike": "coin"}
     ]
 })
 
@@ -61,11 +61,11 @@ pc
     assert equal_templates(template, Template(**{
         "entities": [
             {"x": 0, "y": 0, "ai": {"kind": "pathfinder"},
-             "looksLike": "player"},
-            {"x": 1, "y": 1, "collisionBehavior": "block",
+             "looksLike": "player", "canPickup": True},
+            {"x": 1, "y": 1, "blocksMovement": True,
              "looksLike": "wall"},
-            {"x": 1, "y": 0, "collisionBehavior": "vanish",
-             "looksLike": "coin", "scoreOnDestroy": 1}
+            {"x": 1, "y": 0, "pickup": {"kind": "addScore", "score": 1},
+             "looksLike": "coin"}
         ]
     }))
 
@@ -82,11 +82,11 @@ def test_template_not_modified_by_room():
     template = Template(**{
         "entities": [
             {"x": 0, "y": 0, "ai": {"kind": "pathfinder"},
-             "looksLike": "player"},
-            {"x": 1, "y": 1, "collisionBehavior": "block",
+             "looksLike": "player", "canPickup": True},
+            {"x": 1, "y": 1, "blocksMovement": True,
              "looksLike": "wall"},
-            {"x": 1, "y": 0, "collisionBehavior": "vanish",
-             "looksLike": "coin", "scoreOnDestroy": 1}
+            {"x": 1, "y": 0, "pickup": {"kind": "addScore", "score": 1},
+             "looksLike": "coin"}
         ]
     })
     template_keeper.add_template(template, template_id="testtemplate")
@@ -95,10 +95,10 @@ def test_template_not_modified_by_room():
     assert equal_templates(template, Template(**{
         "entities": [
             {"x": 0, "y": 0, "ai": {"kind": "pathfinder"},
-             "looksLike": "player"},
-            {"x": 1, "y": 1, "collisionBehavior": "block",
+             "looksLike": "player", "canPickup": True},
+            {"x": 1, "y": 1, "blocksMovement": True,
              "looksLike": "wall"},
-            {"x": 1, "y": 0, "collisionBehavior": "vanish",
-             "looksLike": "coin", "scoreOnDestroy": 1}
+            {"x": 1, "y": 0, "pickup": {"kind": "addScore", "score": 1},
+             "looksLike": "coin"}
         ]
     }))

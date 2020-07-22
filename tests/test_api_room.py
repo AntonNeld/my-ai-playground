@@ -5,9 +5,9 @@ import pytest
 def test_create_room_from_template(client, method):
     client.put("/api/templates/testtemplate", json={
         "entities": [{"x": 0, "y": 0, "ai": {"kind": "random"},
-                      "looksLike": "player"},
+                      "looksLike": "player", "canPickup": True},
                      {"x": 1, "y": 0,
-                      "collisionBehavior": "vanish", "scoreOnDestroy": 1,
+                      "pickup": {"kind": "addScore", "score": 1},
                       "looksLike": "coin"}]
     })
     if method == "post":
@@ -22,11 +22,11 @@ def test_create_room_from_template(client, method):
     assert response.status_code == 200
     room = response.json()
     assert {"x": 0, "y": 0, "ai": {"kind": "random"},
-            "looksLike": "player"} in room["entities"].values()
+            "looksLike": "player",
+            "canPickup": True} in room["entities"].values()
     assert {"x": 1, "y": 0,
-            "collisionBehavior": "vanish",
-            "looksLike": "coin",
-            "scoreOnDestroy": 1} in room["entities"].values()
+            "pickup": {"kind": "addScore", "score": 1},
+            "looksLike": "coin"} in room["entities"].values()
     assert room["steps"] == 0
 
 
@@ -46,9 +46,10 @@ def test_step(client):
         "entities": {
             "a": {"x": 0, "y": 0,
                   "ai": {"kind": "pathfinder"}, "score": 0,
-                  "looksLike": "player"},
-            "b": {"x": 1, "y": 0, "type": "coin", "scoreOnDestroy": 1,
-                  "collisionBehavior": "vanish", "looksLike": "coin"}
+                  "looksLike": "player", "canPickup": True},
+            "b": {"x": 1, "y": 0, "type": "coin",
+                  "pickup": {"kind": "addScore", "score": 1},
+                  "looksLike": "coin"}
         }
     })
 
@@ -61,6 +62,6 @@ def test_step(client):
         "entities": {
             "a": {"x": 1, "y": 0,
                   "ai": {"kind": "pathfinder", "plan": []}, "score": 1,
-                  "looksLike": "player"}
+                  "looksLike": "player", "canPickup": True}
         }
     }

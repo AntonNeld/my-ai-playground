@@ -100,15 +100,14 @@ def template_from_txt(txt):
             elif symbol in definitions:
                 definition = definitions[symbol]
                 if definition == "player":
-                    entity = {"looksLike": "player",
+                    entity = {"looksLike": "player", "canPickup": True,
                               "ai": {"kind": "pathfinder"}}
                 elif definition == "block":
-                    entity = {"collisionBehavior": "block",
+                    entity = {"blocksMovement": True,
                               "looksLike": "wall"}
                 elif definition == "coin":
-                    entity = {"collisionBehavior": "vanish",
-                              "looksLike": "coin",
-                              "scoreOnDestroy": 1}
+                    entity = {"pickup": {"kind": "addScore", "score": 1},
+                              "looksLike": "coin"}
                 else:
                     raise ParseError(f"Unknown definition: {definition}")
                 entity["x"] = x

@@ -5,20 +5,20 @@
       "y": 0,
       "type": "player",
       "ai": { "kind": "pathfinder" },
-      "looksLike": "player"
+      "looksLike": "player",
+      "canPickup": true
     },
     {
       "x": 1,
       "y": 1,
-      "collisionBehavior": "block",
+      "blocksMovement": true,
       "looksLike": "wall"
     },
     {
       "x": 1,
       "y": 0,
-      "collisionBehavior": "vanish",
-      "looksLike": "coin",
-      "scoreOnDestroy": 1
+      "pickup": { "kind": "addScore", "score": 1 },
+      "looksLike": "coin"
     }
   ]
 }

@@ -6,7 +6,14 @@ from typing_extensions import Literal
 from dungeon.ai import AI
 
 LooksLike = Union[Literal["player"], Literal["coin"], Literal["wall"]]
-CollisionBehavior = Union[Literal["block"], Literal["vanish"]]
+
+
+class ScorePickup(BaseModel):
+    kind: Literal["addScore"]
+    score: int
+
+
+Pickup = Union[ScorePickup]
 
 
 class Entity(BaseModel):
@@ -14,7 +21,8 @@ class Entity(BaseModel):
     y: int
     ai: Optional[AI]
     score: Optional[int]
-    collision_behavior: Optional[CollisionBehavior] = Field(
-        None, alias="collisionBehavior")
-    score_on_destroy: Optional[int] = Field(None, alias="scoreOnDestroy")
+    blocks_movement: bool = Field(
+        None, alias="blocksMovement")
+    can_pickup: bool = Field(None, alias="canPickup")
+    pickup: Optional[Pickup]
     looks_like: LooksLike = Field(None, alias="looksLike")

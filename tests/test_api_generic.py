@@ -11,9 +11,9 @@ RESOURCE_TYPES = [
                 {"x": 0, "y": 0, "ai": {"kind": "pathfinder"},
                  "looksLike": "player"},
                 {"x": 1, "y": 1,
-                    "collisionBehavior": "block", "looksLike": "wall"},
-                {"x": 1, "y": 0, "collisionBehavior": "vanish",
-                    "looksLike": "coin", "scoreOnDestroy": 1}
+                    "blocksMovement": True, "looksLike": "wall"},
+                {"x": 1, "y": 0, "pickup": {"kind": "addScore", "score": 1},
+                    "looksLike": "coin"}
             ]
         },
         "example_two": {
@@ -33,9 +33,10 @@ RESOURCE_TYPES = [
                       "ai": {"kind": "pathfinder"}, "score": 0,
                       "looksLike": "player"},
                 "b": {"x": 1, "y": 1,
-                      "collisionBehavior": "block", "looksLike": "wall"},
-                "c": {"x": 1, "y": 0, "scoreOnDestroy": 1,
-                      "collisionBehavior": "vanish", "looksLike": "coin"}
+                      "blocksMovement": True, "looksLike": "wall"},
+                "c": {"x": 1, "y": 0,
+                      "pickup": {"kind": "addScore", "score": 1},
+                      "looksLike": "coin"}
             }
         },
         "example_two": {
@@ -64,7 +65,7 @@ RESOURCE_TYPES = [
         "example_two": {
             "x": 1,
             "y": -4,
-            "collisionBehavior": "block",
+            "blocksMovement": True,
             "looksLike": "wall"
         }
     }

@@ -73,16 +73,17 @@ class Room(BaseModel):
 
             colliding_entities = [e for e in self.get_entities(
             ) if e.x == entity.x+dx and e.y == entity.y+dy and e != entity]
-            if "block" not in map(lambda e: e.collision_behavior,
-                                  colliding_entities):
+            if not any(map(lambda e: e.blocks_movement,
+                           colliding_entities)):
                 entity.x += dx
                 entity.y += dy
-                for colliding_entity in colliding_entities:
-                    if colliding_entity.collision_behavior == "vanish":
-                        self.remove_entity(colliding_entity)
-                        if colliding_entity.score_on_destroy is not None:
-                            if entity.score is None:
-                                entity.score = 0
-                            entity.score += colliding_entity.score_on_destroy
+                if entity.can_pickup:
+                    for colliding_entity in colliding_entities:
+                        if colliding_entity.pickup is not None:
+                            self.remove_entity(colliding_entity)
+                            if colliding_entity.pickup.kind == "addScore":
+                                if entity.score is None:
+                                    entity.score = 0
+                                entity.score += colliding_entity.pickup.score
 
         self.steps += 1
