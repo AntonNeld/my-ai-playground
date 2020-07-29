@@ -37,8 +37,10 @@ class Room(BaseModel):
         except KeyError:
             raise ResourceNotFoundError
 
-    def get_entities(self):
-        return list(self.entities.values())
+    def get_entities(self, **kwargs):
+        return list(filter(lambda e: all(getattr(e, key) == value
+                                         for key, value in kwargs.items()),
+                           self.entities.values()))
 
     def get_view(self, perceptor):
         x = perceptor.x
@@ -71,8 +73,9 @@ class Room(BaseModel):
             elif action == "move_right":
                 dx = 1
 
-            colliding_entities = [e for e in self.get_entities(
-            ) if e.x == entity.x+dx and e.y == entity.y+dy and e != entity]
+            colliding_entities = [e for e in self.get_entities(x=entity.x+dx,
+                                                               y=entity.y+dy)
+                                  if e != entity]
             if not any(map(lambda e: e.blocks_movement,
                            colliding_entities)):
                 entity.x += dx
