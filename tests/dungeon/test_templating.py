@@ -83,8 +83,6 @@ def test_template_not_modified_by_room():
         "entities": [
             {"x": 0, "y": 0, "ai": {"kind": "pathfinder"},
              "looksLike": "player", "canPickup": True},
-            {"x": 1, "y": 1, "blocksMovement": True,
-             "looksLike": "wall"},
             {"x": 1, "y": 0, "pickup": {"kind": "addScore", "score": 1},
              "looksLike": "coin"}
         ]
@@ -96,8 +94,6 @@ def test_template_not_modified_by_room():
         "entities": [
             {"x": 0, "y": 0, "ai": {"kind": "pathfinder"},
              "looksLike": "player", "canPickup": True},
-            {"x": 1, "y": 1, "blocksMovement": True,
-             "looksLike": "wall"},
             {"x": 1, "y": 0, "pickup": {"kind": "addScore", "score": 1},
              "looksLike": "coin"}
         ]

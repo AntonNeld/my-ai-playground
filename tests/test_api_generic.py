@@ -8,18 +8,12 @@ RESOURCE_TYPES = [
         "parents": [],
         "example": {
             "entities": [
-                {"x": 0, "y": 0, "ai": {"kind": "pathfinder"},
-                 "looksLike": "player"},
-                {"x": 1, "y": 1,
-                    "blocksMovement": True, "looksLike": "wall"},
-                {"x": 1, "y": 0, "pickup": {"kind": "addScore", "score": 1},
-                    "looksLike": "coin"}
+                {"x": 0, "y": 0, "looksLike": "player"}
             ]
         },
         "example_two": {
             "entities": [
-                {"x": 0, "y": 0,
-                 "ai": {"kind": "random"}, "looksLike": "player"}
+                {"x": 0, "y": 0, "looksLike": "coin"}
             ]
         }
     },
@@ -29,22 +23,13 @@ RESOURCE_TYPES = [
         "example": {
             "steps": 0,
             "entities": {
-                "a": {"x": 0, "y": 0,
-                      "ai": {"kind": "pathfinder"}, "score": 0,
-                      "looksLike": "player"},
-                "b": {"x": 1, "y": 1,
-                      "blocksMovement": True, "looksLike": "wall"},
-                "c": {"x": 1, "y": 0,
-                      "pickup": {"kind": "addScore", "score": 1},
-                      "looksLike": "coin"}
+                "a": {"x": 0, "y": 0, "looksLike": "player"},
             }
         },
         "example_two": {
             "steps": 1,
             "entities": {
-                "d": {"x": 0, "y": 0,
-                      "ai": {"kind": "random"}, "score": 0,
-                      "looksLike": "player"}
+                "b": {"x": 0, "y": 0, "looksLike": "coin"}
             }
         }
     },
@@ -58,15 +43,12 @@ RESOURCE_TYPES = [
         "example": {
             "x": 0,
             "y": 0,
-            "ai": {"kind": "pathfinder"},
-            "score": 0,
             "looksLike": "player"
         },
         "example_two": {
-            "x": 1,
-            "y": -4,
-            "blocksMovement": True,
-            "looksLike": "wall"
+            "x": 0,
+            "y": 0,
+            "looksLike": "coin"
         }
     }
 ]
