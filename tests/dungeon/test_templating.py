@@ -70,6 +70,19 @@ pc
     }))
 
 
+def test_parse_ignore_comment():
+    template = template_from_txt("""
+This is a comment
+p = {"looksLike": "player"}
+
+p
+
+""")
+    assert equal_templates(template, Template(**{
+        "entities": [{"x": 0, "y": 0, "looksLike": "player"}]
+    }))
+
+
 def test_parse_multiline_definition():
     template = template_from_txt("""
 a = {

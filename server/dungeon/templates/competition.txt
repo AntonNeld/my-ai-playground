@@ -1,3 +1,4 @@
+This room has two pathfinders who both want to pick up coins
 p = {"looksLike": "player", "canPickup": "auto", "ai": {"kind": "pathfinder"}}
 c = {"looksLike": "coin", "pickup": {"kind": "addScore", "score": 1}}
 # = {"looksLike": "wall", "blocksMovement": true}

@@ -69,6 +69,9 @@ def template_from_txt(txt):
     after a newline:
     <symbol>=<definition>
 
+    A line that does not follow this format (and is not in the middle of a
+    JSON string) is ignored and can be used for comments.
+
     A symbol is one unicode character, a definition is usually a JSON-encoded
     object defining an entity. The definition can be split up across
     multiple lines, but cannot have empty lines in it. A definition
@@ -88,9 +91,9 @@ def template_from_txt(txt):
     for line in header.split("\n"):
         if current_symbol is None:
             without_whitespace = re.sub(r"\s+", "", line)
-            current_symbol = without_whitespace[0]
             if without_whitespace[1] != "=":
-                raise ParseError(f"Malformed header:\n{header}")
+                continue
+            current_symbol = without_whitespace[0]
             current_json = without_whitespace[2:]
         else:
             # Include a space in case the whitespace makes a difference

@@ -1,3 +1,4 @@
+This room is a maze that demonstrates pathfinding ability
 p = {"looksLike": "player", "canPickup": "auto", "ai": {"kind": "pathfinder"}}
 c = {"looksLike": "coin", "pickup": {"kind": "addScore", "score": 1}}
 # = {"looksLike": "wall", "blocksMovement": true}
