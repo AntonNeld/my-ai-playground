@@ -1,6 +1,6 @@
-p = player
-c = coin
-# = block
+p = {"looksLike": "player", "canPickup": true, "ai": {"kind": "pathfinder"}}
+c = {"looksLike": "coin", "pickup": {"kind": "addScore", "score": 1}}
+# = {"looksLike": "wall", "blocksMovement": true}
 
 ####################
 #c#   #  c  #     c#

@@ -50,9 +50,9 @@ def test_load_txt(loaded_keeper):
 def test_parse_txt():
     template = template_from_txt(
         """
-p = player
-c = coin
-# = block
+p = {"looksLike": "player", "canPickup": true, "ai": {"kind": "pathfinder"}}
+c = {"looksLike": "coin", "pickup": {"kind": "addScore", "score": 1}}
+# = {"looksLike": "wall", "blocksMovement": true}
 
  #
 pc

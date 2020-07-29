@@ -88,7 +88,7 @@ def template_from_txt(txt):
         if without_whitespace[1] != "=":
             raise ParseError(f"Malformed header:\n{header}")
         definition = without_whitespace[2:]
-        definitions[symbol] = definition
+        definitions[symbol] = json.loads(definition)
 
     entities = []
     body = txt.strip().split("\n\n", 1)[1]
@@ -98,21 +98,9 @@ def template_from_txt(txt):
             if symbol == " ":
                 pass
             elif symbol in definitions:
-                definition = definitions[symbol]
-                if definition == "player":
-                    entity = {"looksLike": "player", "canPickup": True,
-                              "ai": {"kind": "pathfinder"}}
-                elif definition == "block":
-                    entity = {"blocksMovement": True,
-                              "looksLike": "wall"}
-                elif definition == "coin":
-                    entity = {"pickup": {"kind": "addScore", "score": 1},
-                              "looksLike": "coin"}
-                else:
-                    raise ParseError(f"Unknown definition: {definition}")
-                entity["x"] = x
-                entity["y"] = len(lines) - y - 1
-                entities.append(entity)
+                entities.append({"x": x,
+                                 "y": len(lines) - y - 1,
+                                 **definitions[symbol]})
             else:
                 raise ParseError(f"Unknown symbol: {symbol}")
     return Template(entities=entities)
