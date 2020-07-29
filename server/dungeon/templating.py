@@ -66,14 +66,12 @@ def template_from_txt(txt):
     Create a template from a string of the following format:
 
     The string begins with a header defining the symbols, each
-    on its own line:
+    after a newline:
     <symbol>=<definition>
 
-    All whitespace except newlines are ignored in the header.
-    A symbol is one unicode character, a definition is one of:
-    player
-    coin
-    block
+    A symbol is one unicode character, a definition is a JSON-encoded
+    object defining an entity. The definition can be split up across
+    multiple lines, but cannot have empty lines in it.
 
     Between the header and the body is an empty line, then the
     layout of the room is defined, with a symbol's location
@@ -81,13 +79,27 @@ def template_from_txt(txt):
     """
     header = txt.strip().split("\n\n", 1)[0]
     definitions = {}
+    current_symbol = None
+    current_json = None
     for line in header.split("\n"):
-        without_whitespace = re.sub(r"\s+", "", line)
-        symbol = without_whitespace[0]
-        if without_whitespace[1] != "=":
-            raise ParseError(f"Malformed header:\n{header}")
-        definition = without_whitespace[2:]
-        definitions[symbol] = json.loads(definition)
+        if current_symbol is None:
+            without_whitespace = re.sub(r"\s+", "", line)
+            current_symbol = without_whitespace[0]
+            if without_whitespace[1] != "=":
+                raise ParseError(f"Malformed header:\n{header}")
+            current_json = without_whitespace[2:]
+        else:
+            # Include a space in case the whitespace makes a difference
+            current_json += " " + line
+        try:
+            definitions[current_symbol] = json.loads(current_json)
+            current_symbol = None
+            current_json = None
+        except json.decoder.JSONDecodeError:
+            pass
+    # Should be nothing left
+    if current_symbol is not None or current_json is not None:
+        raise ParseError(f"Malformed header:\n{header}")
 
     entities = []
     body = txt.strip().split("\n\n", 1)[1]

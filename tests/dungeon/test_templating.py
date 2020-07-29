@@ -48,8 +48,7 @@ def test_load_txt(loaded_keeper):
 
 
 def test_parse_txt():
-    template = template_from_txt(
-        """
+    template = template_from_txt("""
 p = {"looksLike": "player", "canPickup": true, "ai": {"kind": "pathfinder"}}
 c = {"looksLike": "coin", "pickup": {"kind": "addScore", "score": 1}}
 # = {"looksLike": "wall", "blocksMovement": true}
@@ -57,8 +56,7 @@ c = {"looksLike": "coin", "pickup": {"kind": "addScore", "score": 1}}
  #
 pc
 
-"""
-    )
+""")
     assert equal_templates(template, Template(**{
         "entities": [
             {"x": 0, "y": 0, "ai": {"kind": "pathfinder"},
@@ -67,6 +65,25 @@ pc
              "looksLike": "wall"},
             {"x": 1, "y": 0, "pickup": {"kind": "addScore", "score": 1},
              "looksLike": "coin"}
+        ]
+    }))
+
+
+def test_parse_multiline_definition():
+    template = template_from_txt("""
+a = {
+      "looksLike": "player",
+      "canPickup": true,
+      "ai": {"kind": "pathfinder"}
+    }
+
+a
+
+""")
+    assert equal_templates(template, Template(**{
+        "entities": [
+            {"x": 0, "y": 0, "ai": {"kind": "pathfinder"},
+             "looksLike": "player", "canPickup": True},
         ]
     }))
 
