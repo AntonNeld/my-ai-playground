@@ -32,7 +32,8 @@ def equal_templates(one, two):
 @ pytest.fixture
 def loaded_keeper():
     template_keeper = TemplateKeeper()
-    template_keeper.load_directory(PARENT_DIR / "templates")
+    template_keeper.load_directory(
+        PARENT_DIR / "test_templating" / "templates")
     return template_keeper
 
 
