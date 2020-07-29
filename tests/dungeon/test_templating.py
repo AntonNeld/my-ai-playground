@@ -82,20 +82,10 @@ def test_template_not_modified_by_room():
     template_keeper = TemplateKeeper()
     template = Template(**{
         "entities": [
-            {"x": 0, "y": 0, "ai": {"kind": "pathfinder"},
-             "looksLike": "player", "canPickup": True},
-            {"x": 1, "y": 0, "pickup": {"kind": "addScore", "score": 1},
-             "looksLike": "coin"}
+            {"x": 0, "y": 0, "looksLike": "player"},
         ]
     })
     template_keeper.add_template(template, template_id="testtemplate")
     room = template_keeper.create_room("testtemplate")
-    room.step()
-    assert equal_templates(template, Template(**{
-        "entities": [
-            {"x": 0, "y": 0, "ai": {"kind": "pathfinder"},
-             "looksLike": "player", "canPickup": True},
-            {"x": 1, "y": 0, "pickup": {"kind": "addScore", "score": 1},
-             "looksLike": "coin"}
-        ]
-    }))
+    room.get_entities()[0].x = 1
+    assert template.entities[0].x == 0
