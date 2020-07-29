@@ -2,7 +2,8 @@ from pathlib import Path
 
 import pytest
 
-from dungeon.templating import TemplateKeeper, template_from_txt, Template
+from dungeon.templating import (TemplateKeeper, template_from_txt,
+                                Template, ParseError)
 
 PARENT_DIR = Path(__file__).parent
 
@@ -86,6 +87,65 @@ a
              "looksLike": "player", "canPickup": "auto"},
         ]
     }))
+
+
+def test_parse_colocated_entities():
+    template = template_from_txt("""
+a = [{"looksLike": "player"}, {"looksLike": "wall"}]
+
+a
+
+""")
+    assert equal_templates(template, Template(**{
+        "entities": [
+            {"x": 0, "y": 0, "looksLike": "player"},
+            {"x": 0, "y": 0, "looksLike": "wall"},
+        ]
+    }))
+
+
+def test_parse_colocated_entities_with_refs():
+    template = template_from_txt("""
+a = [{"looksLike": "player"}, "#"]
+# = {"looksLike": "wall"}
+
+a
+
+""")
+    assert equal_templates(template, Template(**{
+        "entities": [
+            {"x": 0, "y": 0, "looksLike": "player"},
+            {"x": 0, "y": 0, "looksLike": "wall"},
+        ]
+    }))
+
+
+def test_parse_nested_refs():
+    template = template_from_txt("""
+a = ["b"]
+b = "c"
+c = {"looksLike": "coin"}
+
+a
+
+""")
+    assert equal_templates(template, Template(**{
+        "entities": [
+            {"x": 0, "y": 0, "looksLike": "coin"},
+        ]
+    }))
+
+
+def test_parse_circular_refs():
+    with pytest.raises(ParseError):
+        template_from_txt("""
+a = "b"
+b = "c"
+c = "a"
+
+a
+
+""")
 
 
 def test_included_templates_validate():

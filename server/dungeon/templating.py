@@ -69,9 +69,13 @@ def template_from_txt(txt):
     after a newline:
     <symbol>=<definition>
 
-    A symbol is one unicode character, a definition is a JSON-encoded
+    A symbol is one unicode character, a definition is usually a JSON-encoded
     object defining an entity. The definition can be split up across
-    multiple lines, but cannot have empty lines in it.
+    multiple lines, but cannot have empty lines in it. A definition
+    can also be a JSON-encoded array of entities and/or other
+    symbols, which means there are multiple entities in the same location.
+    It can also be a symbol, if you for some reason want to have multiple
+    symbols representing identical entities.
 
     Between the header and the body is an empty line, then the
     layout of the room is defined, with a symbol's location
@@ -100,6 +104,20 @@ def template_from_txt(txt):
     # Should be nothing left
     if current_symbol is not None or current_json is not None:
         raise ParseError(f"Malformed header:\n{header}")
+    # Make all definitions hold lists
+    for symbol in definitions:
+        if not isinstance(definitions[symbol], list):
+            definitions[symbol] = [definitions[symbol]]
+    # Dereference symbols in definitions
+    for symbol in definitions:
+        while any(map(lambda e: isinstance(e, str), definitions[symbol])):
+            entity = definitions[symbol].pop(0)
+            if entity == symbol:
+                raise ParseError(f"Circular reference: {entity}")
+            if isinstance(entity, str):
+                definitions[symbol].extend(definitions[entity])
+            else:
+                definitions[symbol].append(entity)
 
     entities = []
     body = txt.strip().split("\n\n", 1)[1]
@@ -109,9 +127,10 @@ def template_from_txt(txt):
             if symbol == " ":
                 pass
             elif symbol in definitions:
-                entities.append({"x": x,
-                                 "y": len(lines) - y - 1,
-                                 **definitions[symbol]})
+                for entity in definitions[symbol]:
+                    entities.append({"x": x,
+                                     "y": len(lines) - y - 1,
+                                     **entity})
             else:
                 raise ParseError(f"Unknown symbol: {symbol}")
     return Template(entities=entities)
