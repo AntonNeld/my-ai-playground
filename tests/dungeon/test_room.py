@@ -1,18 +1,18 @@
 import pytest
 
-from dungeon.room import Room
+from test_utils import room_from_text
 
 
 @pytest.mark.parametrize("move,x,y",
                          [("move_up", 0, 1), ("move_down", 0, -1),
                           ("move_left", -1, 0), ("move_right", 1, 0)])
 def test_action_move(move, x, y):
-    room = Room(steps=0, entities={"a": {
-        "x": 0,
-        "y": 0,
-        "looks_like": "player",
-        "ai": {"kind": "singular", "move": move}
-    }})
+    room = room_from_text(f"""
+p = {{"ai": {{"kind": "singular", "move": "{move}"}}}}
+
+p
+    """)
+
     room.step()
-    assert room.get_entity("a").x == x
-    assert room.get_entity("a").y == y
+    assert room.get_entities()[0].x == x
+    assert room.get_entities()[0].y == y

@@ -79,13 +79,11 @@ def test_included_templates_validate():
 
 
 def test_template_not_modified_by_room():
-    template_keeper = TemplateKeeper()
     template = Template(**{
         "entities": [
             {"x": 0, "y": 0, "looksLike": "player"},
         ]
     })
-    template_keeper.add_template(template, template_id="testtemplate")
-    room = template_keeper.create_room("testtemplate")
+    room = template.create_room()
     room.get_entities()[0].x = 1
     assert template.entities[0].x == 0

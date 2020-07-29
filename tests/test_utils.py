@@ -1,5 +1,7 @@
 from uuid import UUID
 
+from dungeon.templating import template_from_txt
+
 
 def is_uuid(string):
     try:
@@ -7,6 +9,10 @@ def is_uuid(string):
         return True
     except (ValueError, TypeError):
         return False
+
+
+def room_from_text(text):
+    return template_from_txt(text).create_room()
 
 
 def test_helper_is_uuid():

@@ -14,6 +14,12 @@ from dungeon.room import Room
 class Template(BaseModel):
     entities: List[Entity]
 
+    def create_room(self):
+        new_room = Room(steps=0, entities={})
+        for entity in self.entities:
+            new_room.add_entity(entity.copy(deep=True))
+        return new_room
+
 
 class TemplateKeeper:
 
@@ -38,13 +44,6 @@ class TemplateKeeper:
 
     def list_templates(self):
         return list(self._templates.keys())
-
-    def create_room(self, template_id):
-        template = self.get_template(template_id)
-        new_room = Room(steps=0, entities={})
-        for entity in template.entities:
-            new_room.add_entity(entity.copy(deep=True))
-        return new_room
 
     def load_directory(self, directory):
         parent_dir = Path(directory)
