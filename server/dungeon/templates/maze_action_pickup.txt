@@ -1,0 +1,19 @@
+p = {"looksLike": "player", "canPickup": "action", "ai": {"kind": "pathfinder", "manualPickup": true}}
+c = {"looksLike": "coin", "pickup": {"kind": "addScore", "score": 1}}
+# = {"looksLike": "wall", "blocksMovement": true}
+
+####################
+#c#   #  c  #     c#
+# # # # # # # # ####
+# # # c # #  c#    #
+# # ##### # ###### #
+# #c  # #c# #  c # #
+#   #   ### # ## # #
+######c##p c   # # #
+#   #   # #### #  c#
+# # c # # #c# c  # #
+# ##### #   # ## # #
+#c#c      # #  # # #
+#### ## # # ## #   #
+#c   #c #c#  c # #c#
+####################

@@ -143,6 +143,9 @@ document.addEventListener("keydown", ({ key }) => {
     case "ArrowUp":
       takeManualAction("move_up");
       break;
+    case "Control":
+      takeManualAction("pick_up");
+      break;
     case "a":
       toggleAutoStep();
       break;
