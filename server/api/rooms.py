@@ -47,7 +47,7 @@ def rooms_routes(dungeon, template_keeper):
         return dungeon.remove_room_by_id(room_id)
 
     @router.post("/rooms/{room_id}/step")
-    async def step_room(room_id: str):
-        return dungeon.get_room(room_id).step()
+    async def step_room(room_id: str, steps: int = 1):
+        return dungeon.get_room(room_id).step(steps)
 
     return router

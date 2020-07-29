@@ -56,37 +56,41 @@ class Room(BaseModel):
 
         return percept
 
-    def step(self):
-        for entity in self.get_entities():
-            # Find next action
-            action = entity.ai.next_move(self.get_view(
-                entity)) if entity.ai is not None else "none"
-            # Move and handle collisions
-            dx = dy = 0
+    def step(self, steps=1):
+        for _ in range(steps):
+            for entity in self.get_entities():
+                # Find next action
+                action = entity.ai.next_move(self.get_view(
+                    entity)) if entity.ai is not None else "none"
+                # Move and handle collisions
+                dx = dy = 0
 
-            if action == "move_up":
-                dy = 1
-            elif action == "move_down":
-                dy = -1
-            elif action == "move_left":
-                dx = -1
-            elif action == "move_right":
-                dx = 1
+                if action == "move_up":
+                    dy = 1
+                elif action == "move_down":
+                    dy = -1
+                elif action == "move_left":
+                    dx = -1
+                elif action == "move_right":
+                    dx = 1
 
-            colliding_entities = [e for e in self.get_entities(x=entity.x+dx,
-                                                               y=entity.y+dy)
-                                  if e != entity]
-            if not any(map(lambda e: e.blocks_movement,
-                           colliding_entities)):
-                entity.x += dx
-                entity.y += dy
-                if entity.can_pickup:
-                    for colliding_entity in colliding_entities:
-                        if colliding_entity.pickup is not None:
+                colliding_entities = [e for e in self.get_entities(
+                    x=entity.x+dx, y=entity.y+dy) if e != entity]
+
+                if not any(map(lambda e: e.blocks_movement is True,
+                               colliding_entities)):
+                    entity.x += dx
+                    entity.y += dy
+                    if entity.can_pickup is True:
+                        pickups = [
+                            e for e in colliding_entities
+                            if e.pickup is not None
+                        ]
+                        for colliding_entity in pickups:
                             self.remove_entity(colliding_entity)
                             if colliding_entity.pickup.kind == "addScore":
                                 if entity.score is None:
                                     entity.score = 0
                                 entity.score += colliding_entity.pickup.score
 
-        self.steps += 1
+            self.steps += 1

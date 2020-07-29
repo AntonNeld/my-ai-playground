@@ -32,17 +32,20 @@ def test_body_required_if_no_template(client, method):
     assert response.status_code == 422
 
 
-def test_step(client):
+@pytest.mark.parametrize("steps", [None, 1, 10])
+def test_step(client, steps):
     client.put("/api/rooms/testroom", json={
         "steps": 0,
         "entities": {}
     })
 
-    response = client.post("/api/rooms/testroom/step")
+    response = client.post(
+        "/api/rooms/testroom/step" if steps is None
+        else f"/api/rooms/testroom/step?steps={steps}")
     assert response.status_code == 200
 
     room_after = client.get("/api/rooms/testroom").json()
     assert room_after == {
-        "steps": 1,
+        "steps": 1 if steps is None else steps,
         "entities": {}
     }
