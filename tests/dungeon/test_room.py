@@ -16,3 +16,15 @@ p
     room.step()
     assert room.get_entities()[0].x == x
     assert room.get_entities()[0].y == y
+
+
+def test_blocks_movement():
+    room = room_from_text("""
+p = {"looksLike": "player", "ai": {"kind": "singular", "move": "move_right"}}
+# = {"blocksMovement": true}
+
+p#
+    """)
+
+    room.step()
+    assert room.get_entities(looks_like="player")[0].x == 0
