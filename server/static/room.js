@@ -1,3 +1,5 @@
+const drawOrder = ["player", "vacuum", "dirt", "coin", "wall"];
+
 export class Room extends EventTarget {
   constructor(element) {
     super();
@@ -36,7 +38,11 @@ export class Room extends EventTarget {
   }
 
   setData(data) {
+    // Sort to make some types of entities appear above others
     this.data = data;
+    this.data.sort(
+      (a, b) => drawOrder.indexOf(b.looksLike) - drawOrder.indexOf(a.looksLike)
+    );
     this.draw();
   }
 
