@@ -1,7 +1,7 @@
 import math
 from typing import List, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing_extensions import Literal
 
 from dungeon.ai.lib.perception import get_coordinates
@@ -11,6 +11,7 @@ from dungeon.consts import Move
 
 class PathfinderAI(BaseModel):
     kind: Literal["pathfinder"]
+    manual_pickup: bool = Field(None, alias="manualPickup")
     plan: Optional[List[Move]]
 
     def next_move(self, percept):
@@ -23,6 +24,8 @@ class PathfinderAI(BaseModel):
                 if new_actions and len(new_actions) < shortest:
                     self.plan = new_actions
                     shortest = len(new_actions)
+            if self.manual_pickup is True:
+                self.plan.append("pick_up")
             if shortest == math.inf:
                 self.plan = ["none"]
         return self.plan.pop(0)

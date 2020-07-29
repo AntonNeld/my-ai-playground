@@ -35,13 +35,34 @@ def test_score_pickup():
 p = {
       "looksLike": "player",
       "ai": {"kind": "singular", "move": "move_right"},
-      "canPickup": true
+      "canPickup": "auto"
     }
 c = {"pickup": {"kind": "addScore", "score": 1}}
 
 pc
     """)
 
+    room.step()
+    assert len(room.get_entities()) == 1
+    assert room.get_entities()[0].score == 1
+
+
+def test_score_pickup_action():
+    room = room_from_text("""
+p = {
+      "looksLike": "player",
+      "ai": {"kind": "singular", "move": "move_right"},
+      "canPickup": "action"
+    }
+c = {"pickup": {"kind": "addScore", "score": 1}}
+
+pc
+    """)
+
+    room.step()
+    assert len(room.get_entities()) == 2
+    assert room.get_entities()[0].score is None
+    room.get_entities(looks_like="player")[0].ai.move = "pick_up"
     room.step()
     assert len(room.get_entities()) == 1
     assert room.get_entities()[0].score == 1

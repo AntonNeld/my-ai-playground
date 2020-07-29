@@ -23,6 +23,7 @@ class Entity(BaseModel):
     score: Optional[int]
     blocks_movement: bool = Field(
         None, alias="blocksMovement")
-    can_pickup: bool = Field(None, alias="canPickup")
+    can_pickup: Union[Literal["auto"], Literal["action"]
+                      ] = Field(None, alias="canPickup")
     pickup: Optional[Pickup]
     looks_like: LooksLike = Field(None, alias="looksLike")

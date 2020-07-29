@@ -4,7 +4,7 @@
       "x": 0,
       "y": 0,
       "ai": { "kind": "pathfinder" },
-      "canPickup": true,
+      "canPickup": "auto",
       "looksLike": "player"
     },
     { "x": -1, "y": 1, "blocksMovement": true, "looksLike": "wall" },

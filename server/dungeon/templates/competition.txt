@@ -1,4 +1,4 @@
-p = {"looksLike": "player", "canPickup": true, "ai": {"kind": "pathfinder"}}
+p = {"looksLike": "player", "canPickup": "auto", "ai": {"kind": "pathfinder"}}
 c = {"looksLike": "coin", "pickup": {"kind": "addScore", "score": 1}}
 # = {"looksLike": "wall", "blocksMovement": true}
 

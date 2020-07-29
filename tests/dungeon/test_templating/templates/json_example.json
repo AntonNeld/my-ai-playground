@@ -6,7 +6,7 @@
       "type": "player",
       "ai": { "kind": "pathfinder" },
       "looksLike": "player",
-      "canPickup": true
+      "canPickup": "auto"
     },
     {
       "x": 1,

@@ -81,7 +81,7 @@ class Room(BaseModel):
                                colliding_entities)):
                     entity.x += dx
                     entity.y += dy
-                    if entity.can_pickup is True:
+                    if entity.can_pickup == "auto" or action == "pick_up":
                         pickups = [
                             e for e in colliding_entities
                             if e.pickup is not None
