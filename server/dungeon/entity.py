@@ -17,10 +17,15 @@ class ScorePickup(BaseModel):
 Pickup = Union[ScorePickup]
 
 
+class Perception(BaseModel):
+    distance: int
+
+
 class Entity(BaseModel):
     x: int
     y: int
     ai: Optional[AI]
+    perception: Optional[Perception]
     score: Optional[int]
     blocks_movement: bool = Field(
         None, alias="blocksMovement")

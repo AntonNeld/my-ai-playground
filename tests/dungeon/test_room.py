@@ -66,3 +66,34 @@ pc
     room.step()
     assert len(room.get_entities()) == 1
     assert room.get_entities()[0].score == 1
+
+
+def test_get_view():
+    room = room_from_text("""
+p = {"looksLike": "player"}
+c = {"looksLike": "coin"}
+# = {"looksLike": "wall"}
+
+   #
+p  c
+    """)
+    perceptor = room.get_entities(looks_like="player")[0]
+    view = room.get_view(perceptor)
+    assert len(view) == 2
+    assert {"x": 3, "y": 0, "looks_like": "coin"} in view
+    assert {"x": 3, "y": 1, "looks_like": "wall"} in view
+
+
+def test_get_view_with_max_distance():
+    room = room_from_text("""
+p = {"looksLike": "player", "perception": {"distance": 3}}
+c = {"looksLike": "coin"}
+# = {"looksLike": "wall"}
+
+   #
+p  c
+    """)
+    perceptor = room.get_entities(looks_like="player")[0]
+    view = room.get_view(perceptor)
+    assert len(view) == 1
+    assert {"x": 3, "y": 0, "looks_like": "coin"} in view
