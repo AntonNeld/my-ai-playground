@@ -19,7 +19,7 @@ Pickup = Union[ScorePickup]
 
 
 class Perception(BaseModel):
-    distance: int
+    distance: Optional[int]
 
 
 class Entity(BaseModel):

@@ -43,12 +43,14 @@ class Room(BaseModel):
                            self.entities.values()))
 
     def get_view(self, perceptor):
+        if perceptor.perception is None:
+            return {}
         x = perceptor.x
         y = perceptor.y
         percept = []
         entities = self.get_entities()
         for entity in entities:
-            if entity != perceptor and (perceptor.perception is None
+            if entity != perceptor and (perceptor.perception.distance is None
                                         or abs(entity.x-x) + abs(entity.y-y)
                                         <= perceptor.perception.distance):
                 entity_view = {"x":          entity.x - x,

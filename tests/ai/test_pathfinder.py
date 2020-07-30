@@ -3,7 +3,12 @@ from test_utils import room_from_text
 
 def test_find_coins_auto_pickup():
     room = room_from_text("""
-p = {"looksLike": "player", "ai": {"kind": "pathfinder"}, "canPickup": "auto"}
+p = {
+      "looksLike": "player",
+      "ai": {"kind": "pathfinder"},
+      "canPickup": "auto",
+      "perception": {}
+    }
 # = {"looksLike": "wall", "blocksMovement": true}
 c = {"looksLike": "coin", "pickup": {"kind": "addScore", "score": 1}}
 
@@ -25,7 +30,8 @@ def test_find_coins_action_pickup():
 p = {
       "looksLike": "player",
       "ai": {"kind": "pathfinder", "manualPickup": true},
-      "canPickup": "action"
+      "canPickup": "action",
+      "perception": {}
     }
 # = {"looksLike": "wall", "blocksMovement": true}
 c = {"looksLike": "coin", "pickup": {"kind": "addScore", "score": 1}}

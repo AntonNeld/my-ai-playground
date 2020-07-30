@@ -1,5 +1,10 @@
 This is like the 'maze' room, but the player needs to take an action to pick up a coin
-p = {"looksLike": "player", "canPickup": "action", "ai": {"kind": "pathfinder", "manualPickup": true}}
+p = {
+      "looksLike": "player",
+      "canPickup": "action",
+      "ai": {"kind": "pathfinder", "manualPickup": true},
+      "perception": {}
+    }
 c = {"looksLike": "coin", "pickup": {"kind": "addScore", "score": 1}}
 # = {"looksLike": "wall", "blocksMovement": true}
 

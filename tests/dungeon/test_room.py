@@ -70,7 +70,7 @@ pc
 
 def test_get_view():
     room = room_from_text("""
-p = {"looksLike": "player"}
+p = {"looksLike": "player", "perception": {}}
 c = {"looksLike": "coin"}
 # = {"looksLike": "wall"}
 
