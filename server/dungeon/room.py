@@ -8,8 +8,8 @@ from dungeon.entity import Entity
 
 
 class Room(BaseModel):
-    steps: int
-    entities: Dict[str, Entity]
+    steps: int = 0
+    entities: Dict[str, Entity] = {}
 
     def add_entity(self, entity, entity_id=None):
         if entity_id is None:

@@ -15,7 +15,7 @@ class Template(BaseModel):
     entities: List[Entity]
 
     def create_room(self):
-        new_room = Room(steps=0, entities={})
+        new_room = Room()
         for entity in self.entities:
             new_room.add_entity(entity.copy(deep=True))
         return new_room
