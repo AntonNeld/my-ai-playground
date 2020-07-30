@@ -5,7 +5,8 @@ d = {"looksLike": "dirt", "pickup": {"kind": "addScore", "score": 1}}
 v = {
       "looksLike": "vacuum",
       "canPickup": "action",
-      "perception": {"distance": 0}
+      "perception": {"distance": 0},
+      "ai": {"kind": "reflexVacuumAgent"}
     }
 a = [{"looksLike": "labelA"}, "v", "d"]
 b = [{"looksLike": "labelB"}, "d"]
