@@ -1,4 +1,12 @@
-const drawOrder = ["player", "vacuum", "dirt", "coin", "wall"];
+const drawOrder = [
+  "player",
+  "vacuum",
+  "dirt",
+  "coin",
+  "wall",
+  "labelA",
+  "labelB",
+];
 
 export class Room extends EventTarget {
   constructor(element) {
