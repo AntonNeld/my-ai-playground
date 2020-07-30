@@ -90,8 +90,9 @@ p = {"looksLike": "player", "perception": {"distance": 3}}
 c = {"looksLike": "coin"}
 # = {"looksLike": "wall"}
 
-   #
-p  c
+#     #
+   p  c
+#     #
     """)
     perceptor = room.get_entities(looks_like="player")[0]
     view = room.get_view(perceptor)
