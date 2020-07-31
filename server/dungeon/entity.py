@@ -28,9 +28,9 @@ class Entity(BaseModel):
     ai: Optional[AI]
     perception: Optional[Perception]
     score: Optional[int]
-    blocks_movement: bool = Field(
+    blocks_movement: Optional[Literal[True]] = Field(
         None, alias="blocksMovement")
-    can_pickup: Union[Literal["auto"], Literal["action"]
-                      ] = Field(None, alias="canPickup")
+    can_pickup: Optional[Union[Literal["auto"], Literal["action"]
+                               ]] = Field(None, alias="canPickup")
     pickup: Optional[Pickup]
-    looks_like: LooksLike = Field(None, alias="looksLike")
+    looks_like: Optional[LooksLike] = Field(None, alias="looksLike")
