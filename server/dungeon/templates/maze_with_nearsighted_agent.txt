@@ -1,12 +1,19 @@
-This room is a maze where the agent can only see within a distance of 3 tiles
-p = {
+// This room is a maze where the agent can only see within a distance of 3 tiles
+{
+  "definitions": {
+    "p": {
       "looksLike": "player",
       "canPickup": {},
       "ai": {"kind": "pathfinder"},
       "perception": {"distance": 3}
-    }
-c = {"looksLike": "coin", "pickup": {"kind": "addScore", "score": 1}}
-# = {"looksLike": "wall", "blocksMovement": true}
+    },
+    "c": {
+      "looksLike": "coin",
+      "pickup": {"kind": "addScore", "score": 1}
+    },
+    "#": {"looksLike": "wall", "blocksMovement": true}
+  }
+}
 
 ####################
 #c#   #  c  #     c#

@@ -1,15 +1,19 @@
-A simple vacuum cleaner world with two locations,
-from chapter 2 of Artificial Intelligence: A Modern Approach
-d = {"looksLike": "dirt", "pickup": {"kind": "addScore", "score": 1}}
-# = {"looksLike": "wall", "blocksMovement": true}
-v = {
+// A simple vacuum cleaner world with two locations,
+// from chapter 2 of Artificial Intelligence: A Modern Approach
+{
+  "definitions": {
+    "d": {"looksLike": "dirt", "pickup": {"kind": "addScore", "score": 1}},
+    "#": {"looksLike": "wall", "blocksMovement": true},
+    "v": {
       "looksLike": "vacuum",
       "canPickup": {"mode": "action"},
       "perception": {"distance": 0},
       "ai": {"kind": "reflexVacuumAgent"}
-    }
-a = [{"looksLike": "labelA"}, "v", "d"]
-b = [{"looksLike": "labelB"}, "d"]
+    },
+    "a": [{"looksLike": "labelA"}, "v", "d"],
+    "b": [{"looksLike": "labelB"}, "d"]
+  }
+}
 
 ####
 #ab#

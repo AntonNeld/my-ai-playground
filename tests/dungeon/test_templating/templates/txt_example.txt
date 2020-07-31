@@ -1,6 +1,10 @@
-p = {"looksLike": "player", "canPickup": {}, "ai": {"kind": "pathfinder"}}
-c = {"looksLike": "coin", "pickup": {"kind": "addScore", "score": 1}}
-# = {"looksLike": "wall", "blocksMovement": true}
+{
+  "definitions": {
+    "p": {"looksLike": "player", "canPickup": {}, "ai": {"kind": "pathfinder"}},
+    "c": {"looksLike": "coin", "pickup": {"kind": "addScore", "score": 1}},
+    "#": {"looksLike": "wall", "blocksMovement": true}
+  }
+}
 
  #
 pc

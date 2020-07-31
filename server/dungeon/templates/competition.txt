@@ -1,12 +1,19 @@
-This room has two pathfinders who both want to pick up coins
-p = {
+// This room has two pathfinders who both want to pick up coins
+{
+  "definitions": {
+    "p": {
       "looksLike": "player",
       "canPickup": {},
       "ai": {"kind": "pathfinder"},
       "perception": {}
-    }
-c = {"looksLike": "coin", "pickup": {"kind": "addScore", "score": 1}}
-# = {"looksLike": "wall", "blocksMovement": true}
+    },
+    "c": {
+      "looksLike": "coin",
+      "pickup": {"kind": "addScore", "score": 1}
+    },
+    "#": {"looksLike": "wall", "blocksMovement": true}
+  }
+}
 
 ####################
 #c#   #  c  #     p#

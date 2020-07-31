@@ -1,12 +1,19 @@
-This is like the 'maze' room, but the player needs to take an action to pick up a coin
-p = {
+// This is like the 'maze' room, but the player needs to take an action to pick up a coin
+{
+  "definitions": {
+    "p": {
       "looksLike": "player",
       "canPickup": {"mode": "action"},
-      "ai": {"kind": "pathfinder", "manualPickup": true},
+      "ai": {"kind": "pathfinder"},
       "perception": {}
-    }
-c = {"looksLike": "coin", "pickup": {"kind": "addScore", "score": 1}}
-# = {"looksLike": "wall", "blocksMovement": true}
+    },
+    "c": {
+      "looksLike": "coin",
+      "pickup": {"kind": "addScore", "score": 1}
+    },
+    "#": {"looksLike": "wall", "blocksMovement": true}
+  }
+}
 
 ####################
 #c#   #  c  #     c#

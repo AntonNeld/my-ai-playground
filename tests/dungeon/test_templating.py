@@ -51,9 +51,17 @@ def test_load_txt(loaded_keeper):
 
 def test_parse_txt():
     template = template_from_txt("""
-p = {"looksLike": "player", "canPickup": {}, "ai": {"kind": "pathfinder"}}
-c = {"looksLike": "coin", "pickup": {"kind": "addScore", "score": 1}}
-# = {"looksLike": "wall", "blocksMovement": true}
+{
+  "definitions": {
+    "p": {
+      "looksLike": "player",
+      "canPickup": {},
+      "ai": {"kind": "pathfinder"}
+    },
+    "c": {"looksLike": "coin", "pickup": {"kind": "addScore", "score": 1}},
+    "#": {"looksLike": "wall", "blocksMovement": true}
+  }
+}
 
  #
 pc
@@ -74,8 +82,13 @@ pc
 
 def test_parse_ignore_comment():
     template = template_from_txt("""
-This is a comment
-p = {"looksLike": "player"}
+// This is a comment
+{
+  "definitions": {
+    // This is a comment inside the JSON
+    "p": {"looksLike": "player"}
+  }
+}
 
 p
 
@@ -85,28 +98,13 @@ p
     }))
 
 
-def test_parse_multiline_definition():
-    template = template_from_txt("""
-a = {
-      "looksLike": "player",
-      "canPickup": {},
-      "ai": {"kind": "pathfinder"}
-    }
-
-a
-
-""")
-    assert equal_templates(template, Template(**{
-        "entities": [
-            {"position": {"x": 0, "y": 0}, "ai": {"kind": "pathfinder"},
-             "looksLike": "player", "canPickup": {}},
-        ]
-    }))
-
-
 def test_parse_colocated_entities():
     template = template_from_txt("""
-a = [{"looksLike": "player"}, {"looksLike": "wall"}]
+{
+  "definitions": {
+    "a": [{"looksLike": "player"}, {"looksLike": "wall"}]
+  }
+}
 
 a
 
@@ -121,8 +119,12 @@ a
 
 def test_parse_colocated_entities_with_refs():
     template = template_from_txt("""
-a = [{"looksLike": "player"}, "#"]
-# = {"looksLike": "wall"}
+{
+  "definitions": {
+    "a": [{"looksLike": "player"}, "#"],
+    "#": {"looksLike": "wall"}
+  }
+}
 
 a
 
@@ -137,9 +139,13 @@ a
 
 def test_parse_nested_refs():
     template = template_from_txt("""
-a = ["b"]
-b = "c"
-c = {"looksLike": "coin"}
+{
+  "definitions": {
+    "a": ["b"],
+    "b": "c",
+    "c": {"looksLike": "coin"}
+  }
+}
 
 a
 
@@ -154,9 +160,13 @@ a
 def test_parse_circular_refs():
     with pytest.raises(ParseError):
         template_from_txt("""
-a = "b"
-b = "c"
-c = "a"
+{
+  "definitions": {
+    "a": "b",
+    "b": "c",
+    "c": "a"
+  }
+}
 
 a
 

@@ -1,12 +1,19 @@
-This room is a maze that demonstrates pathfinding ability
-p = {
+// This room is a maze that demonstrates pathfinding ability
+{
+  "definitions": {
+    "p": {
       "looksLike": "player",
       "canPickup": {},
       "ai": {"kind": "pathfinder"},
       "perception": {}
-    }
-c = {"looksLike": "coin", "pickup": {"kind": "addScore", "score": 1}}
-# = {"looksLike": "wall", "blocksMovement": true}
+    },
+    "c": {
+      "looksLike": "coin",
+      "pickup": {"kind": "addScore", "score": 1}
+    },
+    "#": {"looksLike": "wall", "blocksMovement": true}
+  }
+}
 
 ####################
 #c#   #  c  #     c#

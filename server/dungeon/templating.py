@@ -1,13 +1,13 @@
 import json
 from pathlib import Path
 import re
-from typing import List
+from typing import List, Dict, Union
 import uuid
 
 from pydantic import BaseModel
 
 from errors import ResourceNotFoundError
-from dungeon.entity import Entity
+from dungeon.entity import Entity, Position
 from dungeon.room import Room
 
 
@@ -61,52 +61,33 @@ class ParseError(Exception):
     pass
 
 
+class TextTemplateHeader(BaseModel):
+    definitions: Dict[str, Union[Entity, str, List[Union[Entity, str]]]] = {}
+
+
 def template_from_txt(txt):
     """
     Create a template from a string of the following format:
 
-    The string begins with a header defining the symbols, each
-    after a newline:
-    <symbol>=<definition>
+    The string begins with a header defining the symbols and global
+    room parameters. The header is a JSON-encoded object following
+    TextTemplateHeader. The definitions property is a mapping from
+    symbols (unicode characters) to a list of entities or other
+    symbols, defining what is in a tile with the corresponding symbol.
+    Instead of a list, a single entity (or symbol) is also permitted.
 
-    A line that does not follow this format (and is not in the middle of a
-    JSON string) is ignored and can be used for comments.
-
-    A symbol is one unicode character, a definition is usually a JSON-encoded
-    object defining an entity. The definition can be split up across
-    multiple lines, but cannot have empty lines in it. A definition
-    can also be a JSON-encoded array of entities and/or other
-    symbols, which means there are multiple entities in the same location.
-    It can also be a symbol, if you for some reason want to have multiple
-    symbols representing identical entities.
+    Lines in the header beginning with // are comments.
 
     Between the header and the body is an empty line, then the
     layout of the room is defined, with a symbol's location
     defining its entity's coordinates. 0,0 is to the lower left.
     """
-    header = txt.strip().split("\n\n", 1)[0]
-    definitions = {}
-    current_symbol = None
-    current_json = None
-    for line in header.split("\n"):
-        if current_symbol is None:
-            without_whitespace = re.sub(r"\s+", "", line)
-            if without_whitespace[1] != "=":
-                continue
-            current_symbol = without_whitespace[0]
-            current_json = without_whitespace[2:]
-        else:
-            # Include a space in case the whitespace makes a difference
-            current_json += " " + line
-        try:
-            definitions[current_symbol] = json.loads(current_json)
-            current_symbol = None
-            current_json = None
-        except json.decoder.JSONDecodeError:
-            pass
-    # Should be nothing left
-    if current_symbol is not None or current_json is not None:
-        raise ParseError(f"Malformed header:\n{header}")
+    # Find header
+    header_string = txt.strip().split("\n\n", 1)[0]
+    # Strip comments
+    header_no_comments = re.sub("//.*\n", "", header_string)
+    header = TextTemplateHeader(**json.loads(header_no_comments))
+    definitions = header.definitions
     # Make all definitions hold lists
     for symbol in definitions:
         if not isinstance(definitions[symbol], list):
@@ -131,9 +112,9 @@ def template_from_txt(txt):
                 pass
             elif symbol in definitions:
                 for entity in definitions[symbol]:
-                    entities.append({"position": {"x": x,
-                                                  "y": len(lines) - y - 1},
-                                     **entity})
+                    new_entity = entity.copy(deep=True)
+                    new_entity.position = Position(x=x, y=len(lines) - y - 1)
+                    entities.append(new_entity)
             else:
                 raise ParseError(f"Unknown symbol: {symbol}")
     return Template(entities=entities)

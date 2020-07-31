@@ -8,11 +8,15 @@ from dungeon.entity import Entity
                          [("move_up", 0, 1), ("move_down", 0, -1),
                           ("move_left", -1, 0), ("move_right", 1, 0)])
 def test_action_move(move, x, y):
-    room = room_from_text(f"""
-p = {{"ai": {{"kind": "singular", "move": "{move}"}}}}
+    room = room_from_text("""
+{
+  "definitions": {
+    "p": {"ai": {"kind": "singular", "move": "%s"}}
+  }
+}
 
 p
-    """)
+    """ % move)
 
     room.step()
     assert room.get_entities()[0].position.x == x
@@ -21,8 +25,15 @@ p
 
 def test_blocks_movement():
     room = room_from_text("""
-p = {"looksLike": "player", "ai": {"kind": "singular", "move": "move_right"}}
-# = {"blocksMovement": true}
+{
+  "definitions": {
+    "p": {
+      "looksLike": "player",
+      "ai": {"kind": "singular", "move": "move_right"}
+    },
+    "#": {"blocksMovement": true}
+  }
+}
 
 p#
     """)
@@ -33,12 +44,16 @@ p#
 
 def test_pickup():
     room = room_from_text("""
-p = {
+{
+  "definitions": {
+    "p": {
       "looksLike": "player",
       "ai": {"kind": "singular", "move": "move_right"},
       "canPickup": {}
-    }
-c = {"pickup": {"kind": "item"}}
+    },
+    "c": {"pickup": {"kind": "item"}}
+  }
+}
 
 pc
     """)
@@ -51,12 +66,16 @@ pc
 
 def test_pickup_action():
     room = room_from_text("""
-p = {
+{
+  "definitions": {
+    "p": {
       "looksLike": "player",
       "ai": {"kind": "singular", "move": "move_right"},
       "canPickup": {"mode": "action"}
-    }
-c = {"pickup": {"kind": "item"}}
+    },
+    "c": {"pickup": {"kind": "item"}}
+  }
+}
 
 pc
     """)
@@ -73,12 +92,16 @@ pc
 
 def test_score_pickup():
     room = room_from_text("""
-p = {
+{
+  "definitions": {
+    "p": {
       "looksLike": "player",
       "ai": {"kind": "singular", "move": "move_right"},
       "canPickup": {}
-    }
-c = {"pickup": {"kind": "addScore", "score": 1}}
+    },
+    "c": {"pickup": {"kind": "addScore", "score": 1}}
+  }
+}
 
 pc
     """)
@@ -90,9 +113,13 @@ pc
 
 def test_get_view():
     room = room_from_text("""
-p = {"looksLike": "player", "perception": {}}
-c = {"looksLike": "coin"}
-# = {"looksLike": "wall"}
+{
+  "definitions": {
+    "p": {"looksLike": "player", "perception": {}},
+    "c": {"looksLike": "coin"},
+    "#": {"looksLike": "wall"}
+  }
+}
 
    #
 p  c
@@ -106,9 +133,13 @@ p  c
 
 def test_get_view_with_max_distance():
     room = room_from_text("""
-p = {"looksLike": "player", "perception": {"distance": 3}}
-c = {"looksLike": "coin"}
-# = {"looksLike": "wall"}
+{
+  "definitions": {
+    "p": {"looksLike": "player", "perception": {"distance": 3}},
+    "c": {"looksLike": "coin"},
+    "#": {"looksLike": "wall"}
+  }
+}
 
 #     #
    p  c
