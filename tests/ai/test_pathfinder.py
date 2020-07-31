@@ -6,7 +6,7 @@ def test_find_coins_auto_pickup():
 p = {
       "looksLike": "player",
       "ai": {"kind": "pathfinder"},
-      "canPickup": "auto",
+      "canPickup": {},
       "perception": {}
     }
 # = {"looksLike": "wall", "blocksMovement": true}
@@ -30,7 +30,7 @@ def test_find_coins_action_pickup():
 p = {
       "looksLike": "player",
       "ai": {"kind": "pathfinder", "manualPickup": true},
-      "canPickup": "action",
+      "canPickup": {"mode": "action"},
       "perception": {}
     }
 # = {"looksLike": "wall", "blocksMovement": true}

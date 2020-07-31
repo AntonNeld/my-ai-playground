@@ -10,7 +10,7 @@ PARENT_DIR = Path(__file__).parent
 RAW_TEMPLATE = Template(**{
     "entities": [
         {"position": {"x": 0, "y": 0}, "ai": {"kind": "pathfinder"},
-         "looksLike": "player", "canPickup": "auto"},
+         "looksLike": "player", "canPickup": {}},
         {"position": {"x": 1, "y": 1}, "blocksMovement": True,
          "looksLike": "wall"},
         {"position": {"x": 1, "y": 0},
@@ -51,7 +51,7 @@ def test_load_txt(loaded_keeper):
 
 def test_parse_txt():
     template = template_from_txt("""
-p = {"looksLike": "player", "canPickup": "auto", "ai": {"kind": "pathfinder"}}
+p = {"looksLike": "player", "canPickup": {}, "ai": {"kind": "pathfinder"}}
 c = {"looksLike": "coin", "pickup": {"kind": "addScore", "score": 1}}
 # = {"looksLike": "wall", "blocksMovement": true}
 
@@ -62,7 +62,7 @@ pc
     assert equal_templates(template, Template(**{
         "entities": [
             {"position": {"x": 0, "y": 0}, "ai": {"kind": "pathfinder"},
-             "looksLike": "player", "canPickup": "auto"},
+             "looksLike": "player", "canPickup": {}},
             {"position": {"x": 1, "y": 1}, "blocksMovement": True,
              "looksLike": "wall"},
             {"position": {"x": 1, "y": 0},
@@ -89,7 +89,7 @@ def test_parse_multiline_definition():
     template = template_from_txt("""
 a = {
       "looksLike": "player",
-      "canPickup": "auto",
+      "canPickup": {},
       "ai": {"kind": "pathfinder"}
     }
 
@@ -99,7 +99,7 @@ a
     assert equal_templates(template, Template(**{
         "entities": [
             {"position": {"x": 0, "y": 0}, "ai": {"kind": "pathfinder"},
-             "looksLike": "player", "canPickup": "auto"},
+             "looksLike": "player", "canPickup": {}},
         ]
     }))
 

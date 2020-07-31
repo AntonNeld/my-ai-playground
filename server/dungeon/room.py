@@ -66,6 +66,11 @@ class Room(BaseModel):
     def step(self, steps=1):
         for _ in range(steps):
             for entity in self.get_entities():
+                # Only entities with a position can act
+                # This is a proxy for not being picked up,
+                # and should be fixed.
+                if entity.position is None:
+                    continue
                 # Find next action
                 action = entity.ai.next_move(self.get_view(
                     entity)) if entity.ai is not None else "none"
@@ -91,7 +96,9 @@ class Room(BaseModel):
                                colliding_entities)):
                     entity.position.x = new_x
                     entity.position.y = new_y
-                    if entity.can_pickup == "auto" or action == "pick_up":
+                    if (entity.can_pickup is not None
+                            and (entity.can_pickup.mode == "auto"
+                                 or action == "pick_up")):
                         pickups = [
                             e for e in colliding_entities
                             if e.pickup is not None
@@ -102,5 +109,9 @@ class Room(BaseModel):
                                 if entity.score is None:
                                     entity.score = 0
                                 entity.score += colliding_entity.pickup.score
+                            elif colliding_entity.pickup.kind == "item":
+                                colliding_entity.position = None
+                                entity.can_pickup.inventory.append(
+                                    colliding_entity)
 
             self.steps += 1

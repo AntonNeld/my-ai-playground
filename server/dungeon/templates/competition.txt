@@ -1,7 +1,7 @@
 This room has two pathfinders who both want to pick up coins
 p = {
       "looksLike": "player",
-      "canPickup": "auto",
+      "canPickup": {},
       "ai": {"kind": "pathfinder"},
       "perception": {}
     }

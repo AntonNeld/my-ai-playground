@@ -1,7 +1,7 @@
 This room is a maze where the agent can only see within a distance of 3 tiles
 p = {
       "looksLike": "player",
-      "canPickup": "auto",
+      "canPickup": {},
       "ai": {"kind": "pathfinder"},
       "perception": {"distance": 3}
     }

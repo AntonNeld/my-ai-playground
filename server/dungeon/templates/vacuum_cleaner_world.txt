@@ -4,7 +4,7 @@ d = {"looksLike": "dirt", "pickup": {"kind": "addScore", "score": 1}}
 # = {"looksLike": "wall", "blocksMovement": true}
 v = {
       "looksLike": "vacuum",
-      "canPickup": "action",
+      "canPickup": {"mode": "action"},
       "perception": {"distance": 0},
       "ai": {"kind": "reflexVacuumAgent"}
     }

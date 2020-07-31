@@ -1,4 +1,5 @@
-from typing import Optional, Union
+from __future__ import annotations
+from typing import Optional, Union, List
 
 from pydantic import BaseModel, Field
 from typing_extensions import Literal
@@ -20,7 +21,16 @@ class ScorePickup(BaseModel):
     score: int
 
 
-Pickup = Union[ScorePickup]
+class ItemPickup(BaseModel):
+    kind: Literal["item"]
+
+
+Pickup = Union[ScorePickup, ItemPickup]
+
+
+class Pickupper(BaseModel):
+    mode: Union[Literal["auto"], Literal["action"]] = "auto"
+    inventory: List[Entity] = []
 
 
 class Perception(BaseModel):
@@ -34,7 +44,9 @@ class Entity(BaseModel):
     score: Optional[int]
     blocks_movement: Optional[Literal[True]] = Field(
         None, alias="blocksMovement")
-    can_pickup: Optional[Union[Literal["auto"], Literal["action"]
-                               ]] = Field(None, alias="canPickup")
+    can_pickup: Optional[Pickupper] = Field(None, alias="canPickup")
     pickup: Optional[Pickup]
     looks_like: Optional[LooksLike] = Field(None, alias="looksLike")
+
+
+Pickupper.update_forward_refs()
