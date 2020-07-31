@@ -46,9 +46,15 @@ async function update() {
   room.setData(
     Object.entries(roomData.entities).map(([id, entity]) => ({ id, ...entity }))
   );
-  document.querySelector("#details-area").innerHTML = entityData
-    ? JSON.stringify(entityData, null, 2)
-    : "";
+  // Use timeout so the browser doesn't scroll to the new data when
+  // this is triggered by the user directly
+  setTimeout(
+    () =>
+      (document.querySelector("#details-area").innerHTML = entityData
+        ? JSON.stringify(entityData, null, 2)
+        : ""),
+    0
+  );
 }
 
 async function getRoomData() {
