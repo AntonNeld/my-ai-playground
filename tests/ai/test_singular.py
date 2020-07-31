@@ -8,8 +8,8 @@ p = {"looksLike": "player", "ai": {"kind": "singular", "move": "move_right"}}
 p
     """)
 
-    assert room.get_entities(looks_like="player")[0].x == 0
+    assert room.get_entities(looks_like="player")[0].position.x == 0
     room.step()
-    assert room.get_entities(looks_like="player")[0].x == 1
+    assert room.get_entities(looks_like="player")[0].position.x == 1
     room.step()
-    assert room.get_entities(looks_like="player")[0].x == 2
+    assert room.get_entities(looks_like="player")[0].position.x == 2

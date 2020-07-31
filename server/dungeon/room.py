@@ -43,18 +43,21 @@ class Room(BaseModel):
                            self.entities.values()))
 
     def get_view(self, perceptor):
-        if perceptor.perception is None:
+        if perceptor.perception is None or perceptor.position is None:
             return {}
-        x = perceptor.x
-        y = perceptor.y
+        my_x = perceptor.position.x
+        my_y = perceptor.position.y
         percept = []
         entities = self.get_entities()
-        for entity in entities:
+        for entity in [e for e in entities if e.position is not None]:
+            other_x = entity.position.x
+            other_y = entity.position.y
+            distance = abs(other_x-my_x) + abs(other_y-my_y)
             if entity != perceptor and (perceptor.perception.distance is None
-                                        or abs(entity.x-x) + abs(entity.y-y)
+                                        or distance
                                         <= perceptor.perception.distance):
-                entity_view = {"x":          entity.x - x,
-                               "y":          entity.y - y,
+                entity_view = {"x":          other_x - my_x,
+                               "y":          other_y - my_y,
                                "looks_like": entity.looks_like}
                 percept.append(entity_view)
 
@@ -77,14 +80,17 @@ class Room(BaseModel):
                     dx = -1
                 elif action == "move_right":
                     dx = 1
+                new_x = entity.position.x + dx
+                new_y = entity.position.y + dy
 
                 colliding_entities = [e for e in self.get_entities(
-                    x=entity.x+dx, y=entity.y+dy) if e != entity]
+                ) if e.position is not None and e.position.x == new_x
+                    and e.position.y == new_y and e != entity]
 
                 if not any(map(lambda e: e.blocks_movement is True,
                                colliding_entities)):
-                    entity.x += dx
-                    entity.y += dy
+                    entity.position.x = new_x
+                    entity.position.y = new_y
                     if entity.can_pickup == "auto" or action == "pick_up":
                         pickups = [
                             e for e in colliding_entities

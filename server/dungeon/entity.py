@@ -10,6 +10,11 @@ LooksLike = Union[Literal["player"], Literal["coin"], Literal["wall"],
                   Literal["labelB"]]
 
 
+class Position(BaseModel):
+    x: int
+    y: int
+
+
 class ScorePickup(BaseModel):
     kind: Literal["addScore"]
     score: int
@@ -23,8 +28,7 @@ class Perception(BaseModel):
 
 
 class Entity(BaseModel):
-    x: int
-    y: int
+    position: Optional[Position]
     ai: Optional[AI]
     perception: Optional[Perception]
     score: Optional[int]

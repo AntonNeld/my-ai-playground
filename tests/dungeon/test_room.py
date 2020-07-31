@@ -14,8 +14,8 @@ p
     """)
 
     room.step()
-    assert room.get_entities()[0].x == x
-    assert room.get_entities()[0].y == y
+    assert room.get_entities()[0].position.x == x
+    assert room.get_entities()[0].position.y == y
 
 
 def test_blocks_movement():
@@ -27,7 +27,7 @@ p#
     """)
 
     room.step()
-    assert room.get_entities(looks_like="player")[0].x == 0
+    assert room.get_entities(looks_like="player")[0].position.x == 0
 
 
 def test_score_pickup():

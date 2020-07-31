@@ -46,11 +46,14 @@ export class Room extends EventTarget {
   }
 
   setData(data) {
-    // Sort to make some types of entities appear above others
-    this.data = data;
-    this.data.sort(
-      (a, b) => drawOrder.indexOf(b.looksLike) - drawOrder.indexOf(a.looksLike)
-    );
+    // Filter to remove undrawable entities,
+    // sort to make some types of entities appear above others
+    this.data = data
+      .filter(({ position, looksLike }) => position && looksLike)
+      .sort(
+        (a, b) =>
+          drawOrder.indexOf(b.looksLike) - drawOrder.indexOf(a.looksLike)
+      );
     this.draw();
   }
 
@@ -61,10 +64,10 @@ export class Room extends EventTarget {
     let maxX = 1;
     let maxY = 1;
     if (data.length > 0) {
-      minX = d3.min(data.map((d) => d.x));
-      minY = d3.min(data.map((d) => -d.y));
-      maxX = d3.max(data.map((d) => d.x)) + 1;
-      maxY = d3.max(data.map((d) => -d.y)) + 1;
+      minX = d3.min(data.map((d) => d.position.x));
+      minY = d3.min(data.map((d) => -d.position.y));
+      maxX = d3.max(data.map((d) => d.position.x)) + 1;
+      maxY = d3.max(data.map((d) => -d.position.y)) + 1;
     }
     const svg = d3
       .select(this.element)
@@ -81,7 +84,10 @@ export class Room extends EventTarget {
         (enter) => {
           const g = enter
             .append("g")
-            .attr("transform", (d) => `translate(${d.x},${-d.y})`)
+            .attr(
+              "transform",
+              (d) => `translate(${d.position.x},${-d.position.y})`
+            )
             .attr("opacity", 0)
             .call((g) => g.transition(transition).attr("opacity", 1));
           g.append("image")
@@ -124,7 +130,10 @@ export class Room extends EventTarget {
           update.call((update) => {
             update
               .transition(transition)
-              .attr("transform", (d) => `translate(${d.x},${-d.y})`);
+              .attr(
+                "transform",
+                (d) => `translate(${d.position.x},${-d.position.y})`
+              );
             update
               .select("rect")
               .transition(transition)

@@ -8,12 +8,12 @@ RESOURCE_TYPES = [
         "parents": [],
         "example": {
             "entities": [
-                {"x": 0, "y": 0, "looksLike": "player"}
+                {"looksLike": "player"}
             ]
         },
         "example_two": {
             "entities": [
-                {"x": 0, "y": 0, "looksLike": "coin"}
+                {"looksLike": "coin"}
             ]
         }
     },
@@ -23,13 +23,13 @@ RESOURCE_TYPES = [
         "example": {
             "steps": 0,
             "entities": {
-                "a": {"x": 0, "y": 0, "looksLike": "player"},
+                "a": {"looksLike": "player"},
             }
         },
         "example_two": {
             "steps": 1,
             "entities": {
-                "b": {"x": 0, "y": 0, "looksLike": "coin"}
+                "b": {"looksLike": "coin"}
             }
         }
     },
@@ -41,13 +41,9 @@ RESOURCE_TYPES = [
                          "entities": {}
                      }}],
         "example": {
-            "x": 0,
-            "y": 0,
             "looksLike": "player"
         },
         "example_two": {
-            "x": 0,
-            "y": 0,
             "looksLike": "coin"
         }
     }

@@ -131,8 +131,8 @@ def template_from_txt(txt):
                 pass
             elif symbol in definitions:
                 for entity in definitions[symbol]:
-                    entities.append({"x": x,
-                                     "y": len(lines) - y - 1,
+                    entities.append({"position": {"x": x,
+                                                  "y": len(lines) - y - 1},
                                      **entity})
             else:
                 raise ParseError(f"Unknown symbol: {symbol}")

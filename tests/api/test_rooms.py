@@ -4,7 +4,7 @@ import pytest
 @pytest.mark.parametrize("method", ["post", "put"])
 def test_create_room_from_template(client, method):
     client.put("/api/templates/testtemplate", json={
-        "entities": [{"x": 0, "y": 0, "looksLike": "wall"}]
+        "entities": [{"looksLike": "wall"}]
     })
     if method == "post":
         response = client.post("/api/rooms?from_template=testtemplate")
@@ -18,7 +18,7 @@ def test_create_room_from_template(client, method):
     assert response.status_code == 200
     room = response.json()
     assert len(room["entities"]) == 1
-    assert {"x": 0, "y": 0, "looksLike": "wall"} in room["entities"].values()
+    assert {"looksLike": "wall"} in room["entities"].values()
     assert room["steps"] == 0
 
 
