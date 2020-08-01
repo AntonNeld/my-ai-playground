@@ -149,8 +149,9 @@ document
     initRoom(template);
     this.blur();
   });
-document.addEventListener("keydown", ({ key }) => {
-  switch (key) {
+document.addEventListener("keydown", (event) => {
+  event.preventDefault();
+  switch (event.key) {
     case " ":
       step();
       break;
