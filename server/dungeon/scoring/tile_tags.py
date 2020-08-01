@@ -13,13 +13,17 @@ class TileTagsScoring(BaseModel):
         positions = map(lambda e: e.position,
                         room.get_entities())
         score = 0
+        done_positions = set()
         for position in positions:
+            if (position.x, position.y) in done_positions:
+                continue
             entities = room.get_entities(position=position)
             if (all(map(lambda t: tag_in_entities(t, entities),
                         self.should_have_tags))
                     and not any(map(lambda t: tag_in_entities(t, entities),
                                     self.should_not_have_tags))):
                 score += 1
+            done_positions.add((position.x, position.y))
         return score
 
 
