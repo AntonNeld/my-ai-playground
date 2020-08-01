@@ -109,5 +109,7 @@ class Room(BaseModel):
                                 colliding_entity.position = None
                                 entity.pickupper.inventory.append(
                                     colliding_entity)
+                            elif colliding_entity.pickup.kind == "vanish":
+                                pass
 
             self.steps += 1

@@ -89,6 +89,27 @@ pc
         Entity(**{"pickup": {"kind": "item"}})]
 
 
+def test_vanish_pickup():
+    room = room_from_text("""
+{
+  "definitions": {
+    "p": {
+      "looksLike": "player",
+      "ai": {"kind": "singular", "move": "move_right"},
+      "pickupper": {}
+    },
+    "c": {"pickup": {"kind": "vanish"}}
+  }
+}
+
+pc
+    """)
+
+    room.step()
+    assert len(room.get_entities()) == 1
+    assert room.get_entities()[0].pickupper.inventory == []
+
+
 def test_get_view():
     room = room_from_text("""
 {

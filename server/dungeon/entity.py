@@ -21,7 +21,11 @@ class ItemPickup(BaseModel):
     kind: Literal["item"]
 
 
-Pickup = Union[ItemPickup]
+class VanishPickup(BaseModel):
+    kind: Literal["vanish"]
+
+
+Pickup = Union[ItemPickup, VanishPickup]
 
 
 class Pickupper(BaseModel):

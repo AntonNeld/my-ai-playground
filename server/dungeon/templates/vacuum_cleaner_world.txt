@@ -2,7 +2,7 @@
 // from chapter 2 of Artificial Intelligence: A Modern Approach
 {
   "definitions": {
-    "d": {"looksLike": "dirt", "pickup": {"kind": "item"}},
+    "d": {"looksLike": "dirt", "pickup": {"kind": "vanish"}},
     "#": {"looksLike": "wall", "blocksMovement": true},
     "v": {
       "looksLike": "vacuum",
