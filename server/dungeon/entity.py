@@ -17,16 +17,11 @@ class Position(BaseModel):
     y: int
 
 
-class ScorePickup(BaseModel):
-    kind: Literal["addScore"]
-    score: int
-
-
 class ItemPickup(BaseModel):
     kind: Literal["item"]
 
 
-Pickup = Union[ScorePickup, ItemPickup]
+Pickup = Union[ItemPickup]
 
 
 class Pickupper(BaseModel):
@@ -42,7 +37,6 @@ class Entity(BaseModel):
     position: Optional[Position]
     ai: Optional[AI]
     perception: Optional[Perception]
-    score: Optional[int]
     scoring: Optional[Scoring]
     blocks_movement: Optional[Literal[True]] = Field(
         None, alias="blocksMovement")

@@ -105,11 +105,7 @@ class Room(BaseModel):
                         ]
                         for colliding_entity in pickups:
                             self.remove_entity(colliding_entity)
-                            if colliding_entity.pickup.kind == "addScore":
-                                if entity.score is None:
-                                    entity.score = 0
-                                entity.score += colliding_entity.pickup.score
-                            elif colliding_entity.pickup.kind == "item":
+                            if colliding_entity.pickup.kind == "item":
                                 colliding_entity.position = None
                                 entity.can_pickup.inventory.append(
                                     colliding_entity)
