@@ -5,7 +5,7 @@
       "type": "player",
       "ai": { "kind": "pathfinder" },
       "looksLike": "player",
-      "canPickup": {},
+      "pickupper": {},
       "scoring": { "kind": "heldItems" }
     },
     {

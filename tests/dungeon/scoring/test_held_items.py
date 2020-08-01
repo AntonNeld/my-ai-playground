@@ -3,7 +3,7 @@ import pytest
 from test_utils import room_from_text
 
 
-def test_score_0_no_can_pickup():
+def test_score_0_no_pickupper():
     room = room_from_text("""
 {
   "definitions": {
@@ -22,12 +22,12 @@ def test_score_inventory_length(items):
     room = room_from_text("""
 {
   "definitions": {
-    "p": {"canPickup": {"inventory": []}, "scoring": {"kind": "heldItems"}}
+    "p": {"pickupper": {"inventory": []}, "scoring": {"kind": "heldItems"}}
   }
 }
 
 p
     """)
     entity = room.get_entities()[0]
-    entity.can_pickup.inventory += [{}] * items
+    entity.pickupper.inventory += [{}] * items
     assert entity.scoring.get_score(entity, room) == items

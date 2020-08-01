@@ -6,7 +6,7 @@
     "#": {"looksLike": "wall", "blocksMovement": true},
     "v": {
       "looksLike": "vacuum",
-      "canPickup": {"mode": "action"},
+      "pickupper": {"mode": "action"},
       "perception": {"distance": 0},
       "ai": {"kind": "reflexVacuumAgent"},
       "scoring": {"kind": "heldItems"}

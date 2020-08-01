@@ -7,6 +7,6 @@ class HeldItemsScoring(BaseModel):
     kind: Literal["heldItems"]
 
     def get_score(self, entity, room):
-        if entity.can_pickup is None:
+        if entity.pickupper is None:
             return 0
-        return len(entity.can_pickup.inventory)
+        return len(entity.pickupper.inventory)

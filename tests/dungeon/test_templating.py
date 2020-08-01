@@ -10,7 +10,7 @@ PARENT_DIR = Path(__file__).parent
 RAW_TEMPLATE = Template(**{
     "entities": [
         {"position": {"x": 0, "y": 0}, "ai": {"kind": "pathfinder"},
-         "looksLike": "player", "canPickup": {},
+         "looksLike": "player", "pickupper": {},
          "scoring": {"kind": "heldItems"}},
         {"position": {"x": 1, "y": 1}, "blocksMovement": True,
          "looksLike": "wall"},
@@ -56,7 +56,7 @@ def test_parse_txt():
   "definitions": {
     "p": {
       "looksLike": "player",
-      "canPickup": {},
+      "pickupper": {},
       "ai": {"kind": "pathfinder"},
       "scoring": {"kind": "heldItems"}
     },
@@ -72,7 +72,7 @@ pc
     assert equal_templates(template, Template(**{
         "entities": [
             {"position": {"x": 0, "y": 0}, "ai": {"kind": "pathfinder"},
-             "looksLike": "player", "canPickup": {},
+             "looksLike": "player", "pickupper": {},
              "scoring": {"kind": "heldItems"}},
             {"position": {"x": 1, "y": 1}, "blocksMovement": True,
              "looksLike": "wall"},

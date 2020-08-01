@@ -8,7 +8,7 @@ def test_find_coins_auto_pickup():
     "p": {
       "looksLike": "player",
       "ai": {"kind": "pathfinder"},
-      "canPickup": {},
+      "pickupper": {},
       "perception": {}
     },
     "#": {"looksLike": "wall", "blocksMovement": true},
@@ -26,7 +26,7 @@ def test_find_coins_auto_pickup():
 
     room.step(16)
     assert len(room.get_entities(looks_like="player")
-               [0].can_pickup.inventory) == 2
+               [0].pickupper.inventory) == 2
     assert room.get_entities(looks_like="coin") == []
 
 
@@ -37,7 +37,7 @@ def test_find_coins_action_pickup():
     "p": {
       "looksLike": "player",
       "ai": {"kind": "pathfinder", "manualPickup": true},
-      "canPickup": {"mode": "action"},
+      "pickupper": {"mode": "action"},
       "perception": {}
     },
     "#": {"looksLike": "wall", "blocksMovement": true},
@@ -55,5 +55,5 @@ def test_find_coins_action_pickup():
 
     room.step(18)
     assert len(room.get_entities(looks_like="player")
-               [0].can_pickup.inventory) == 2
+               [0].pickupper.inventory) == 2
     assert room.get_entities(looks_like="coin") == []

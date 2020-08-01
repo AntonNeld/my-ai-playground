@@ -2,7 +2,7 @@
   "definitions": {
     "p": {
       "looksLike": "player",
-      "canPickup": {},
+      "pickupper": {},
       "ai": {"kind": "pathfinder"},
       "scoring": {"kind": "heldItems"}
     },

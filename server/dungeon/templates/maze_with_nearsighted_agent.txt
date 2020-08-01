@@ -3,7 +3,7 @@
   "definitions": {
     "p": {
       "looksLike": "player",
-      "canPickup": {},
+      "pickupper": {},
       "scoring": {"kind": "heldItems"},
       "ai": {"kind": "pathfinder"},
       "perception": {"distance": 3}

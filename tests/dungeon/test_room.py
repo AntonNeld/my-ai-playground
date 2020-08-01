@@ -49,7 +49,7 @@ def test_pickup():
     "p": {
       "looksLike": "player",
       "ai": {"kind": "singular", "move": "move_right"},
-      "canPickup": {}
+      "pickupper": {}
     },
     "c": {"pickup": {"kind": "item"}}
   }
@@ -60,7 +60,7 @@ pc
 
     room.step()
     assert len(room.get_entities()) == 1
-    assert room.get_entities()[0].can_pickup.inventory == [
+    assert room.get_entities()[0].pickupper.inventory == [
         Entity(**{"pickup": {"kind": "item"}})]
 
 
@@ -71,7 +71,7 @@ def test_pickup_action():
     "p": {
       "looksLike": "player",
       "ai": {"kind": "singular", "move": "move_right"},
-      "canPickup": {"mode": "action"}
+      "pickupper": {"mode": "action"}
     },
     "c": {"pickup": {"kind": "item"}}
   }
@@ -85,7 +85,7 @@ pc
     room.get_entities(looks_like="player")[0].ai.move = "pick_up"
     room.step()
     assert len(room.get_entities()) == 1
-    assert room.get_entities()[0].can_pickup.inventory == [
+    assert room.get_entities()[0].pickupper.inventory == [
         Entity(**{"pickup": {"kind": "item"}})]
 
 

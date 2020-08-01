@@ -4,7 +4,7 @@ def test_get_score(client):
     client.put("/api/rooms/testroom", json={
         "steps": 0,
         "entities": {"a": {
-            "canPickup": {"inventory": [{}]},
+            "pickupper": {"inventory": [{}]},
             "scoring": {"kind": "heldItems"}
         }
         }

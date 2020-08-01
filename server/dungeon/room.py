@@ -96,8 +96,8 @@ class Room(BaseModel):
                                colliding_entities)):
                     entity.position.x = new_x
                     entity.position.y = new_y
-                    if (entity.can_pickup is not None
-                            and (entity.can_pickup.mode == "auto"
+                    if (entity.pickupper is not None
+                            and (entity.pickupper.mode == "auto"
                                  or action == "pick_up")):
                         pickups = [
                             e for e in colliding_entities
@@ -107,7 +107,7 @@ class Room(BaseModel):
                             self.remove_entity(colliding_entity)
                             if colliding_entity.pickup.kind == "item":
                                 colliding_entity.position = None
-                                entity.can_pickup.inventory.append(
+                                entity.pickupper.inventory.append(
                                     colliding_entity)
 
             self.steps += 1

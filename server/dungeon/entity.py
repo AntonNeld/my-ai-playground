@@ -40,7 +40,7 @@ class Entity(BaseModel):
     scoring: Optional[Scoring]
     blocks_movement: Optional[Literal[True]] = Field(
         None, alias="blocksMovement")
-    can_pickup: Optional[Pickupper] = Field(None, alias="canPickup")
+    pickupper: Optional[Pickupper]
     pickup: Optional[Pickup]
     looks_like: Optional[LooksLike] = Field(None, alias="looksLike")
 

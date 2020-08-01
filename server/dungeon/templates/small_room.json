@@ -4,7 +4,7 @@
       "position": { "x": 0, "y": 0 },
       "ai": { "kind": "pathfinder" },
       "scoring": { "kind": "heldItems" },
-      "canPickup": {},
+      "pickupper": {},
       "looksLike": "player",
       "perception": {}
     },
