@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 
 from fastapi import APIRouter
 
@@ -31,5 +31,13 @@ def entities_routes(dungeon):
     @router.delete("/rooms/{room_id}/entities/{entity_id}")
     async def delete_entity(room_id: str, entity_id: str):
         return dungeon.get_room(room_id).remove_entity_by_id(entity_id)
+
+    @router.get("/rooms/{room_id}/entities/{entity_id}/score",
+                response_model=int)
+    async def get_entity_score(room_id: str, entity_id: Union[str, None]):
+        room = dungeon.get_room(room_id)
+        entity = room.get_entity(entity_id)
+        return (None if entity.scoring is None
+                else entity.scoring.get_score(entity, room))
 
     return router

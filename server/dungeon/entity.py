@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field
 from typing_extensions import Literal
 
 from dungeon.ai import AI
+from dungeon.scoring import Scoring
 
 LooksLike = Union[Literal["player"], Literal["coin"], Literal["wall"],
                   Literal["vacuum"], Literal["dirt"], Literal["labelA"],
@@ -42,6 +43,7 @@ class Entity(BaseModel):
     ai: Optional[AI]
     perception: Optional[Perception]
     score: Optional[int]
+    scoring: Optional[Scoring]
     blocks_movement: Optional[Literal[True]] = Field(
         None, alias="blocksMovement")
     can_pickup: Optional[Pickupper] = Field(None, alias="canPickup")
