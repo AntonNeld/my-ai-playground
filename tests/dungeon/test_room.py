@@ -89,6 +89,30 @@ pc
         Entity(**{"pickup": {"kind": "item"}})]
 
 
+def test_cumulative_score():
+    room = room_from_text("""
+{
+  "definitions": {
+    "p": {
+      "looksLike": "player",
+      "ai": {"kind": "singular", "move": "move_right"},
+      "pickupper": {},
+      "scoring": {"kind": "heldItems"},
+      "cumulativeScore": 0
+    },
+    "c": {"pickup": {"kind": "item"}}
+  }
+}
+
+pc
+    """)
+
+    room.step()
+    assert room.get_entities(looks_like="player")[0].cumulative_score == 1
+    room.step()
+    assert room.get_entities(looks_like="player")[0].cumulative_score == 2
+
+
 def test_vanish_pickup():
     room = room_from_text("""
 {

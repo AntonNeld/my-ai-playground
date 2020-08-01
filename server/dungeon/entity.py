@@ -42,6 +42,7 @@ class Entity(BaseModel):
     ai: Optional[AI]
     perception: Optional[Perception]
     scoring: Optional[Scoring]
+    cumulative_score: Optional[int] = Field(None, alias="cumulativeScore")
     blocks_movement: Optional[Literal[True]] = Field(
         None, alias="blocksMovement")
     pickupper: Optional[Pickupper]

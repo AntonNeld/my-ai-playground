@@ -35,9 +35,6 @@ def entities_routes(dungeon):
     @router.get("/rooms/{room_id}/entities/{entity_id}/score",
                 response_model=int)
     async def get_entity_score(room_id: str, entity_id: Union[str, None]):
-        room = dungeon.get_room(room_id)
-        entity = room.get_entity(entity_id)
-        return (None if entity.scoring is None
-                else entity.scoring.get_score(entity, room))
+        return dungeon.get_room(room_id).get_entity_score(entity_id)
 
     return router

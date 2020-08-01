@@ -63,6 +63,13 @@ class Room(BaseModel):
 
         return percept
 
+    def get_entity_score(self, entity_id):
+        entity = self.get_entity(entity_id)
+        if entity.cumulative_score is not None:
+            return entity.cumulative_score
+        return (None if entity.scoring is None
+                else entity.scoring.get_score(entity, self))
+
     def step(self, steps=1):
         for _ in range(steps):
             for entity in self.get_entities():
@@ -111,5 +118,7 @@ class Room(BaseModel):
                                     colliding_entity)
                             elif colliding_entity.pickup.kind == "vanish":
                                 pass
-
+                if entity.cumulative_score is not None:
+                    entity.cumulative_score += entity.scoring.get_score(
+                        entity, self)
             self.steps += 1
