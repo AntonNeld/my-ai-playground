@@ -12,7 +12,7 @@ def test_find_coins_auto_pickup():
       "perception": {}
     },
     "#": {"looksLike": "wall", "blocksMovement": true},
-    "c": {"looksLike": "coin", "pickup": {"kind": "addScore", "score": 1}}
+    "c": {"looksLike": "coin", "pickup": {"kind": "item"}}
   }
 }
 
@@ -25,7 +25,8 @@ def test_find_coins_auto_pickup():
     """)
 
     room.step(16)
-    assert room.get_entities(looks_like="player")[0].score == 2
+    assert len(room.get_entities(looks_like="player")
+               [0].can_pickup.inventory) == 2
     assert room.get_entities(looks_like="coin") == []
 
 
@@ -40,7 +41,7 @@ def test_find_coins_action_pickup():
       "perception": {}
     },
     "#": {"looksLike": "wall", "blocksMovement": true},
-    "c": {"looksLike": "coin", "pickup": {"kind": "addScore", "score": 1}}
+    "c": {"looksLike": "coin", "pickup": {"kind": "item"}}
   }
 }
 
@@ -53,5 +54,6 @@ def test_find_coins_action_pickup():
     """)
 
     room.step(18)
-    assert room.get_entities(looks_like="player")[0].score == 2
+    assert len(room.get_entities(looks_like="player")
+               [0].can_pickup.inventory) == 2
     assert room.get_entities(looks_like="coin") == []

@@ -10,11 +10,12 @@ PARENT_DIR = Path(__file__).parent
 RAW_TEMPLATE = Template(**{
     "entities": [
         {"position": {"x": 0, "y": 0}, "ai": {"kind": "pathfinder"},
-         "looksLike": "player", "canPickup": {}},
+         "looksLike": "player", "canPickup": {},
+         "scoring": {"kind": "heldItems"}},
         {"position": {"x": 1, "y": 1}, "blocksMovement": True,
          "looksLike": "wall"},
         {"position": {"x": 1, "y": 0},
-         "pickup": {"kind": "addScore", "score": 1},
+         "pickup": {"kind": "item"},
          "looksLike": "coin"}
     ]
 })
@@ -56,9 +57,10 @@ def test_parse_txt():
     "p": {
       "looksLike": "player",
       "canPickup": {},
-      "ai": {"kind": "pathfinder"}
+      "ai": {"kind": "pathfinder"},
+      "scoring": {"kind": "heldItems"}
     },
-    "c": {"looksLike": "coin", "pickup": {"kind": "addScore", "score": 1}},
+    "c": {"looksLike": "coin", "pickup": {"kind": "item"}},
     "#": {"looksLike": "wall", "blocksMovement": true}
   }
 }
@@ -70,11 +72,12 @@ pc
     assert equal_templates(template, Template(**{
         "entities": [
             {"position": {"x": 0, "y": 0}, "ai": {"kind": "pathfinder"},
-             "looksLike": "player", "canPickup": {}},
+             "looksLike": "player", "canPickup": {},
+             "scoring": {"kind": "heldItems"}},
             {"position": {"x": 1, "y": 1}, "blocksMovement": True,
              "looksLike": "wall"},
             {"position": {"x": 1, "y": 0},
-             "pickup": {"kind": "addScore", "score": 1},
+             "pickup": {"kind": "item"},
              "looksLike": "coin"}
         ]
     }))

@@ -2,13 +2,14 @@
 // from chapter 2 of Artificial Intelligence: A Modern Approach
 {
   "definitions": {
-    "d": {"looksLike": "dirt", "pickup": {"kind": "addScore", "score": 1}},
+    "d": {"looksLike": "dirt", "pickup": {"kind": "item"}},
     "#": {"looksLike": "wall", "blocksMovement": true},
     "v": {
       "looksLike": "vacuum",
       "canPickup": {"mode": "action"},
       "perception": {"distance": 0},
-      "ai": {"kind": "reflexVacuumAgent"}
+      "ai": {"kind": "reflexVacuumAgent"},
+      "scoring": {"kind": "heldItems"}
     },
     "a": [{"looksLike": "labelA"}, "v", "d"],
     "b": [{"looksLike": "labelB"}, "d"]

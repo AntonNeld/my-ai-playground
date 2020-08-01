@@ -1,7 +1,12 @@
 {
   "definitions": {
-    "p": {"looksLike": "player", "canPickup": {}, "ai": {"kind": "pathfinder"}},
-    "c": {"looksLike": "coin", "pickup": {"kind": "addScore", "score": 1}},
+    "p": {
+      "looksLike": "player",
+      "canPickup": {},
+      "ai": {"kind": "pathfinder"},
+      "scoring": {"kind": "heldItems"}
+    },
+    "c": {"looksLike": "coin", "pickup": {"kind": "item"}},
     "#": {"looksLike": "wall", "blocksMovement": true}
   }
 }

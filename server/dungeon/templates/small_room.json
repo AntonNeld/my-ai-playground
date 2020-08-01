@@ -3,6 +3,7 @@
     {
       "position": { "x": 0, "y": 0 },
       "ai": { "kind": "pathfinder" },
+      "scoring": { "kind": "heldItems" },
       "canPickup": {},
       "looksLike": "player",
       "perception": {}
@@ -24,12 +25,12 @@
     },
     {
       "position": { "x": 1, "y": 0 },
-      "pickup": { "kind": "addScore", "score": 1 },
+      "pickup": { "kind": "item" },
       "looksLike": "coin"
     },
     {
       "position": { "x": -1, "y": 0 },
-      "pickup": { "kind": "addScore", "score": 1 },
+      "pickup": { "kind": "item" },
       "looksLike": "coin"
     }
   ]

@@ -4,12 +4,13 @@
     "p": {
       "looksLike": "player",
       "canPickup": {},
+      "scoring": {"kind": "heldItems"},
       "ai": {"kind": "pathfinder"},
       "perception": {"distance": 3}
     },
     "c": {
       "looksLike": "coin",
-      "pickup": {"kind": "addScore", "score": 1}
+      "pickup": {"kind": "item"}
     },
     "#": {"looksLike": "wall", "blocksMovement": true}
   }
