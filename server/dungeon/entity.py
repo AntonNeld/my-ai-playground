@@ -47,6 +47,7 @@ class Entity(BaseModel):
     pickupper: Optional[Pickupper]
     pickup: Optional[Pickup]
     looks_like: Optional[LooksLike] = Field(None, alias="looksLike")
+    tags: Optional[List[str]]
 
 
 Pickupper.update_forward_refs()
