@@ -15,6 +15,10 @@ body {
   height: 100%;
 }
 
+.score {
+  font-size: 16pt;
+}
+
 .details-text {
   white-space: pre;
   font-size: 10pt;

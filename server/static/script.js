@@ -39,22 +39,24 @@ async function initRoom(template) {
 }
 
 async function update() {
-  const [roomData, entityData] = await Promise.all([
+  const [roomData, entityData, scoreData] = await Promise.all([
     getRoomData(),
     getEntityData(),
+    getScoreData(),
   ]);
   room.setData(
     Object.entries(roomData.entities).map(([id, entity]) => ({ id, ...entity }))
   );
   // Use timeout so the browser doesn't scroll to the new data when
   // this is triggered by the user directly
-  setTimeout(
-    () =>
-      (document.querySelector("#details-area").innerHTML = entityData
-        ? JSON.stringify(entityData, null, 2)
-        : ""),
-    0
-  );
+  setTimeout(() => {
+    document.querySelector("#details-area").innerHTML = entityData
+      ? JSON.stringify(entityData, null, 2)
+      : "";
+    document.querySelector("#score").innerHTML = `Score: ${
+      scoreData !== null ? scoreData : "-"
+    }`;
+  }, 0);
 }
 
 async function getRoomData() {
@@ -73,6 +75,21 @@ async function getEntityData() {
     }
     const entity = await response.json();
     return entity;
+  } else {
+    return null;
+  }
+}
+
+async function getScoreData() {
+  if (highlighted) {
+    const response = await fetch(
+      `/api/rooms/${roomId}/entities/${highlighted}/score`
+    );
+    if (!response.ok) {
+      return null;
+    }
+    const score = await response.json();
+    return score;
   } else {
     return null;
   }
