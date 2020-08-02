@@ -5,6 +5,7 @@
     "d": {"looksLike": "dirt", "pickup": {"kind": "vanish"}, "tags": ["dirt"]},
     "#": {"looksLike": "wall", "blocksMovement": true},
     "v": {
+      "label": "vacuum",
       "looksLike": "vacuum",
       "pickupper": {"mode": "action"},
       "perception": {"distance": 0},

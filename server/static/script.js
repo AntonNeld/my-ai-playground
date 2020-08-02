@@ -134,6 +134,16 @@ function toggleAutoStep() {
   }
 }
 
+async function evaluateTemplate(template, duration) {
+  document.querySelector("#details-area").innerHTML = "...";
+  const response = await fetch(`/api/evaluate`, {
+    method: "POST",
+    body: JSON.stringify({ template, duration }),
+  });
+  const result = await response.json();
+  document.querySelector("#details-area").innerHTML = JSON.stringify(result);
+}
+
 getTemplates();
 initRoom(currentTemplate);
 document
@@ -149,8 +159,18 @@ document
     initRoom(template);
     this.blur();
   });
+document
+  .querySelector("#evaluate-button")
+  .addEventListener("click", function (event) {
+    const template = document.querySelector("#template-dropdown").value;
+    const duration = document.querySelector("#duration-input").value;
+    evaluateTemplate(template, duration);
+    this.blur();
+  });
 document.addEventListener("keydown", (event) => {
-  event.preventDefault();
+  if (event.target !== document.body) {
+    return;
+  }
   switch (event.key) {
     case " ":
       step();
