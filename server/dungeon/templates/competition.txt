@@ -1,7 +1,16 @@
 // This room has two pathfinders who both want to pick up coins
 {
   "definitions": {
-    "p": {
+    "1": {
+      "label": "playerOne",
+      "looksLike": "player",
+      "pickupper": {},
+      "scoring": {"kind": "heldItems"},
+      "ai": {"kind": "pathfinder"},
+      "perception": {}
+    },
+    "2": {
+      "label": "playerTwo",
       "looksLike": "player",
       "pickupper": {},
       "scoring": {"kind": "heldItems"},
@@ -17,7 +26,7 @@
 }
 
 ####################
-#c#   #  c  #     p#
+#c#   #  c  #     1#
 # # # # # # # # ####
 # # # c # #  c#    #
 # # ##### # ###### #
@@ -29,5 +38,5 @@
 # ##### #   # ## # #
 #c#c      # #  # # #
 #### ## # # ## #   #
-#p   #c #c#  c # #c#
+#2   #c #c#  c # #c#
 ####################

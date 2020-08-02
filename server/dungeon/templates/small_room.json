@@ -5,6 +5,7 @@
       "ai": { "kind": "pathfinder" },
       "scoring": { "kind": "heldItems" },
       "pickupper": {},
+      "label": "player",
       "looksLike": "player",
       "perception": {}
     },

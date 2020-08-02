@@ -2,6 +2,7 @@
 {
   "definitions": {
     "p": {
+      "label": "player",
       "looksLike": "player",
       "pickupper": {},
       "scoring": {"kind": "heldItems"},
