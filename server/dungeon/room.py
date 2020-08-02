@@ -63,8 +63,9 @@ class Room(BaseModel):
 
         return percept
 
-    def get_entity_score(self, entity_id):
-        entity = self.get_entity(entity_id)
+    def get_entity_score(self, entity):
+        if isinstance(entity, str):
+            entity = self.get_entity(entity)
         if entity.cumulative_score is not None:
             return entity.cumulative_score
         return (None if entity.scoring is None
@@ -76,48 +77,47 @@ class Room(BaseModel):
                 # Only entities with a position can act
                 # This is a proxy for not being picked up,
                 # and should be fixed.
-                if entity.position is None:
-                    continue
-                # Find next action
-                action = entity.ai.next_move(self.get_view(
-                    entity)) if entity.ai is not None else "none"
-                # Move and handle collisions
-                dx = dy = 0
+                if entity.position is not None:
+                    # Find next action
+                    action = entity.ai.next_move(self.get_view(
+                        entity)) if entity.ai is not None else "none"
+                    # Move and handle collisions
+                    dx = dy = 0
 
-                if action == "move_up":
-                    dy = 1
-                elif action == "move_down":
-                    dy = -1
-                elif action == "move_left":
-                    dx = -1
-                elif action == "move_right":
-                    dx = 1
-                new_x = entity.position.x + dx
-                new_y = entity.position.y + dy
+                    if action == "move_up":
+                        dy = 1
+                    elif action == "move_down":
+                        dy = -1
+                    elif action == "move_left":
+                        dx = -1
+                    elif action == "move_right":
+                        dx = 1
+                    new_x = entity.position.x + dx
+                    new_y = entity.position.y + dy
 
-                colliding_entities = [e for e in self.get_entities(
-                ) if e.position is not None and e.position.x == new_x
-                    and e.position.y == new_y and e != entity]
+                    colliding_entities = [e for e in self.get_entities(
+                    ) if e.position is not None and e.position.x == new_x
+                        and e.position.y == new_y and e != entity]
 
-                if not any(map(lambda e: e.blocks_movement is True,
-                               colliding_entities)):
-                    entity.position.x = new_x
-                    entity.position.y = new_y
-                    if (entity.pickupper is not None
-                            and (entity.pickupper.mode == "auto"
-                                 or action == "pick_up")):
-                        pickups = [
-                            e for e in colliding_entities
-                            if e.pickup is not None
-                        ]
-                        for colliding_entity in pickups:
-                            self.remove_entity(colliding_entity)
-                            if colliding_entity.pickup.kind == "item":
-                                colliding_entity.position = None
-                                entity.pickupper.inventory.append(
-                                    colliding_entity)
-                            elif colliding_entity.pickup.kind == "vanish":
-                                pass
+                    if not any(map(lambda e: e.blocks_movement is True,
+                                   colliding_entities)):
+                        entity.position.x = new_x
+                        entity.position.y = new_y
+                        if (entity.pickupper is not None
+                                and (entity.pickupper.mode == "auto"
+                                     or action == "pick_up")):
+                            pickups = [
+                                e for e in colliding_entities
+                                if e.pickup is not None
+                            ]
+                            for colliding_entity in pickups:
+                                self.remove_entity(colliding_entity)
+                                if colliding_entity.pickup.kind == "item":
+                                    colliding_entity.position = None
+                                    entity.pickupper.inventory.append(
+                                        colliding_entity)
+                                elif colliding_entity.pickup.kind == "vanish":
+                                    pass
                 if entity.cumulative_score is not None:
                     entity.cumulative_score += entity.scoring.get_score(
                         entity, self)
