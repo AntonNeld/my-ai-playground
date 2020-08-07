@@ -113,6 +113,49 @@ pc
     assert room.get_entities(looks_like="player")[0].cumulative_score == 2
 
 
+def test_score_pickup():
+    room = room_from_text("""
+{
+  "definitions": {
+    "p": {
+      "looksLike": "player",
+      "ai": {"kind": "singular", "move": "move_right"},
+      "score": 0,
+      "pickupper": {}
+    },
+    "c": {"pickup": {"kind": "addScore", "score": 2}}
+  }
+}
+
+pc
+    """)
+
+    room.step()
+    assert len(room.get_entities()) == 1
+    assert room.get_entities()[0].score == 2
+
+
+def test_score_pickup_score_none():
+    room = room_from_text("""
+{
+  "definitions": {
+    "p": {
+      "looksLike": "player",
+      "ai": {"kind": "singular", "move": "move_right"},
+      "pickupper": {}
+    },
+    "c": {"pickup": {"kind": "addScore", "score": 2}}
+  }
+}
+
+pc
+    """)
+
+    room.step()
+    assert len(room.get_entities()) == 1
+    assert room.get_entities()[0].score == 2
+
+
 def test_vanish_pickup():
     room = room_from_text("""
 {
