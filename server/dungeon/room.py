@@ -66,10 +66,12 @@ class Room(BaseModel):
     def get_entity_score(self, entity):
         if isinstance(entity, str):
             entity = self.get_entity(entity)
-        if entity.cumulative_score is not None:
-            return entity.cumulative_score
-        return (None if entity.scoring is None
-                else entity.scoring.get_score(entity, self))
+        if entity.scoring is None and entity.score is None:
+            return None
+        evaluated_score = (entity.scoring.get_score(
+            entity, self) if entity.scoring is not None else 0)
+        accumulated_score = entity.score if entity.score is not None else 0
+        return evaluated_score + accumulated_score
 
     def step(self, steps=1):
         for _ in range(steps):
@@ -137,7 +139,4 @@ class Room(BaseModel):
                                     added_score = colliding_entity.pickup.score
                                     if entity.score is not None:
                                         entity.score += added_score
-                if entity.cumulative_score is not None:
-                    entity.cumulative_score += entity.scoring.get_score(
-                        entity, self)
             self.steps += 1

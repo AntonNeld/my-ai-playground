@@ -54,7 +54,6 @@ class Entity(BaseModel):
     perception: Optional[Perception]
     score: Optional[int]
     scoring: Optional[Scoring]
-    cumulative_score: Optional[int] = Field(None, alias="cumulativeScore")
     blocks_movement: Optional[Literal[True]] = Field(
         None, alias="blocksMovement")
     pickupper: Optional[Pickupper]

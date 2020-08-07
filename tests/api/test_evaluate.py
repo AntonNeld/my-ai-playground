@@ -4,12 +4,11 @@ def test_evaluate(client):
             {
                 "label": "entityOne",
                 "pickupper": {"inventory": [{}]},
-                "scoring": {"kind": "heldItems"},
-                "cumulativeScore": 0
+                "scoring": {"kind": "heldItems"}
             },
             {
                 "label": "entityTwo",
-                "scoring": {"kind": "heldItems"}
+                "score": 0
             },
         ]
     })
@@ -17,4 +16,4 @@ def test_evaluate(client):
     response = client.post(
         "/api/evaluate", json={"template": "testtemplate", "duration": 3})
     assert response.status_code == 200
-    assert response.json() == {"entityOne": 3, "entityTwo": 0}
+    assert response.json() == {"entityOne": 1, "entityTwo": 0}

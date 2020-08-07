@@ -4,21 +4,17 @@
   "definitions": {
     "d": {"looksLike": "dirt", "pickup": {"kind": "vanish"}, "tags": ["dirt"]},
     "#": {"looksLike": "wall", "blocksMovement": true},
+    ".": {"countTagsScore": {"addTo": "vacuum", "score": 1, "tags": {"dirt": 0}}},
     "v": {
       "label": "vacuum",
       "looksLike": "vacuum",
       "pickupper": {"mode": "action"},
       "perception": {"distance": 0},
       "ai": {"kind": "reflexVacuumAgent"},
-      "scoring": {
-        "kind": "tileTags",
-        "shouldHaveTags": ["floor"],
-        "shouldNotHaveTags": ["dirt"]
-      },
-      "cumulativeScore": 0
+      "score": 0
     },
-    "a": [{"looksLike": "labelA", "tags": ["floor"]}, "v", "d"],
-    "b": [{"looksLike": "labelB", "tags": ["floor"]}, "d"]
+    "a": [{"looksLike": "labelA"}, ".", "v", "d"],
+    "b": [{"looksLike": "labelB"}, ".", "d"]
   }
 }
 
