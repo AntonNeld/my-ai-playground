@@ -1,5 +1,5 @@
 // A simple vacuum cleaner world with two locations,
-// from chapter 2 of Artificial Intelligence: A Modern Approach
+// from exercise 2.9 of Artificial Intelligence: A Modern Approach
 {
   "definitions": {
     "d": {"looksLike": "dirt", "pickup": {"kind": "vanish"}, "tags": ["dirt"]},
