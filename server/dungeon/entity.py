@@ -17,6 +17,11 @@ class Position(BaseModel):
     y: int
 
 
+class ScorePickup(BaseModel):
+    kind: Literal["addScore"]
+    score: int
+
+
 class ItemPickup(BaseModel):
     kind: Literal["item"]
 
@@ -25,7 +30,7 @@ class VanishPickup(BaseModel):
     kind: Literal["vanish"]
 
 
-Pickup = Union[ItemPickup, VanishPickup]
+Pickup = Union[ItemPickup, ScorePickup, VanishPickup]
 
 
 class Pickupper(BaseModel):
@@ -41,6 +46,7 @@ class Entity(BaseModel):
     position: Optional[Position]
     ai: Optional[AI]
     perception: Optional[Perception]
+    score: Optional[int]
     scoring: Optional[Scoring]
     cumulative_score: Optional[int] = Field(None, alias="cumulativeScore")
     blocks_movement: Optional[Literal[True]] = Field(

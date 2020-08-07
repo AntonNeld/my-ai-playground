@@ -112,12 +112,18 @@ class Room(BaseModel):
                             ]
                             for colliding_entity in pickups:
                                 self.remove_entity(colliding_entity)
-                                if colliding_entity.pickup.kind == "item":
+                                kind = colliding_entity.pickup.kind
+                                if kind == "item":
                                     colliding_entity.position = None
                                     entity.pickupper.inventory.append(
                                         colliding_entity)
-                                elif colliding_entity.pickup.kind == "vanish":
+                                elif kind == "vanish":
                                     pass
+                                elif kind == "addScore":
+                                    if entity.score is None:
+                                        entity.score = 0
+                                    added_score = colliding_entity.pickup.score
+                                    entity.score += added_score
                 if entity.cumulative_score is not None:
                     entity.cumulative_score += entity.scoring.get_score(
                         entity, self)
