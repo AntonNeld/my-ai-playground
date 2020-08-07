@@ -1,13 +1,10 @@
 {
   "definitions": {
     "p": {
-      "looksLike": "player",
-      "pickupper": {},
-      "ai": {"kind": "pathfinder"},
-      "scoring": {"kind": "heldItems"}
+      "looksLike": "player"
     },
-    "c": {"looksLike": "coin", "pickup": {"kind": "item"}},
-    "#": {"looksLike": "wall", "blocksMovement": true}
+    "c": {"looksLike": "coin"},
+    "#": {"looksLike": "wall"}
   }
 }
 

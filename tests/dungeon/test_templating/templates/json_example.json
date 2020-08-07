@@ -2,20 +2,14 @@
   "entities": [
     {
       "position": { "x": 0, "y": 0 },
-      "type": "player",
-      "ai": { "kind": "pathfinder" },
-      "looksLike": "player",
-      "pickupper": {},
-      "scoring": { "kind": "heldItems" }
+      "looksLike": "player"
     },
     {
       "position": { "x": 1, "y": 1 },
-      "blocksMovement": true,
       "looksLike": "wall"
     },
     {
       "position": { "x": 1, "y": 0 },
-      "pickup": { "kind": "item" },
       "looksLike": "coin"
     }
   ]

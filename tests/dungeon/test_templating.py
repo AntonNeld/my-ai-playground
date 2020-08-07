@@ -9,14 +9,9 @@ PARENT_DIR = Path(__file__).parent
 
 RAW_TEMPLATE = Template(**{
     "entities": [
-        {"position": {"x": 0, "y": 0}, "ai": {"kind": "pathfinder"},
-         "looksLike": "player", "pickupper": {},
-         "scoring": {"kind": "heldItems"}},
-        {"position": {"x": 1, "y": 1}, "blocksMovement": True,
-         "looksLike": "wall"},
-        {"position": {"x": 1, "y": 0},
-         "pickup": {"kind": "item"},
-         "looksLike": "coin"}
+        {"position": {"x": 0, "y": 0}, "looksLike": "player"},
+        {"position": {"x": 1, "y": 1}, "looksLike": "wall"},
+        {"position": {"x": 1, "y": 0}, "looksLike": "coin"}
     ]
 })
 
@@ -48,39 +43,6 @@ def test_load_json(loaded_keeper):
 def test_load_txt(loaded_keeper):
     template = loaded_keeper.get_template("txt_example")
     assert equal_templates(template, RAW_TEMPLATE)
-
-
-def test_parse_txt():
-    template = template_from_txt("""
-{
-  "definitions": {
-    "p": {
-      "looksLike": "player",
-      "pickupper": {},
-      "ai": {"kind": "pathfinder"},
-      "scoring": {"kind": "heldItems"}
-    },
-    "c": {"looksLike": "coin", "pickup": {"kind": "item"}},
-    "#": {"looksLike": "wall", "blocksMovement": true}
-  }
-}
-
- #
-pc
-
-""")
-    assert equal_templates(template, Template(**{
-        "entities": [
-            {"position": {"x": 0, "y": 0}, "ai": {"kind": "pathfinder"},
-             "looksLike": "player", "pickupper": {},
-             "scoring": {"kind": "heldItems"}},
-            {"position": {"x": 1, "y": 1}, "blocksMovement": True,
-             "looksLike": "wall"},
-            {"position": {"x": 1, "y": 0},
-             "pickup": {"kind": "item"},
-             "looksLike": "coin"}
-        ]
-    }))
 
 
 def test_parse_ignore_comment():
