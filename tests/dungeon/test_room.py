@@ -153,7 +153,7 @@ pc
 
     room.step()
     assert len(room.get_entities()) == 1
-    assert room.get_entities()[0].score == 2
+    assert room.get_entities()[0].score is None
 
 
 def test_vanish_pickup():
@@ -215,3 +215,29 @@ def test_get_view_with_max_distance():
     view = room.get_view(perceptor)
     assert len(view) == 1
     assert {"x": 3, "y": 0, "looks_like": "coin"} in view
+
+
+def test_count_tags_score():
+    room = room_from_text("""
+{
+  "definitions": {
+    "p": {"label": "player", "score": 0},
+    "d": {"tags": ["dirt"]},
+    ".": {
+      "countTagsScore": {
+        "addTo": "player",
+        "score": 1,
+        "tags": {"dirt": 0}
+      }
+    },
+    "a": ["d", "."]
+  }
+}
+
+p  a..
+    """)
+    player = room.get_entities(label="player")[0]
+    room.step()
+    assert player.score == 2
+    room.step()
+    assert player.score == 4

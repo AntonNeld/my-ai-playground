@@ -103,6 +103,20 @@ class Room(BaseModel):
                                    colliding_entities)):
                         entity.position.x = new_x
                         entity.position.y = new_y
+                        if entity.count_tags_score is not None:
+                            tags = {
+                                tag: 0 for tag in entity.count_tags_score.tags}
+                            for colliding_entity in colliding_entities:
+                                if colliding_entity.tags is not None:
+                                    for tag in colliding_entity.tags:
+                                        if tag in tags:
+                                            tags[tag] += 1
+                            if tags == entity.count_tags_score.tags:
+                                add_to = self.get_entities(
+                                    label=entity.count_tags_score.add_to)[0]
+                                if add_to.score is not None:
+                                    score = entity.count_tags_score.score
+                                    add_to.score += score
                         if (entity.pickupper is not None
                                 and (entity.pickupper.mode == "auto"
                                      or action == "pick_up")):
@@ -120,10 +134,9 @@ class Room(BaseModel):
                                 elif kind == "vanish":
                                     pass
                                 elif kind == "addScore":
-                                    if entity.score is None:
-                                        entity.score = 0
                                     added_score = colliding_entity.pickup.score
-                                    entity.score += added_score
+                                    if entity.score is not None:
+                                        entity.score += added_score
                 if entity.cumulative_score is not None:
                     entity.cumulative_score += entity.scoring.get_score(
                         entity, self)

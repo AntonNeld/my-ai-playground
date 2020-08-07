@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Optional, Union, List
+from typing import Optional, Union, List, Dict
 
 from pydantic import BaseModel, Field
 from typing_extensions import Literal
@@ -42,6 +42,12 @@ class Perception(BaseModel):
     distance: Optional[int]
 
 
+class CountTagsScore(BaseModel):
+    add_to: str = Field(..., alias="addTo")
+    score: int
+    tags: Dict[str, int]
+
+
 class Entity(BaseModel):
     position: Optional[Position]
     ai: Optional[AI]
@@ -56,6 +62,8 @@ class Entity(BaseModel):
     looks_like: Optional[LooksLike] = Field(None, alias="looksLike")
     tags: Optional[List[str]]
     label: Optional[str]
+    count_tags_score: Optional[CountTagsScore] = Field(
+        None, alias="countTagsScore")
 
 
 Pickupper.update_forward_refs()
