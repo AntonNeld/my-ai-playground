@@ -1,4 +1,4 @@
-// A simple vacuum cleaner world with two locations,
+// A simple vacuum cleaner world with a cost for moving,
 // from chapter 2 of Artificial Intelligence: A Modern Approach
 {
   "definitions": {
@@ -13,8 +13,8 @@
       "ai": {"kind": "reflexVacuumAgent"},
       "score": 0,
       "actions": {
-        "move_left": {},
-        "move_right": {},
+        "move_left": {"cost": 1},
+        "move_right": {"cost": 1},
         "pick_up": {}
       }
     },

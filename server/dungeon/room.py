@@ -83,6 +83,14 @@ class Room(BaseModel):
                     # Find next action
                     action = entity.ai.next_move(self.get_view(
                         entity)) if entity.ai is not None else "none"
+                    # Don't perform actions we're not allowed to
+                    if entity.actions is None or action not in entity.actions:
+                        action = "none"
+                    else:
+                        if (entity.actions[action].cost is not None
+                                and entity.score is not None):
+                            entity.score -= entity.actions[action].cost
+
                     # Move and handle collisions
                     dx = dy = 0
 

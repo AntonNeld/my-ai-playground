@@ -11,7 +11,15 @@ def test_action_move(move, x, y):
     room = room_from_text("""
 {
   "definitions": {
-    "p": {"ai": {"kind": "singular", "move": "%s"}}
+    "p": {
+      "ai": {"kind": "singular", "move": "%s"},
+      "actions": {
+        "move_up": {},
+        "move_down": {},
+        "move_left": {},
+        "move_right": {}
+      }
+    }
   }
 }
 
@@ -29,7 +37,8 @@ def test_blocks_movement():
   "definitions": {
     "p": {
       "looksLike": "player",
-      "ai": {"kind": "singular", "move": "move_right"}
+      "ai": {"kind": "singular", "move": "move_right"},
+      "actions": {"move_right": {}}
     },
     "#": {"blocksMovement": true}
   }
@@ -49,7 +58,8 @@ def test_pickup():
     "p": {
       "looksLike": "player",
       "ai": {"kind": "singular", "move": "move_right"},
-      "pickupper": {}
+      "pickupper": {},
+      "actions": {"move_right": {}}
     },
     "c": {"pickup": {"kind": "item"}}
   }
@@ -71,7 +81,8 @@ def test_pickup_action():
     "p": {
       "looksLike": "player",
       "ai": {"kind": "singular", "move": "move_right"},
-      "pickupper": {"mode": "action"}
+      "pickupper": {"mode": "action"},
+      "actions": {"move_right": {}, "pick_up": {}}
     },
     "c": {"pickup": {"kind": "item"}}
   }
@@ -97,7 +108,8 @@ def test_score_pickup():
       "looksLike": "player",
       "ai": {"kind": "singular", "move": "move_right"},
       "score": 0,
-      "pickupper": {}
+      "pickupper": {},
+      "actions": {"move_right": {}}
     },
     "c": {"pickup": {"kind": "addScore", "score": 2}}
   }
@@ -118,7 +130,8 @@ def test_score_pickup_score_none():
     "p": {
       "looksLike": "player",
       "ai": {"kind": "singular", "move": "move_right"},
-      "pickupper": {}
+      "pickupper": {},
+      "actions": {"move_right": {}}
     },
     "c": {"pickup": {"kind": "addScore", "score": 2}}
   }
@@ -139,7 +152,8 @@ def test_vanish_pickup():
     "p": {
       "looksLike": "player",
       "ai": {"kind": "singular", "move": "move_right"},
-      "pickupper": {}
+      "pickupper": {},
+      "actions": {"move_right": {}}
     },
     "c": {"pickup": {"kind": "vanish"}}
   }
@@ -217,3 +231,24 @@ p  a..
     assert player.score == 2
     room.step()
     assert player.score == 4
+
+
+def test_move_penalty():
+    room = room_from_text("""
+{
+  "definitions": {
+    "p": {
+      "label": "player",
+      "ai": {"kind": "singular", "move": "move_right"},
+      "actions": {"move_right": {"cost": 1}},
+      "score": 0
+    },
+    "#": {"blocksMovement": true}
+  }
+}
+
+p#
+    """)
+
+    room.step()
+    assert room.get_entities(label="player")[0].score == -1

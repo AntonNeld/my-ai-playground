@@ -7,7 +7,8 @@ def test_move_right():
   "definitions": {
     "p": {
       "looksLike": "player",
-      "ai": {"kind": "singular", "move": "move_right"}
+      "ai": {"kind": "singular", "move": "move_right"},
+      "actions": {"move_right": {}}
     }
   }
 }

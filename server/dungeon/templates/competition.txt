@@ -7,7 +7,13 @@
       "pickupper": {},
       "scoring": {"kind": "heldItems"},
       "ai": {"kind": "pathfinder"},
-      "perception": {}
+      "perception": {},
+      "actions": {
+        "move_up": {},
+        "move_down": {},
+        "move_left": {},
+        "move_right": {}
+      }
     },
     "2": {
       "label": "playerTwo",
@@ -15,7 +21,13 @@
       "pickupper": {},
       "scoring": {"kind": "heldItems"},
       "ai": {"kind": "pathfinder"},
-      "perception": {}
+      "perception": {},
+      "actions": {
+        "move_up": {},
+        "move_down": {},
+        "move_left": {},
+        "move_right": {}
+      }
     },
     "c": {
       "looksLike": "coin",

@@ -7,7 +7,13 @@
       "pickupper": {},
       "scoring": {"kind": "heldItems"},
       "ai": {"kind": "pathfinder"},
-      "perception": {"distance": 3}
+      "perception": {"distance": 3},
+      "actions": {
+        "move_up": {},
+        "move_down": {},
+        "move_left": {},
+        "move_right": {}
+      }
     },
     "c": {
       "looksLike": "coin",

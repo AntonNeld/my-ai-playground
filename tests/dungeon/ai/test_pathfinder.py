@@ -9,7 +9,13 @@ def test_find_coins_auto_pickup():
       "looksLike": "player",
       "ai": {"kind": "pathfinder"},
       "pickupper": {},
-      "perception": {}
+      "perception": {},
+      "actions": {
+        "move_right": {},
+        "move_left": {},
+        "move_up": {},
+        "move_down": {}
+      }
     },
     "#": {"looksLike": "wall", "blocksMovement": true},
     "c": {"looksLike": "coin", "pickup": {"kind": "item"}}
@@ -38,7 +44,14 @@ def test_find_coins_action_pickup():
       "looksLike": "player",
       "ai": {"kind": "pathfinder", "manualPickup": true},
       "pickupper": {"mode": "action"},
-      "perception": {}
+      "perception": {},
+      "actions": {
+        "move_right": {},
+        "move_left": {},
+        "move_up": {},
+        "move_down": {},
+        "pick_up": {}
+      }
     },
     "#": {"looksLike": "wall", "blocksMovement": true},
     "c": {"looksLike": "coin", "pickup": {"kind": "item"}}

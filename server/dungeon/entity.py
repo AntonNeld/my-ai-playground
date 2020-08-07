@@ -6,6 +6,7 @@ from typing_extensions import Literal
 
 from dungeon.ai import AI
 from dungeon.scoring import Scoring
+from dungeon.consts import Move
 
 LooksLike = Union[Literal["player"], Literal["coin"], Literal["wall"],
                   Literal["vacuum"], Literal["dirt"], Literal["labelA"],
@@ -48,6 +49,10 @@ class CountTagsScore(BaseModel):
     tags: Dict[str, int]
 
 
+class ActionDetails(BaseModel):
+    cost: Optional[int]
+
+
 class Entity(BaseModel):
     position: Optional[Position]
     ai: Optional[AI]
@@ -63,6 +68,7 @@ class Entity(BaseModel):
     label: Optional[str]
     count_tags_score: Optional[CountTagsScore] = Field(
         None, alias="countTagsScore")
+    actions: Optional[Dict[Move, ActionDetails]]
 
 
 Pickupper.update_forward_refs()

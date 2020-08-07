@@ -7,7 +7,14 @@
       "pickupper": {"mode": "action"},
       "scoring": {"kind": "heldItems"},
       "ai": {"kind": "pathfinder"},
-      "perception": {}
+      "perception": {},
+      "actions": {
+        "move_up": {},
+        "move_down": {},
+        "move_left": {},
+        "move_right": {},
+        "pick_up": {}
+      }
     },
     "c": {
       "looksLike": "coin",
