@@ -171,6 +171,7 @@ document.addEventListener("keydown", (event) => {
   if (event.target !== document.body) {
     return;
   }
+  event.preventDefault();
   switch (event.key) {
     case " ":
       step();
