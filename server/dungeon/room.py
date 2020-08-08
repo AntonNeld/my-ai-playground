@@ -80,9 +80,16 @@ class Room(BaseModel):
                 # This is a proxy for not being picked up,
                 # and should be fixed.
                 if entity.position is not None:
-                    # Find next action
-                    action = entity.ai.next_move(self.get_view(
-                        entity)) if entity.ai is not None else "none"
+                    # Update AI state and find next action
+                    if entity.ai is not None:
+                        percept = self.get_view(entity)
+                        if hasattr(entity.ai, "update_state_percept"):
+                            entity.ai.update_state_percept(percept)
+                        action = entity.ai.next_move(percept)
+                        if hasattr(entity.ai, "update_state_action"):
+                            entity.ai.update_state_action(action)
+                    else:
+                        action = "none"
                     # Don't perform actions we're not allowed to
                     if entity.actions is None or action not in entity.actions:
                         action = "none"

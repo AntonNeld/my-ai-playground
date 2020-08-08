@@ -1,5 +1,5 @@
 // A simple vacuum cleaner world with a cost for moving,
-// from exercise 2.10.a of Artificial Intelligence: A Modern Approach
+// from exercise 2.10.b of Artificial Intelligence: A Modern Approach
 {
   "definitions": {
     "d": {"looksLike": "dirt", "pickup": {"kind": "vanish"}, "tags": ["dirt"]},
@@ -10,7 +10,7 @@
       "looksLike": "vacuum",
       "pickupper": {"mode": "action"},
       "perception": {"distance": 0},
-      "ai": {"kind": "reflexVacuumAgent"},
+      "ai": {"kind": "reflexVacuumWithState", "moved": false},
       "score": 0,
       "actions": {
         "move_left": {"cost": 1},
