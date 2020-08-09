@@ -181,10 +181,10 @@ def test_get_view():
 p  c
     """)
     perceptor = room.get_entities(looks_like="player")[0]
-    view = room.get_view(perceptor)
-    assert len(view) == 2
-    assert {"x": 3, "y": 0, "looks_like": "coin"} in view
-    assert {"x": 3, "y": 1, "looks_like": "wall"} in view
+    entities = room.get_view(perceptor)["entities"]
+    assert len(entities) == 2
+    assert {"x": 3, "y": 0, "looks_like": "coin"} in entities
+    assert {"x": 3, "y": 1, "looks_like": "wall"} in entities
 
 
 def test_get_view_with_max_distance():
@@ -202,9 +202,9 @@ def test_get_view_with_max_distance():
 #     #
     """)
     perceptor = room.get_entities(looks_like="player")[0]
-    view = room.get_view(perceptor)
-    assert len(view) == 1
-    assert {"x": 3, "y": 0, "looks_like": "coin"} in view
+    entities = room.get_view(perceptor)["entities"]
+    assert len(entities) == 1
+    assert {"x": 3, "y": 0, "looks_like": "coin"} in entities
 
 
 def test_count_tags_score():

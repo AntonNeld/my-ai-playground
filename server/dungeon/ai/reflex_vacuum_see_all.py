@@ -7,10 +7,11 @@ class ReflexVacuumSeeAllAI(BaseModel):
     kind: Literal["reflexVacuumSeeAll"]
 
     def next_move(self, percept):
-        at_a = {"x": 0, "y": 0, "looks_like": "labelA"} in percept
-        at_b = {"x": 0, "y": 0, "looks_like": "labelB"} in percept
-        dirt_count = len([e for e in percept if e["looks_like"] == "dirt"])
-        at_dirt = {"x": 0, "y": 0, "looks_like": "dirt"} in percept
+        at_a = {"x": 0, "y": 0, "looks_like": "labelA"} in percept["entities"]
+        at_b = {"x": 0, "y": 0, "looks_like": "labelB"} in percept["entities"]
+        dirt_count = len([e for e in percept["entities"]
+                          if e["looks_like"] == "dirt"])
+        at_dirt = {"x": 0, "y": 0, "looks_like": "dirt"} in percept["entities"]
 
         if at_dirt:
             return "pick_up"

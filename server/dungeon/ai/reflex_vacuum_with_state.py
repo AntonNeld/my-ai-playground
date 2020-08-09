@@ -8,7 +8,7 @@ class ReflexVacuumWithStateAI(BaseModel):
     moved: bool
 
     def next_move(self, percept):
-        view = list(map(lambda e: e["looks_like"], percept))
+        view = list(map(lambda e: e["looks_like"], percept["entities"]))
         if "dirt" in view:
             return "pick_up"
         if "labelA" in view and not self.moved:

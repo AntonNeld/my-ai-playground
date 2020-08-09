@@ -7,7 +7,7 @@ class ReflexVacuumAgentAI(BaseModel):
     kind: Literal["reflexVacuumAgent"]
 
     def next_move(self, percept):
-        view = list(map(lambda e: e["looks_like"], percept))
+        view = list(map(lambda e: e["looks_like"], percept["entities"]))
         if "dirt" in view:
             return "pick_up"
         if "labelA" in view:

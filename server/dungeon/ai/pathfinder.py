@@ -16,8 +16,8 @@ class PathfinderAI(BaseModel):
 
     def next_move(self, percept):
         if not self.plan:
-            walls = get_coordinates(percept, "wall")
-            coins = get_coordinates(percept, "coin")
+            walls = get_coordinates(percept["entities"], "wall")
+            coins = get_coordinates(percept["entities"], "coin")
             shortest = math.inf
             for coin in coins:
                 new_actions = breadth_first((0, 0), coin, walls)

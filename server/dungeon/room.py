@@ -47,7 +47,7 @@ class Room(BaseModel):
             return {}
         my_x = perceptor.position.x
         my_y = perceptor.position.y
-        percept = []
+        entities_view = []
         entities = self.get_entities()
         for entity in [e for e in entities if e.position is not None]:
             other_x = entity.position.x
@@ -59,9 +59,9 @@ class Room(BaseModel):
                 entity_view = {"x":          other_x - my_x,
                                "y":          other_y - my_y,
                                "looks_like": entity.looks_like}
-                percept.append(entity_view)
+                entities_view.append(entity_view)
 
-        return percept
+        return {"entities": entities_view}
 
     def get_entity_score(self, entity):
         if isinstance(entity, str):
