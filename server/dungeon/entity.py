@@ -41,6 +41,7 @@ class Pickupper(BaseModel):
 
 class Perception(BaseModel):
     distance: Optional[int]
+    include_position: bool = Field(False, alias="includePosition")
 
 
 class CountTagsScore(BaseModel):

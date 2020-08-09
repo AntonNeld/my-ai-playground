@@ -207,6 +207,24 @@ def test_get_view_with_max_distance():
     assert {"x": 3, "y": 0, "looks_like": "coin"} in entities
 
 
+def test_get_view_with_position():
+    room = room_from_text("""
+{
+  "definitions": {
+    "p": {"looksLike": "player", "perception": {"includePosition": true}},
+    "#": {"looksLike": "wall"}
+  }
+}
+
+   #
+# p
+    """)
+    perceptor = room.get_entities(looks_like="player")[0]
+    position = room.get_view(perceptor)["position"]
+    assert position["x"] == 2
+    assert position["y"] == 0
+
+
 def test_count_tags_score():
     room = room_from_text("""
 {
