@@ -53,6 +53,7 @@ async function update() {
     document.querySelector("#details-area").innerHTML = entityData
       ? JSON.stringify(entityData, null, 2)
       : "";
+    document.querySelector("#steps").innerHTML = `Steps: ${roomData.steps}`;
     document.querySelector("#score").innerHTML = `Score: ${
       scoreData !== null ? scoreData : "-"
     }`;
