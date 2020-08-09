@@ -7,21 +7,6 @@ from app import create_app
 
 TESTS = [
     {
-        "template": "vacuum_cleaner_world",
-        "duration": 100,
-        "scores": {"vacuum": 197}
-    },
-    {
-        "template": "vacuum_cleaner_world_move_cost",
-        "duration": 100,
-        "scores": {"vacuum": 196}
-    },
-    {
-        "template": "vacuum_cleaner_world_move_cost_better_sensors",
-        "duration": 100,
-        "scores": {"vacuum": 196}
-    },
-    {
         "template": "competition",
         "duration": 15,
         "scores": {"playerOne": 2, "playerTwo": 2}
@@ -46,6 +31,23 @@ TESTS = [
         "duration": 3,
         "scores": {"player": 2}
     },
+    {
+        "template": "vacuum_cleaner_world",
+        "duration": 100,
+        "scores": {"vacuum": 197}
+    },
+    {
+        "template": "vacuum_cleaner_world_move_cost",
+        "duration": 100,
+        "scores": {"vacuum": 196}
+    },
+    {
+        "template": "vacuum_cleaner_world_move_cost_better_sensors",
+        "duration": 100,
+        "scores": {"vacuum": 196}
+    }
+    # We can't include the randomized vacuum agents since tests should
+    # be deterministic
 ]
 
 
