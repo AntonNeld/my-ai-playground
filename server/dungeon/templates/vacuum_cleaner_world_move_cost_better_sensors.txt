@@ -9,7 +9,7 @@
       "label": "vacuum",
       "looksLike": "vacuum",
       "pickupper": {"mode": "action"},
-      "perception": {},
+      "perception": {"includePosition": true},
       "ai": {"kind": "reflexVacuumSeeAll"},
       "score": 0,
       "actions": {
@@ -18,8 +18,8 @@
         "pick_up": {}
       }
     },
-    "a": [{"looksLike": "labelA"}, ".", "v", "d"],
-    "b": [{"looksLike": "labelB"}, ".", "d"]
+    "a": [".", "v", "d"],
+    "b": [".", "d"]
   }
 }
 
