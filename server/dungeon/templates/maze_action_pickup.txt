@@ -6,7 +6,7 @@
       "looksLike": "player",
       "pickupper": {"mode": "action"},
       "scoring": {"kind": "heldItems"},
-      "ai": {"kind": "pathfinder"},
+      "ai": {"kind": "pathfinder", "manualPickup": true},
       "perception": {},
       "actions": {
         "move_up": {},

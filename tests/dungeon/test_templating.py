@@ -27,7 +27,7 @@ def equal_templates(one, two):
                       key=lambda x: x.json(sort_keys=True)))
 
 
-@ pytest.fixture
+@pytest.fixture
 def loaded_keeper():
     template_keeper = TemplateKeeper()
     template_keeper.load_directory(
@@ -136,13 +136,6 @@ def test_parse_circular_refs():
 a
 
 """)
-
-
-def test_included_templates_validate():
-    template_keeper = TemplateKeeper()
-    root_dir = Path(__file__).parent.parent.parent
-    template_keeper.load_directory(
-        root_dir / "server" / "dungeon" / "templates")
 
 
 def test_template_not_modified_by_room():
