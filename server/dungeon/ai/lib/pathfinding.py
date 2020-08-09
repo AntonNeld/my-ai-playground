@@ -1,3 +1,16 @@
+import math
+
+
+def shortest_breadth_first(origin, destinations, obstructions):
+    shortest = math.inf
+    plan = ["none"]
+    for destination in destinations:
+        new_actions = breadth_first(origin, destination, obstructions)
+        if new_actions and len(new_actions) < shortest:
+            plan = new_actions
+            shortest = len(new_actions)
+    return plan
+
 
 def breadth_first(origin, destination, obstructions):
     frontier = set([origin])

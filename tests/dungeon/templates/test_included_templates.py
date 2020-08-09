@@ -45,9 +45,29 @@ TESTS = [
         "template": "vacuum_cleaner_world_move_cost_better_sensors",
         "duration": 100,
         "scores": {"vacuum": 196}
-    }
+    },
     # We can't include the randomized vacuum agents since tests should
     # be deterministic
+    {
+        "template": "vacuum_cleaner_world_unknown_1_exploring",
+        "duration": 100,
+        "scores": {"vacuum": 851}
+    },
+    {
+        "template": "vacuum_cleaner_world_unknown_2_exploring",
+        "duration": 100,
+        "scores": {"vacuum": 870}
+    },
+    {
+        "template": "vacuum_cleaner_world_unknown_3_exploring",
+        "duration": 100,
+        "scores": {"vacuum": 871}
+    },
+    {
+        "template": "vacuum_cleaner_world_unknown_poor_exploring",
+        "duration": 100,
+        "scores": {"vacuum": 844}
+    },
 ]
 
 

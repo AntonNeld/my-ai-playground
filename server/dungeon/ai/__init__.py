@@ -7,8 +7,10 @@ from .reflex_vacuum_agent import ReflexVacuumAgentAI
 from .reflex_vacuum_with_state import ReflexVacuumWithStateAI
 from .reflex_vacuum_see_all import ReflexVacuumSeeAllAI
 from .random_vacuum import RandomVacuumAI
+from .exploring_vacuum import ExploringVacuumAI
 
 AI = Union[SingularAI, PathfinderAI, RandomAI, ReflexVacuumAgentAI,
-           ReflexVacuumWithStateAI, ReflexVacuumSeeAllAI, RandomVacuumAI]
+           ReflexVacuumWithStateAI, ReflexVacuumSeeAllAI, RandomVacuumAI,
+           ExploringVacuumAI]
 
 __all__ = ("AI",)
