@@ -1,5 +1,9 @@
-def test_evaluate(client):
-    response = client.put("/api/templates/testtemplate", json={
+import pytest
+
+
+@pytest.fixture
+def template(client):
+    client.put("/api/templates/testtemplate", json={
         "entities": [
             {
                 "label": "entityOne",
@@ -12,8 +16,19 @@ def test_evaluate(client):
             },
         ]
     })
+    return "testtemplate"
 
+
+def test_evaluate(client, template):
     response = client.post(
-        "/api/evaluate", json={"template": "testtemplate", "duration": 3})
+        "/api/evaluate", json={"template": template, "duration": 3})
     assert response.status_code == 200
-    assert response.json() == {"entityOne": 1, "entityTwo": 0}
+    assert response.json() == {"scores": {"entityOne": 1, "entityTwo": 0}}
+
+
+def test_profile_time(client, template):
+    response = client.post(
+        "/api/evaluate", json={"template": template, "duration": 3,
+                               "profileTime": True})
+    assert response.status_code == 200
+    assert "processTime" in response.json()

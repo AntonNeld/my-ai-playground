@@ -81,7 +81,8 @@ def preloaded_client():
 
 @pytest.mark.parametrize("test", TESTS, ids=[t["template"] for t in TESTS])
 def test_included_template(preloaded_client, test):
-    scores = preloaded_client.post(
+    result = preloaded_client.post(
         "/api/evaluate", json={"template": test["template"],
                                "duration": test["duration"]}).json()
+    scores = result["scores"]
     assert scores == test["scores"]
