@@ -7,8 +7,10 @@ def template(client):
         "entities": [
             {
                 "label": "entityOne",
+                "ai": {"kind": "singular", "move": "move_left"},
                 "pickupper": {"inventory": [{}]},
-                "scoring": {"kind": "heldItems"}
+                "scoring": {"kind": "heldItems"},
+                "position": {"x": 0, "y": 0}
             },
             {
                 "label": "entityTwo",
@@ -32,3 +34,5 @@ def test_profile_time(client, template):
                                "profileTime": True})
     assert response.status_code == 200
     assert "processTime" in response.json()
+    assert "aiTimes" in response.json()
+    assert "entityOne" in response.json()["aiTimes"]

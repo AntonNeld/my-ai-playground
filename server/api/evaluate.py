@@ -15,6 +15,7 @@ class EvaluateBody(BaseModel):
 class EvaluateResponse(BaseModel):
     scores: Dict[str, int]
     process_time: Optional[float] = Field(None, alias="processTime")
+    ai_times: Optional[Dict[str, float]] = Field(None, alias="aiTimes")
 
 
 def evaluate_routes(dungeon, template_keeper):
@@ -39,6 +40,7 @@ def evaluate_routes(dungeon, template_keeper):
         if body.profile_time:
             profile_result = time_profiling.get_result()
             result["processTime"] = profile_result["process_time"]
+            result["aiTimes"] = profile_result["contexts"]
         return result
 
     return router
