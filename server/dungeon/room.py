@@ -53,16 +53,18 @@ class Room(BaseModel):
         entities_view = []
         entities = self.get_entities()
         for entity in [e for e in entities if e.position is not None]:
+            if entity is perceptor:
+                continue
             other_x = entity.position.x
             other_y = entity.position.y
-            distance = abs(other_x-my_x) + abs(other_y-my_y)
-            if entity != perceptor and (perceptor.perception.distance is None
-                                        or distance
-                                        <= perceptor.perception.distance):
-                entity_view = {"x":          other_x - my_x,
-                               "y":          other_y - my_y,
-                               "looks_like": entity.looks_like}
-                entities_view.append(entity_view)
+            max_dist = perceptor.perception.distance
+            if (max_dist is not None
+                    and abs(other_x-my_x) + abs(other_y-my_y) > max_dist):
+                continue
+            entity_view = {"x":          other_x - my_x,
+                           "y":          other_y - my_y,
+                           "looks_like": entity.looks_like}
+            entities_view.append(entity_view)
         percept["entities"] = entities_view
 
         if perceptor.perception.include_position:
@@ -124,11 +126,9 @@ class Room(BaseModel):
                         dx = 1
                     new_x = entity.position.x + dx
                     new_y = entity.position.y + dy
-
                     colliding_entities = [e for e in self.get_entities(
                     ) if e.position is not None and e.position.x == new_x
                         and e.position.y == new_y and e != entity]
-
                     if not any(map(lambda e: e.blocks_movement is True,
                                    colliding_entities)):
                         entity.position.x = new_x
