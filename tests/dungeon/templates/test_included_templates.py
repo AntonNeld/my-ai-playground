@@ -24,7 +24,7 @@ TESTS = [
     {
         "template": "maze_with_nearsighted_agent",
         "duration": 25,
-        "scores": {"player": 2}
+        "scores": {"player": 1}
     },
     {
         "template": "small_room",
