@@ -3,9 +3,11 @@ import pytest
 
 from app import create_app
 
+app = create_app()
+test_client = TestClient(app)
+
 
 @pytest.fixture
 def client():
-    # Create a new app for each test to avoid complicated cleanup
-    app = create_app()
-    return TestClient(app)
+    test_client.post("/api/state/clear")
+    return test_client

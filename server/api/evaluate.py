@@ -18,14 +18,14 @@ class EvaluateResponse(BaseModel):
     ai_times: Optional[Dict[str, float]] = Field(None, alias="aiTimes")
 
 
-def evaluate_routes(dungeon, template_keeper):
+def evaluate_routes(state_keeper):
 
     router = APIRouter()
 
     @router.post("/evaluate", response_model=EvaluateResponse,
                  response_model_exclude_none=True)
     async def evaluate(body: EvaluateBody):
-        room = template_keeper.get_template(
+        room = state_keeper.template_keeper.get_template(
             body.template).create_room()
         if body.profile_time:
             time_profiling.start()

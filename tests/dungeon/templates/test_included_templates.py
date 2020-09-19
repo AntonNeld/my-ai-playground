@@ -70,13 +70,16 @@ TESTS = [
     },
 ]
 
+root_dir = Path(__file__).parent.parent.parent.parent
+app = create_app(template_dir=root_dir /
+                 "server" / "dungeon" / "templates")
+test_client = TestClient(app)
+
 
 @pytest.fixture
 def preloaded_client():
-    root_dir = Path(__file__).parent.parent.parent.parent
-    app = create_app(template_dir=root_dir /
-                     "server" / "dungeon" / "templates")
-    return TestClient(app)
+    test_client.post("/state/clear")
+    return test_client
 
 
 @pytest.mark.parametrize("test", TESTS, ids=[t["template"] for t in TESTS])
