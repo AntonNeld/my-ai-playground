@@ -5,7 +5,7 @@
       "label": "playerOne",
       "looksLike": "player",
       "pickupper": {},
-      "scoring": {"kind": "heldItems"},
+      "score": 0,
       "ai": {"kind": "pathfinder"},
       "perception": {},
       "actions": {
@@ -19,7 +19,7 @@
       "label": "playerTwo",
       "looksLike": "player",
       "pickupper": {},
-      "scoring": {"kind": "heldItems"},
+      "score": 0,
       "ai": {"kind": "pathfinder"},
       "perception": {},
       "actions": {
@@ -31,7 +31,7 @@
     },
     "c": {
       "looksLike": "coin",
-      "pickup": {"kind": "item"}
+      "pickup": {"kind": "addScore", "score": 1}
     },
     "#": {"looksLike": "wall", "blocksMovement": true}
   }

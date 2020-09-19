@@ -5,7 +5,7 @@
       "label": "player",
       "looksLike": "player",
       "pickupper": {"mode": "action"},
-      "scoring": {"kind": "heldItems"},
+      "score": 0,
       "ai": {"kind": "pathfinder", "manualPickup": true},
       "perception": {},
       "actions": {
@@ -18,7 +18,7 @@
     },
     "c": {
       "looksLike": "coin",
-      "pickup": {"kind": "item"}
+      "pickup": {"kind": "addScore", "score": 1}
     },
     "#": {"looksLike": "wall", "blocksMovement": true}
   }
