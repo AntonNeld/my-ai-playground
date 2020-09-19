@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 from errors import ResourceNotFoundError
 from dungeon.entity import Entity, Position
-from profiling import time_profiling
+from profiling import time_profiling, memory_profiling
 
 
 class Room(BaseModel):
@@ -137,8 +137,12 @@ class Room(BaseModel):
                         percept = self.get_view(entity)
                         do_time_profiling = (entity.label is not None
                                              and time_profiling.started)
+                        do_memory_profiling = (entity.label is not None
+                                               and memory_profiling.started)
                         if do_time_profiling:
                             time_profiling.set_context(entity.label)
+                        if do_memory_profiling:
+                            memory_profiling.set_context(entity.label)
                         if hasattr(entity.ai, "update_state_percept"):
                             entity.ai.update_state_percept(percept)
                         action = entity.ai.next_move(percept)
@@ -146,6 +150,8 @@ class Room(BaseModel):
                             entity.ai.update_state_action(action)
                         if do_time_profiling:
                             time_profiling.unset_context(entity.label)
+                        if do_memory_profiling:
+                            memory_profiling.unset_context(entity.label)
                     else:
                         action = "none"
                     # Don't perform actions we're not allowed to

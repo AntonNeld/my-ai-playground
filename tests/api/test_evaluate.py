@@ -36,3 +36,12 @@ def test_profile_time(client, template):
     assert "processTime" in response.json()
     assert "aiTimes" in response.json()
     assert "entityOne" in response.json()["aiTimes"]
+
+
+def test_profile_memory(client, template):
+    response = client.post(
+        "/api/evaluate", json={"template": template, "duration": 3,
+                               "profileMemory": True})
+    assert response.status_code == 200
+    assert "aiMemory" in response.json()
+    assert "entityOne" in response.json()["aiMemory"]

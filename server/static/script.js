@@ -139,7 +139,12 @@ async function evaluateTemplate(template, duration) {
   document.querySelector("#details-area").innerHTML = "...";
   const response = await fetch(`/api/evaluate`, {
     method: "POST",
-    body: JSON.stringify({ template, duration, profileTime: true }),
+    body: JSON.stringify({
+      template,
+      duration,
+      profileTime: true,
+      profileMemory: true,
+    }),
   });
   const result = await response.json();
   document.querySelector("#details-area").innerHTML = JSON.stringify(
