@@ -1,0 +1,13 @@
+entities:
+  - looksLike: "player"
+    position:
+      x: 0
+      y: 0
+  - looksLike: "wall"
+    position:
+      x: 1
+      y: 1
+  - looksLike: "coin"
+    position:
+      x: 1
+      y: 0

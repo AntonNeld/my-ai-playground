@@ -1,4 +1,5 @@
 import json
+import yaml
 from pathlib import Path
 import re
 from typing import List, Dict, Union
@@ -50,6 +51,10 @@ class TemplateKeeper:
         for p in parent_dir.glob("./*.json"):
             with p.open() as f:
                 template = Template(**json.load(f))
+                self.add_template(template, template_id=p.stem)
+        for p in parent_dir.glob("./*.yaml"):
+            with p.open() as f:
+                template = Template(**yaml.safe_load(f))
                 self.add_template(template, template_id=p.stem)
         for p in parent_dir.glob("./*.txt"):
             with p.open() as f:

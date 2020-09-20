@@ -40,6 +40,11 @@ def test_load_json(loaded_keeper):
     assert equal_templates(template, RAW_TEMPLATE)
 
 
+def test_load_yaml(loaded_keeper):
+    template = loaded_keeper.get_template("yaml_example")
+    assert equal_templates(template, RAW_TEMPLATE)
+
+
 def test_load_txt(loaded_keeper):
     template = loaded_keeper.get_template("txt_example")
     assert equal_templates(template, RAW_TEMPLATE)
