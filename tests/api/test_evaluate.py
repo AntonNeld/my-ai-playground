@@ -43,6 +43,7 @@ def test_profile_time(client, challenge):
     assert response.status_code == 200
     assert "processTime" in response.json()
     assert "time" in response.json()["entities"]["entityOne"]
+    assert "time" in response.json()["entities"]["entityTwo"]
 
 
 def test_profile_memory(client, challenge):
@@ -51,3 +52,4 @@ def test_profile_memory(client, challenge):
                                "profileMemory": True})
     assert response.status_code == 200
     assert "memory" in response.json()["entities"]["entityOne"]
+    assert "memory" in response.json()["entities"]["entityTwo"]

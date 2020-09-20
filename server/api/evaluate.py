@@ -44,15 +44,17 @@ def evaluate_routes(state_keeper):
             memory_profiling.stop()
         result = {
             "entities": {
-                e.label: {}
+                e.label: {
+                    "score": room.get_entity_score(e),
+                    # Initialize time and memory to 0, in case there is no AI
+                    # to measure
+                    "time": 0 if body.profile_time else None,
+                    "memory": 0 if body.profile_memory else None
+                }
                 for e in room.get_entities()
                 if e.label is not None
             }
         }
-        for entity in result["entities"]:
-            result["entities"][entity]["score"] = room.get_entity_score(
-                room.get_entities(label=entity)[0]
-            )
         if body.profile_time:
             profile_result = time_profiling.get_result()
             result["processTime"] = profile_result["process_time"]
