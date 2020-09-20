@@ -27,6 +27,11 @@ TESTS = [
         "scores": {"player": 1}
     },
     {
+        "template": "singular_agent",
+        "duration": 20,
+        "scores": {"player": 2}
+    },
+    {
         "template": "small_room",
         "duration": 3,
         "scores": {"player": 2}
