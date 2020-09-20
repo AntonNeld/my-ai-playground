@@ -1,0 +1,44 @@
+# This is like the 'maze' room, but the player needs to take an action to pick up a coin
+template:
+  templateType: "visual"
+  definitions:
+    p:
+      label: "player"
+      looksLike: "player"
+      pickupper:
+        mode: "action"
+      score: 0
+      ai:
+        kind: "getNearestCoin"
+        manualPickup: true
+      perception: {}
+      actions:
+        move_up: {}
+        move_down: {}
+        move_left: {}
+        move_right: {}
+        pick_up: {}
+    c:
+      looksLike: "coin"
+      pickup:
+        kind: "addScore"
+        score: 1
+    "#":
+      looksLike: "wall"
+      blocksMovement: true
+  room: |-
+    ####################
+    #c#   #  c  #     c#
+    # # # # # # # # ####
+    # # # c # #  c#    #
+    # # ##### # ###### #
+    # #c  # #c# #  c # #
+    #   #   ### # ## # #
+    ######c##p c   # # #
+    #   #   # #### #  c#
+    # # c # # #c# c  # #
+    # ##### #   # ## # #
+    #c#c      # #  # # #
+    #### ## # # ## #   #
+    #c   #c #c#  c # #c#
+    ####################

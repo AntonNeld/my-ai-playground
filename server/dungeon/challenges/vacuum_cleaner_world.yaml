@@ -1,0 +1,44 @@
+# A simple vacuum cleaner world with two locations,
+# from exercise 2.9 of Artificial Intelligence: A Modern Approach
+template:
+  templateType: "visual"
+  definitions:
+    d:
+      looksLike: "dirt"
+      pickup:
+        kind: "vanish"
+      tags:
+        - "dirt"
+    "#":
+      looksLike: "wall"
+      blocksMovement: true
+    ".":
+      countTagsScore:
+        addTo: "vacuum"
+        score: 1
+        tags:
+          dirt: 0
+    v:
+      label: "vacuum"
+      looksLike: "vacuum"
+      pickupper:
+        mode: "action"
+      perception:
+        distance: 0
+        includePosition: true
+      ai:
+        kind: "reflexVacuumAgent"
+      score: 0
+      actions:
+        move_left: {}
+        move_right: {}
+        pick_up: {}
+    a:
+      - "."
+      - "v"
+      - "d"
+    b:
+      - "."
+      - "d"
+  room: |-
+    #ab#
