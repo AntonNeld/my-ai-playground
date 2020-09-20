@@ -92,5 +92,5 @@ def test_included_challenge(preloaded_client, test):
     result = preloaded_client.post(
         "/api/evaluate", json={"challenge": test["challenge"],
                                "duration": test["duration"]}).json()
-    scores = result["scores"]
+    scores = {key: value["score"] for key, value in result["entities"].items()}
     assert scores == test["scores"]

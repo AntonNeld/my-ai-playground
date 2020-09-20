@@ -13,11 +13,15 @@ class EvaluateBody(BaseModel):
     profile_memory: bool = Field(False, alias="profileMemory")
 
 
+class EvaluateEntityInfo(BaseModel):
+    score: int
+    time: Optional[float]
+    memory: Optional[float]
+
+
 class EvaluateResponse(BaseModel):
-    scores: Dict[str, int]
     process_time: Optional[float] = Field(None, alias="processTime")
-    ai_times: Optional[Dict[str, float]] = Field(None, alias="aiTimes")
-    ai_memory: Optional[Dict[str, float]] = Field(None, alias="aiMemory")
+    entities: Dict[str, EvaluateEntityInfo]
 
 
 def evaluate_routes(state_keeper):
@@ -38,18 +42,28 @@ def evaluate_routes(state_keeper):
             time_profiling.stop()
         if body.profile_memory:
             memory_profiling.stop()
-        scores = {}
-        for entity in room.get_entities():
-            if entity.label is not None:
-                scores[entity.label] = room.get_entity_score(entity)
-        result = {"scores": scores}
+        result = {
+            "entities": {
+                e.label: {}
+                for e in room.get_entities()
+                if e.label is not None
+            }
+        }
+        for entity in result["entities"]:
+            result["entities"][entity]["score"] = room.get_entity_score(
+                room.get_entities(label=entity)[0]
+            )
         if body.profile_time:
             profile_result = time_profiling.get_result()
             result["processTime"] = profile_result["process_time"]
-            result["aiTimes"] = profile_result["contexts"]
+            for entity, entity_time in profile_result["contexts"].items():
+                if entity in result["entities"]:
+                    result["entities"][entity]["time"] = entity_time
         if body.profile_memory:
             profile_result = memory_profiling.get_result()
-            result["aiMemory"] = profile_result
+            for entity, entity_memory in profile_result.items():
+                if entity in result["entities"]:
+                    result["entities"][entity]["memory"] = entity_memory
         return result
 
     return router

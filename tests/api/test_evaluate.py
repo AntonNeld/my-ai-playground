@@ -28,7 +28,12 @@ def test_evaluate(client, challenge):
     response = client.post(
         "/api/evaluate", json={"challenge": challenge, "duration": 3})
     assert response.status_code == 200
-    assert response.json() == {"scores": {"entityOne": 1, "entityTwo": 0}}
+    assert response.json() == {
+        "entities": {
+            "entityOne": {"score": 1},
+            "entityTwo": {"score": 0}
+        }
+    }
 
 
 def test_profile_time(client, challenge):
@@ -37,8 +42,7 @@ def test_profile_time(client, challenge):
                                "profileTime": True})
     assert response.status_code == 200
     assert "processTime" in response.json()
-    assert "aiTimes" in response.json()
-    assert "entityOne" in response.json()["aiTimes"]
+    assert "time" in response.json()["entities"]["entityOne"]
 
 
 def test_profile_memory(client, challenge):
@@ -46,5 +50,4 @@ def test_profile_memory(client, challenge):
         "/api/evaluate", json={"challenge": challenge, "duration": 3,
                                "profileMemory": True})
     assert response.status_code == 200
-    assert "aiMemory" in response.json()
-    assert "entityOne" in response.json()["aiMemory"]
+    assert "memory" in response.json()["entities"]["entityOne"]
