@@ -1,4 +1,4 @@
 from dungeon.dungeon import Dungeon
-from dungeon.templating import TemplateKeeper
+from dungeon.challenge_keeper import ChallengeKeeper
 
-__all__ = ('Dungeon', 'TemplateKeeper')
+__all__ = ('Dungeon', 'ChallengeKeeper')

@@ -14,10 +14,10 @@ def rooms_routes(state_keeper):
         return state_keeper.dungeon.list_rooms()
 
     @router.post("/rooms", response_model=str)
-    async def create_room(room: Room = None, from_template: str = None):
-        if from_template:
-            room_obj = state_keeper.template_keeper.get_template(
-                from_template).create_room()
+    async def create_room(room: Room = None, from_challenge: str = None):
+        if from_challenge:
+            room_obj = state_keeper.challenge_keeper.get_challenge(
+                from_challenge).create_room()
         elif room:
             room_obj = room
         else:
@@ -32,10 +32,10 @@ def rooms_routes(state_keeper):
     @router.put("/rooms/{room_id}", response_model=str)
     async def create_room_with_id(room_id: str,
                                   room: Room = None,
-                                  from_template: str = None):
-        if from_template:
-            room_obj = state_keeper.template_keeper.get_template(
-                from_template).create_room()
+                                  from_challenge: str = None):
+        if from_challenge:
+            room_obj = state_keeper.challenge_keeper.get_challenge(
+                from_challenge).create_room()
         elif room:
             room_obj = room
         else:

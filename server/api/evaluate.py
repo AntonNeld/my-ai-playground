@@ -7,7 +7,7 @@ from profiling import time_profiling, memory_profiling
 
 
 class EvaluateBody(BaseModel):
-    template: str
+    challenge: str
     duration: int
     profile_time: bool = Field(False, alias="profileTime")
     profile_memory: bool = Field(False, alias="profileMemory")
@@ -27,8 +27,8 @@ def evaluate_routes(state_keeper):
     @router.post("/evaluate", response_model=EvaluateResponse,
                  response_model_exclude_none=True)
     async def evaluate(body: EvaluateBody):
-        room = state_keeper.template_keeper.get_template(
-            body.template).create_room()
+        room = state_keeper.challenge_keeper.get_challenge(
+            body.challenge).create_room()
         if body.profile_time:
             time_profiling.start()
         if body.profile_memory:

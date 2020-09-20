@@ -4,28 +4,28 @@ const roomId = "testroom";
 
 let room;
 let highlighted;
-let currentTemplate = "maze";
+let currentChallenge = "maze";
 let autoStepTimer = null;
 
-async function getTemplates() {
-  const response = await fetch("/api/templates");
-  const templates = await response.json();
-  const select = document.querySelector("#template-dropdown");
+async function getChallenges() {
+  const response = await fetch("/api/challenges");
+  const challenges = await response.json();
+  const select = document.querySelector("#challenge-dropdown");
   select.childNodes.forEach((child) => select.removeChild(child));
-  templates.forEach((template) => {
+  challenges.forEach((challenge) => {
     const option = document.createElement("option");
-    option.textContent = template;
-    option.value = template;
+    option.textContent = challenge;
+    option.value = challenge;
     select.appendChild(option);
   });
-  select.value = currentTemplate;
+  select.value = currentChallenge;
 }
 
-async function initRoom(template) {
-  currentTemplate = template;
+async function initRoom(challenge) {
+  currentChallenge = challenge;
   clearInterval(autoStepTimer);
   autoStepTimer = null;
-  await fetch(`/api/rooms/${roomId}?from_template=${template}`, {
+  await fetch(`/api/rooms/${roomId}?from_challenge=${challenge}`, {
     method: "PUT",
   });
   room = new Room(document.querySelector(".room-area"));
@@ -135,12 +135,12 @@ function toggleAutoStep() {
   }
 }
 
-async function evaluateTemplate(template, duration) {
+async function evaluateChallenge(challenge, duration) {
   document.querySelector("#details-area").innerHTML = "...";
   const response = await fetch(`/api/evaluate`, {
     method: "POST",
     body: JSON.stringify({
-      template,
+      challenge,
       duration,
       profileTime: true,
       profileMemory: true,
@@ -154,27 +154,27 @@ async function evaluateTemplate(template, duration) {
   );
 }
 
-getTemplates();
-initRoom(currentTemplate);
+getChallenges();
+initRoom(currentChallenge);
 document
   .querySelector("#restart-button")
   .addEventListener("click", function () {
-    initRoom(currentTemplate);
+    initRoom(currentChallenge);
     this.blur();
   });
 document
-  .querySelector("#template-dropdown")
+  .querySelector("#challenge-dropdown")
   .addEventListener("change", function (event) {
-    const template = event.target.value;
-    initRoom(template);
+    const challenge = event.target.value;
+    initRoom(challenge);
     this.blur();
   });
 document
   .querySelector("#evaluate-button")
   .addEventListener("click", function (event) {
-    const template = document.querySelector("#template-dropdown").value;
+    const challenge = document.querySelector("#challenge-dropdown").value;
     const duration = document.querySelector("#duration-input").value;
-    evaluateTemplate(template, duration);
+    evaluateChallenge(challenge, duration);
     this.blur();
   });
 document.addEventListener("keydown", (event) => {

@@ -2,18 +2,18 @@ import pytest
 
 
 @pytest.mark.parametrize("method", ["post", "put"])
-def test_create_room_from_template(client, method):
-    client.put("/api/templates/testtemplate", json={
+def test_create_room_from_challenge(client, method):
+    client.put("/api/challenges/testchallenge", json={
         "template": {
             "templateType": "raw",
             "entities": [{"looksLike": "wall"}]
         }
     })
     if method == "post":
-        response = client.post("/api/rooms?from_template=testtemplate")
+        response = client.post("/api/rooms?from_challenge=testchallenge")
     elif method == "put":
         response = client.put(
-            "/api/rooms/testroom?from_template=testtemplate")
+            "/api/rooms/testroom?from_challenge=testchallenge")
     assert response.status_code == 200
     room_id = response.json()
 
@@ -26,7 +26,7 @@ def test_create_room_from_template(client, method):
 
 
 @pytest.mark.parametrize("method", ["post", "put"])
-def test_body_required_if_no_template(client, method):
+def test_body_required_if_no_challenge(client, method):
     if method == "post":
         response = client.post("/api/rooms")
     elif method == "put":

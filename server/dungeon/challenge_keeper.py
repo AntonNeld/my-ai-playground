@@ -24,68 +24,68 @@ class RawTemplate(BaseModel):
         return new_room
 
 
-class Template(BaseModel):
+class Challenge(BaseModel):
     template: Union[RawTemplate]
 
     def create_room(self):
         return self.template.create_room()
 
 
-class TemplateKeeper:
+class ChallengeKeeper:
 
     def __init__(self):
-        self._templates = {}
+        self._challenges = {}
 
-    def add_template(self, template, template_id=None):
-        if template_id is None:
-            template_id = uuid.uuid4().hex
-        self._templates[template_id] = template
-        return template_id
+    def add_challenge(self, challenge, challenge_id=None):
+        if challenge_id is None:
+            challenge_id = uuid.uuid4().hex
+        self._challenges[challenge_id] = challenge
+        return challenge_id
 
-    def get_template(self, template_id):
+    def get_challenge(self, challenge_id):
         try:
-            return self._templates[template_id]
+            return self._challenges[challenge_id]
         except KeyError:
             raise ResourceNotFoundError
 
-    def remove_template_by_id(self, template_id):
-        if template_id in self._templates:
-            del self._templates[template_id]
+    def remove_challenge_by_id(self, challenge_id):
+        if challenge_id in self._challenges:
+            del self._challenges[challenge_id]
 
-    def list_templates(self):
-        return list(self._templates.keys())
+    def list_challenges(self):
+        return list(self._challenges.keys())
 
     def load_directory(self, directory):
         parent_dir = Path(directory)
         for p in parent_dir.glob("./*.json"):
             with p.open() as f:
-                template = Template(**json.load(f))
-                self.add_template(template, template_id=p.stem)
+                challenge = Challenge(**json.load(f))
+                self.add_challenge(challenge, challenge_id=p.stem)
         for p in parent_dir.glob("./*.yaml"):
             with p.open() as f:
-                template = Template(**yaml.safe_load(f))
-                self.add_template(template, template_id=p.stem)
+                challenge = Challenge(**yaml.safe_load(f))
+                self.add_challenge(challenge, challenge_id=p.stem)
         for p in parent_dir.glob("./*.txt"):
             with p.open() as f:
-                template = template_from_txt(f.read())
-                self.add_template(template, template_id=p.stem)
+                challenge = challenge_from_txt(f.read())
+                self.add_challenge(challenge, challenge_id=p.stem)
 
 
 class ParseError(Exception):
     pass
 
 
-class TextTemplateHeader(BaseModel):
+class TextChallengeHeader(BaseModel):
     definitions: Dict[str, Union[Entity, str, List[Union[Entity, str]]]] = {}
 
 
-def template_from_txt(txt):
+def challenge_from_txt(txt):
     """
-    Create a template from a string of the following format:
+    Create a challenge from a string of the following format:
 
     The string begins with a header defining the symbols and global
     room parameters. The header is a JSON-encoded object following
-    TextTemplateHeader. The definitions property is a mapping from
+    TextChallengeHeader. The definitions property is a mapping from
     symbols (unicode characters) to a list of entities or other
     symbols, defining what is in a tile with the corresponding symbol.
     Instead of a list, a single entity (or symbol) is also permitted.
@@ -100,7 +100,7 @@ def template_from_txt(txt):
     header_string = txt.strip().split("\n\n", 1)[0]
     # Strip comments
     header_no_comments = re.sub("//.*\n", "", header_string)
-    header = TextTemplateHeader(**json.loads(header_no_comments))
+    header = TextChallengeHeader(**json.loads(header_no_comments))
     definitions = header.definitions
     # Make all definitions hold lists
     for symbol in definitions:
@@ -131,7 +131,7 @@ def template_from_txt(txt):
                     entities.append(new_entity)
             else:
                 raise ParseError(f"Unknown symbol: {symbol}")
-    return Template(**{"template": {
+    return Challenge(**{"template": {
         "templateType": "raw",
         "entities": entities
     }})

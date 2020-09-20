@@ -2,8 +2,8 @@ import pytest
 
 
 @pytest.fixture
-def template(client):
-    client.put("/api/templates/testtemplate", json={
+def challenge(client):
+    client.put("/api/challenges/testchallenge", json={
         "template": {
             "templateType": "raw",
             "entities": [
@@ -21,19 +21,19 @@ def template(client):
             ]
         }
     })
-    return "testtemplate"
+    return "testchallenge"
 
 
-def test_evaluate(client, template):
+def test_evaluate(client, challenge):
     response = client.post(
-        "/api/evaluate", json={"template": template, "duration": 3})
+        "/api/evaluate", json={"challenge": challenge, "duration": 3})
     assert response.status_code == 200
     assert response.json() == {"scores": {"entityOne": 1, "entityTwo": 0}}
 
 
-def test_profile_time(client, template):
+def test_profile_time(client, challenge):
     response = client.post(
-        "/api/evaluate", json={"template": template, "duration": 3,
+        "/api/evaluate", json={"challenge": challenge, "duration": 3,
                                "profileTime": True})
     assert response.status_code == 200
     assert "processTime" in response.json()
@@ -41,9 +41,9 @@ def test_profile_time(client, template):
     assert "entityOne" in response.json()["aiTimes"]
 
 
-def test_profile_memory(client, template):
+def test_profile_memory(client, challenge):
     response = client.post(
-        "/api/evaluate", json={"template": template, "duration": 3,
+        "/api/evaluate", json={"challenge": challenge, "duration": 3,
                                "profileMemory": True})
     assert response.status_code == 200
     assert "aiMemory" in response.json()

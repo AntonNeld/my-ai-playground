@@ -2,13 +2,13 @@ from pathlib import Path
 
 import pytest
 
-from dungeon.templating import (TemplateKeeper, template_from_txt,
-                                Template, ParseError)
+from dungeon.challenge_keeper import (ChallengeKeeper, challenge_from_txt,
+                                      Challenge, ParseError)
 from dungeon.entity import Entity
 
 PARENT_DIR = Path(__file__).parent
 
-RAW_TEMPLATE = Template(**{
+RAW_CHALLENGE = Challenge(**{
     "template": {
         "templateType": "raw",
         "entities": [
@@ -19,7 +19,7 @@ RAW_TEMPLATE = Template(**{
     }
 })
 
-PARSED_TEXT_TEMPLATE = Template(**{
+PARSED_TEXT_CHALLENGE = Challenge(**{
     "template": {
         "templateType": "raw",
         "entities": [
@@ -33,31 +33,31 @@ PARSED_TEXT_TEMPLATE = Template(**{
 
 @pytest.fixture
 def loaded_keeper():
-    template_keeper = TemplateKeeper()
-    template_keeper.load_directory(
-        PARENT_DIR / "test_templating" / "templates")
-    return template_keeper
+    challenge_keeper = ChallengeKeeper()
+    challenge_keeper.load_directory(
+        PARENT_DIR / "test_challenge_keeper" / "challenges")
+    return challenge_keeper
 
 
 def test_load_json(loaded_keeper):
-    template = loaded_keeper.get_template("json_example")
-    assert template == RAW_TEMPLATE
+    challenge = loaded_keeper.get_challenge("json_example")
+    assert challenge == RAW_CHALLENGE
 
 
 def test_load_yaml(loaded_keeper):
-    template = loaded_keeper.get_template("yaml_example")
-    assert template == RAW_TEMPLATE
+    challenge = loaded_keeper.get_challenge("yaml_example")
+    assert challenge == RAW_CHALLENGE
 
 
 def test_load_txt(loaded_keeper):
-    template = loaded_keeper.get_template("txt_example")
+    challenge = loaded_keeper.get_challenge("txt_example")
     # This relies on the order of entities, but it is
     # temporary anyway.
-    assert template == PARSED_TEXT_TEMPLATE
+    assert challenge == PARSED_TEXT_CHALLENGE
 
 
 def test_parse_ignore_comment():
-    template = template_from_txt("""
+    challenge = challenge_from_txt("""
 // This is a comment
 {
   "definitions": {
@@ -69,12 +69,12 @@ def test_parse_ignore_comment():
 p
 
 """)
-    assert template.create_room().get_entities() == [
+    assert challenge.create_room().get_entities() == [
         Entity(**{"looksLike": "player", "position": {"x": 0, "y": 0}})]
 
 
 def test_parse_colocated_entities():
-    template = template_from_txt("""
+    challenge = challenge_from_txt("""
 {
   "definitions": {
     "a": [{"looksLike": "player"}, {"looksLike": "wall"}]
@@ -84,7 +84,7 @@ def test_parse_colocated_entities():
 a
 
 """)
-    entities = template.create_room().get_entities()
+    entities = challenge.create_room().get_entities()
     assert Entity(**{"position": {"x": 0, "y": 0},
                      "looksLike": "player"}) in entities
     assert Entity(**{"position": {"x": 0, "y": 0},
@@ -92,7 +92,7 @@ a
 
 
 def test_parse_colocated_entities_with_refs():
-    template = template_from_txt("""
+    challenge = challenge_from_txt("""
 {
   "definitions": {
     "a": [{"looksLike": "player"}, "#"],
@@ -103,7 +103,7 @@ def test_parse_colocated_entities_with_refs():
 a
 
 """)
-    entities = template.create_room().get_entities()
+    entities = challenge.create_room().get_entities()
     assert Entity(**{"position": {"x": 0, "y": 0},
                      "looksLike": "player"}) in entities
     assert Entity(**{"position": {"x": 0, "y": 0},
@@ -111,7 +111,7 @@ a
 
 
 def test_parse_nested_refs():
-    template = template_from_txt("""
+    challenge = challenge_from_txt("""
 {
   "definitions": {
     "a": ["b"],
@@ -123,13 +123,13 @@ def test_parse_nested_refs():
 a
 
 """)
-    assert template.create_room().get_entities() == [
+    assert challenge.create_room().get_entities() == [
         Entity(**{"looksLike": "coin", "position": {"x": 0, "y": 0}})]
 
 
 def test_parse_circular_refs():
     with pytest.raises(ParseError):
-        template_from_txt("""
+        challenge_from_txt("""
 {
   "definitions": {
     "a": "b",
@@ -143,8 +143,8 @@ a
 """)
 
 
-def test_template_not_modified_by_room():
-    template = Template(
+def test_challenge_not_modified_by_room():
+    challenge = Challenge(
         **{"template":
            {"templateType": "raw",
             "entities": [
@@ -152,6 +152,6 @@ def test_template_not_modified_by_room():
             ]
             }
            })
-    room = template.create_room()
+    room = challenge.create_room()
     room.get_entities()[0].position.x = 1
-    assert template.template.entities[0].position.x == 0
+    assert challenge.template.entities[0].position.x == 0

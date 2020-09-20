@@ -7,13 +7,13 @@ from state import StateKeeper
 from errors import ResourceNotFoundError
 
 
-def create_app(template_dir=None, static_dir=None):
+def create_app(challenge_dir=None, static_dir=None):
     app = FastAPI()
     if static_dir:
         app.mount("/static", StaticFiles(directory=static_dir),
                   name="static")
 
-    state_keeper = StateKeeper(template_dir)
+    state_keeper = StateKeeper(challenge_dir)
     app.include_router(create_api(state_keeper), prefix="/api")
 
     @app.get("/")

@@ -4,7 +4,7 @@ from test_utils import is_uuid
 
 RESOURCE_TYPES = [
     {
-        "resource": "templates",
+        "resource": "challenges",
         "parents": [],
         "example": {
             "template": {

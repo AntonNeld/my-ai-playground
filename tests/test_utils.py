@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from dungeon.templating import template_from_txt
+from dungeon.challenge_keeper import challenge_from_txt
 
 
 def is_uuid(string):
@@ -12,7 +12,7 @@ def is_uuid(string):
 
 
 def room_from_text(text):
-    return template_from_txt(text).create_room()
+    return challenge_from_txt(text).create_room()
 
 
 def test_helper_is_uuid():
