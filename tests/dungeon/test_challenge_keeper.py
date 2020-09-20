@@ -18,20 +18,6 @@ RAW_CHALLENGE = Challenge(**{
     }
 })
 
-PARSED_TEXT_CHALLENGE = Challenge(**{
-    "template": {
-        "templateType": "visual",
-        "definitions": {
-            "p": {
-                "looksLike": "player"
-            },
-            "c": {"looksLike": "coin"},
-            "#": {"looksLike": "wall"}
-        },
-        "room": " #\npc"
-    }
-})
-
 
 @pytest.fixture
 def loaded_keeper():
@@ -49,11 +35,6 @@ def test_load_json(loaded_keeper):
 def test_load_yaml(loaded_keeper):
     challenge = loaded_keeper.get_challenge("yaml_example")
     assert challenge == RAW_CHALLENGE
-
-
-def test_load_txt(loaded_keeper):
-    challenge = loaded_keeper.get_challenge("txt_example")
-    assert challenge == PARSED_TEXT_CHALLENGE
 
 
 def test_parse_colocated_entities():
@@ -123,7 +104,7 @@ def test_parse_circular_refs():
         challenge.create_room()
 
 
-def test_challenge_not_modified_by_room():
+def test_raw_challenge_not_modified_by_room():
     challenge = Challenge(**{
         "template": {
             "templateType": "raw",
@@ -135,3 +116,18 @@ def test_challenge_not_modified_by_room():
     room = challenge.create_room()
     room.get_entities()[0].position.x = 1
     assert challenge.template.entities[0].position.x == 0
+
+
+def test_visual_challenge_not_modified_by_room():
+    challenge = Challenge(**{
+        "template": {
+            "templateType": "visual",
+            "definitions": {
+                "p": {"looksLike": "player"},
+            },
+            "room": "p"
+        }
+    })
+    room = challenge.create_room()
+    room.get_entities()[0].looks_like = "coin"
+    assert challenge.template.definitions["p"].looks_like == "player"
