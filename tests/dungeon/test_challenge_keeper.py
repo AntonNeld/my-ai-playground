@@ -21,12 +21,15 @@ RAW_CHALLENGE = Challenge(**{
 
 PARSED_TEXT_CHALLENGE = Challenge(**{
     "template": {
-        "templateType": "raw",
-        "entities": [
-            {"position": {"x": 1, "y": 1}, "looksLike": "wall"},
-            {"position": {"x": 0, "y": 0}, "looksLike": "player"},
-            {"position": {"x": 1, "y": 0}, "looksLike": "coin"}
-        ]
+        "templateType": "visual",
+        "definitions": {
+            "p": {
+                "looksLike": "player"
+            },
+            "c": {"looksLike": "coin"},
+            "#": {"looksLike": "wall"}
+        },
+        "room": " #\npc"
     }
 })
 
@@ -51,8 +54,6 @@ def test_load_yaml(loaded_keeper):
 
 def test_load_txt(loaded_keeper):
     challenge = loaded_keeper.get_challenge("txt_example")
-    # This relies on the order of entities, but it is
-    # temporary anyway.
     assert challenge == PARSED_TEXT_CHALLENGE
 
 
@@ -128,8 +129,7 @@ a
 
 
 def test_parse_circular_refs():
-    with pytest.raises(ParseError):
-        challenge_from_txt("""
+    challenge = challenge_from_txt("""
 {
   "definitions": {
     "a": "b",
@@ -141,6 +141,8 @@ def test_parse_circular_refs():
 a
 
 """)
+    with pytest.raises(ParseError):
+        challenge.create_room()
 
 
 def test_challenge_not_modified_by_room():

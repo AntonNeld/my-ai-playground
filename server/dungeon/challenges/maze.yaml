@@ -1,0 +1,41 @@
+# This room is a maze that demonstrates pathfinding ability
+template:
+  templateType: "visual"
+  definitions:
+    p:
+      label: "player"
+      looksLike: "player"
+      pickupper: {}
+      score: 0
+      ai:
+        kind: "getNearestCoin"
+      perception: {}
+      actions:
+        move_up: {}
+        move_down: {}
+        move_left: {}
+        move_right: {}
+    c:
+      looksLike: "coin"
+      pickup:
+        kind: "addScore"
+        score: 1
+    "#":
+      looksLike: "wall"
+      blocksMovement: true
+  room: |-
+    ####################
+    #c#   #  c  #     c#
+    # # # # # # # # ####
+    # # # c # #  c#    #
+    # # ##### # ###### #
+    # #c  # #c# #  c # #
+    #   #   ### # ## # #
+    ######c##p c   # # #
+    #   #   # #### #  c#
+    # # c # # #c# c  # #
+    # ##### #   # ## # #
+    #c#c      # #  # # #
+    #### ## # # ## #   #
+    #c   #c #c#  c # #c#
+    ####################

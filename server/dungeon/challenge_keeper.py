@@ -24,8 +24,56 @@ class RawTemplate(BaseModel):
         return new_room
 
 
+class VisualTemplate(BaseModel):
+    template_type: Literal["visual"] = Field(..., alias="templateType")
+    definitions: Dict[str, Union[Entity, str, List[Union[Entity, str]]]]
+    room: str
+
+    def create_room(self):
+        new_room = Room()
+        lines = [line for line in self.room.split(
+            "\n") if line and not line.isspace()]
+        for y, line in enumerate(lines):
+            for x, symbol in enumerate(line):
+                if symbol == " ":
+                    pass
+                else:
+                    for entity in self.translate_symbol(symbol):
+                        new_entity = entity.copy(deep=True)
+                        new_entity.position = Position(
+                            x=x, y=len(lines) - y - 1)
+                        new_room.add_entity(new_entity)
+        return new_room
+
+    def translate_symbol(self, symbol, original_symbol=None):
+        if symbol == original_symbol:
+            raise ParseError(f"Circular reference: {symbol}")
+        if symbol not in self.definitions:
+            raise ParseError(f"Unknown symbol: {symbol}")
+        if isinstance(self.definitions[symbol], list):
+            definition_list = self.definitions[symbol]
+        else:
+            definition_list = [self.definitions[symbol]]
+        entities = []
+        for definition in definition_list:
+            if isinstance(definition, Entity):
+                entities.append(definition)
+            else:
+                entities.extend(
+                    self.translate_symbol(
+                        definition,
+                        (original_symbol if original_symbol is not None
+                         else symbol)
+                    )
+                )
+        return entities
+
+
+Template = Union[RawTemplate, VisualTemplate]
+
+
 class Challenge(BaseModel):
-    template: Union[RawTemplate]
+    template: Template
 
     def create_room(self):
         return self.template.create_room()
@@ -100,38 +148,11 @@ def challenge_from_txt(txt):
     header_string = txt.strip().split("\n\n", 1)[0]
     # Strip comments
     header_no_comments = re.sub("//.*\n", "", header_string)
-    header = TextChallengeHeader(**json.loads(header_no_comments))
-    definitions = header.definitions
-    # Make all definitions hold lists
-    for symbol in definitions:
-        if not isinstance(definitions[symbol], list):
-            definitions[symbol] = [definitions[symbol]]
-    # Dereference symbols in definitions
-    for symbol in definitions:
-        while any(map(lambda e: isinstance(e, str), definitions[symbol])):
-            entity = definitions[symbol].pop(0)
-            if entity == symbol:
-                raise ParseError(f"Circular reference: {entity}")
-            if isinstance(entity, str):
-                definitions[symbol].extend(definitions[entity])
-            else:
-                definitions[symbol].append(entity)
-
-    entities = []
-    body = txt.strip().split("\n\n", 1)[1]
-    lines = [line for line in body.split("\n") if line and not line.isspace()]
-    for y, line in enumerate(lines):
-        for x, symbol in enumerate(line):
-            if symbol == " ":
-                pass
-            elif symbol in definitions:
-                for entity in definitions[symbol]:
-                    new_entity = entity.copy(deep=True)
-                    new_entity.position = Position(x=x, y=len(lines) - y - 1)
-                    entities.append(new_entity)
-            else:
-                raise ParseError(f"Unknown symbol: {symbol}")
-    return Challenge(**{"template": {
-        "templateType": "raw",
-        "entities": entities
-    }})
+    header = json.loads(header_no_comments)
+    return Challenge(**{
+        "template": {
+            "templateType": "visual",
+            "definitions": header["definitions"],
+            "room": txt.strip().split("\n\n", 1)[1]
+        }
+    })
