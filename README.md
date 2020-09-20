@@ -1,8 +1,6 @@
-# ai-dungeon
+# my-ai-playground
 
-Experimenting with AI and web development. Very early phases so far, no actual AI included.
-
-The philosophy is to have a RESTful (with exceptions) backend, and going back to the basics in the frontend.
+Just some playing around.
 
 ## Getting started
 
