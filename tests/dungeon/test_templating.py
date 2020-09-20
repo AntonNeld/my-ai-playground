@@ -9,21 +9,25 @@ from dungeon.entity import Entity
 PARENT_DIR = Path(__file__).parent
 
 RAW_TEMPLATE = Template(**{
-    "templateType": "raw",
-    "entities": [
-        {"position": {"x": 0, "y": 0}, "looksLike": "player"},
-        {"position": {"x": 1, "y": 1}, "looksLike": "wall"},
-        {"position": {"x": 1, "y": 0}, "looksLike": "coin"}
-    ]
+    "template": {
+        "templateType": "raw",
+        "entities": [
+            {"position": {"x": 0, "y": 0}, "looksLike": "player"},
+            {"position": {"x": 1, "y": 1}, "looksLike": "wall"},
+            {"position": {"x": 1, "y": 0}, "looksLike": "coin"}
+        ]
+    }
 })
 
 PARSED_TEXT_TEMPLATE = Template(**{
-    "templateType": "raw",
-    "entities": [
-        {"position": {"x": 1, "y": 1}, "looksLike": "wall"},
-        {"position": {"x": 0, "y": 0}, "looksLike": "player"},
-        {"position": {"x": 1, "y": 0}, "looksLike": "coin"}
-    ]
+    "template": {
+        "templateType": "raw",
+        "entities": [
+            {"position": {"x": 1, "y": 1}, "looksLike": "wall"},
+            {"position": {"x": 0, "y": 0}, "looksLike": "player"},
+            {"position": {"x": 1, "y": 0}, "looksLike": "coin"}
+        ]
+    }
 })
 
 
@@ -141,11 +145,13 @@ a
 
 def test_template_not_modified_by_room():
     template = Template(
-        **{"templateType": "raw",
-           "entities": [
-               {"position": {"x": 0, "y": 0}, "looksLike": "player"},
-           ]
+        **{"template":
+           {"templateType": "raw",
+            "entities": [
+                {"position": {"x": 0, "y": 0}, "looksLike": "player"},
+            ]
+            }
            })
     room = template.create_room()
     room.get_entities()[0].position.x = 1
-    assert template.entities[0].position.x == 0
+    assert template.template.entities[0].position.x == 0

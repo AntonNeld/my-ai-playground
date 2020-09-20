@@ -1,17 +1,19 @@
 {
-  "templateType": "raw",
-  "entities": [
-    {
-      "position": { "x": 0, "y": 0 },
-      "looksLike": "player"
-    },
-    {
-      "position": { "x": 1, "y": 1 },
-      "looksLike": "wall"
-    },
-    {
-      "position": { "x": 1, "y": 0 },
-      "looksLike": "coin"
-    }
-  ]
+  "template": {
+    "templateType": "raw",
+    "entities": [
+      {
+        "position": { "x": 0, "y": 0 },
+        "looksLike": "player"
+      },
+      {
+        "position": { "x": 1, "y": 1 },
+        "looksLike": "wall"
+      },
+      {
+        "position": { "x": 1, "y": 0 },
+        "looksLike": "coin"
+      }
+    ]
+  }
 }

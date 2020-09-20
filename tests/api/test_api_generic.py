@@ -7,16 +7,20 @@ RESOURCE_TYPES = [
         "resource": "templates",
         "parents": [],
         "example": {
-            "templateType": "raw",
-            "entities": [
-                {"looksLike": "player"}
-            ]
+            "template": {
+                "templateType": "raw",
+                "entities": [
+                    {"looksLike": "player"}
+                ]
+            }
         },
         "example_two": {
-            "templateType": "raw",
-            "entities": [
-                {"looksLike": "coin"}
-            ]
+            "template": {
+                "templateType": "raw",
+                "entities": [
+                    {"looksLike": "coin"}
+                ]
+            }
         }
     },
     {

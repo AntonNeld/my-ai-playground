@@ -24,7 +24,11 @@ class RawTemplate(BaseModel):
         return new_room
 
 
-Template = Union[RawTemplate]
+class Template(BaseModel):
+    template: Union[RawTemplate]
+
+    def create_room(self):
+        return self.template.create_room()
 
 
 class TemplateKeeper:
@@ -127,4 +131,7 @@ def template_from_txt(txt):
                     entities.append(new_entity)
             else:
                 raise ParseError(f"Unknown symbol: {symbol}")
-    return Template(**{"templateType": "raw", "entities": entities})
+    return Template(**{"template": {
+        "templateType": "raw",
+        "entities": entities
+    }})

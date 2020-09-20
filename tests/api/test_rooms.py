@@ -4,8 +4,10 @@ import pytest
 @pytest.mark.parametrize("method", ["post", "put"])
 def test_create_room_from_template(client, method):
     client.put("/api/templates/testtemplate", json={
-        "templateType": "raw",
-        "entities": [{"looksLike": "wall"}]
+        "template": {
+            "templateType": "raw",
+            "entities": [{"looksLike": "wall"}]
+        }
     })
     if method == "post":
         response = client.post("/api/rooms?from_template=testtemplate")

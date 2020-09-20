@@ -4,20 +4,22 @@ import pytest
 @pytest.fixture
 def template(client):
     client.put("/api/templates/testtemplate", json={
-        "templateType": "raw",
-        "entities": [
-            {
-                "label": "entityOne",
-                "ai": {"kind": "singular", "move": "move_left"},
-                "pickupper": {"inventory": [{}]},
-                "scoring": {"kind": "heldItems"},
-                "position": {"x": 0, "y": 0}
-            },
-            {
-                "label": "entityTwo",
-                "score": 0
-            },
-        ]
+        "template": {
+            "templateType": "raw",
+            "entities": [
+                {
+                    "label": "entityOne",
+                    "ai": {"kind": "singular", "move": "move_left"},
+                    "pickupper": {"inventory": [{}]},
+                    "scoring": {"kind": "heldItems"},
+                    "position": {"x": 0, "y": 0}
+                },
+                {
+                    "label": "entityTwo",
+                    "score": 0
+                },
+            ]
+        }
     })
     return "testtemplate"
 
