@@ -1,8 +1,10 @@
+// A comment
 {
   "definitions": {
     "p": {
       "looksLike": "player"
     },
+    // A comment in here
     "c": {"looksLike": "coin"},
     "#": {"looksLike": "wall"}
   }

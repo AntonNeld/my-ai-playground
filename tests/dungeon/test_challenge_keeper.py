@@ -2,8 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from dungeon.challenge_keeper import (ChallengeKeeper, challenge_from_txt,
-                                      Challenge, ParseError)
+from dungeon.challenge_keeper import ChallengeKeeper, Challenge, ParseError
 from dungeon.entity import Entity
 
 PARENT_DIR = Path(__file__).parent
@@ -57,34 +56,16 @@ def test_load_txt(loaded_keeper):
     assert challenge == PARSED_TEXT_CHALLENGE
 
 
-def test_parse_ignore_comment():
-    challenge = challenge_from_txt("""
-// This is a comment
-{
-  "definitions": {
-    // This is a comment inside the JSON
-    "p": {"looksLike": "player"}
-  }
-}
-
-p
-
-""")
-    assert challenge.create_room().get_entities() == [
-        Entity(**{"looksLike": "player", "position": {"x": 0, "y": 0}})]
-
-
 def test_parse_colocated_entities():
-    challenge = challenge_from_txt("""
-{
-  "definitions": {
-    "a": [{"looksLike": "player"}, {"looksLike": "wall"}]
-  }
-}
-
-a
-
-""")
+    challenge = Challenge(**{
+        "template": {
+            "templateType": "visual",
+            "definitions": {
+                "a": [{"looksLike": "player"}, {"looksLike": "wall"}]
+            },
+            "room": "a"
+        }
+    })
     entities = challenge.create_room().get_entities()
     assert Entity(**{"position": {"x": 0, "y": 0},
                      "looksLike": "player"}) in entities
@@ -93,17 +74,16 @@ a
 
 
 def test_parse_colocated_entities_with_refs():
-    challenge = challenge_from_txt("""
-{
-  "definitions": {
-    "a": [{"looksLike": "player"}, "#"],
-    "#": {"looksLike": "wall"}
-  }
-}
-
-a
-
-""")
+    challenge = Challenge(**{
+        "template": {
+            "templateType": "visual",
+            "definitions": {
+                "a": [{"looksLike": "player"}, "#"],
+                "#": {"looksLike": "wall"}
+            },
+            "room": "a"
+        }
+    })
     entities = challenge.create_room().get_entities()
     assert Entity(**{"position": {"x": 0, "y": 0},
                      "looksLike": "player"}) in entities
@@ -112,48 +92,46 @@ a
 
 
 def test_parse_nested_refs():
-    challenge = challenge_from_txt("""
-{
-  "definitions": {
-    "a": ["b"],
-    "b": "c",
-    "c": {"looksLike": "coin"}
-  }
-}
-
-a
-
-""")
+    challenge = Challenge(**{
+        "template": {
+            "templateType": "visual",
+            "definitions": {
+                "a": ["b"],
+                "b": "c",
+                "c": {"looksLike": "coin"}
+            },
+            "room": "a"
+        }
+    })
     assert challenge.create_room().get_entities() == [
         Entity(**{"looksLike": "coin", "position": {"x": 0, "y": 0}})]
 
 
 def test_parse_circular_refs():
-    challenge = challenge_from_txt("""
-{
-  "definitions": {
-    "a": "b",
-    "b": "c",
-    "c": "a"
-  }
-}
-
-a
-
-""")
+    challenge = Challenge(**{
+        "template": {
+            "templateType": "visual",
+            "definitions": {
+                "a": "b",
+                "b": "c",
+                "c": "a"
+            },
+            "room": "a"
+        }
+    })
     with pytest.raises(ParseError):
         challenge.create_room()
 
 
 def test_challenge_not_modified_by_room():
-    challenge = Challenge(
-        **{"template":
-           {"templateType": "raw",
+    challenge = Challenge(**{
+        "template": {
+            "templateType": "raw",
             "entities": [
                 {"position": {"x": 0, "y": 0}, "looksLike": "player"},
             ]
-            }
-           })
+        }
+    })
     room = challenge.create_room()
     room.get_entities()[0].position.x = 1
     assert challenge.template.entities[0].position.x == 0
