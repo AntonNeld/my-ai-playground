@@ -1,10 +1,12 @@
 
 def test_clear_state(client):
     client.put("/api/challenges/testchallenge", json={
-        "entities": [
-            {"looksLike": "player"}
-        ]
-    })
+        "template": {
+            "templateType": "raw",
+            "entities": [
+                {"looksLike": "player"}
+            ]
+        }})
     client.post("/api/rooms?from_challenge=testchallenge")
 
     response = client.post("/api/state/clear")
