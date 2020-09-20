@@ -8,6 +8,7 @@ from dungeon.templating import (TemplateKeeper, template_from_txt,
 PARENT_DIR = Path(__file__).parent
 
 RAW_TEMPLATE = Template(**{
+    "templateType": "raw",
     "entities": [
         {"position": {"x": 0, "y": 0}, "looksLike": "player"},
         {"position": {"x": 1, "y": 1}, "looksLike": "wall"},
@@ -63,9 +64,10 @@ def test_parse_ignore_comment():
 p
 
 """)
-    assert equal_templates(template, Template(**{
-        "entities": [{"position": {"x": 0, "y": 0}, "looksLike": "player"}]
-    }))
+    assert equal_templates(template, Template(
+        **{"templateType": "raw",
+           "entities": [{"position": {"x": 0, "y": 0}, "looksLike": "player"}]
+           }))
 
 
 def test_parse_colocated_entities():
@@ -79,12 +81,13 @@ def test_parse_colocated_entities():
 a
 
 """)
-    assert equal_templates(template, Template(**{
-        "entities": [
-            {"position": {"x": 0, "y": 0}, "looksLike": "player"},
-            {"position": {"x": 0, "y": 0}, "looksLike": "wall"},
-        ]
-    }))
+    assert equal_templates(template, Template(
+        **{"templateType": "raw",
+           "entities": [
+               {"position": {"x": 0, "y": 0}, "looksLike": "player"},
+               {"position": {"x": 0, "y": 0}, "looksLike": "wall"},
+           ]
+           }))
 
 
 def test_parse_colocated_entities_with_refs():
@@ -99,12 +102,13 @@ def test_parse_colocated_entities_with_refs():
 a
 
 """)
-    assert equal_templates(template, Template(**{
-        "entities": [
-            {"position": {"x": 0, "y": 0}, "looksLike": "player"},
-            {"position": {"x": 0, "y": 0}, "looksLike": "wall"},
-        ]
-    }))
+    assert equal_templates(template, Template(
+        **{"templateType": "raw",
+           "entities": [
+               {"position": {"x": 0, "y": 0}, "looksLike": "player"},
+               {"position": {"x": 0, "y": 0}, "looksLike": "wall"},
+           ]
+           }))
 
 
 def test_parse_nested_refs():
@@ -120,11 +124,12 @@ def test_parse_nested_refs():
 a
 
 """)
-    assert equal_templates(template, Template(**{
-        "entities": [
-            {"position": {"x": 0, "y": 0}, "looksLike": "coin"},
-        ]
-    }))
+    assert equal_templates(template, Template(
+        **{"templateType": "raw",
+           "entities": [
+               {"position": {"x": 0, "y": 0}, "looksLike": "coin"},
+           ]
+           }))
 
 
 def test_parse_circular_refs():
@@ -144,11 +149,12 @@ a
 
 
 def test_template_not_modified_by_room():
-    template = Template(**{
-        "entities": [
-            {"position": {"x": 0, "y": 0}, "looksLike": "player"},
-        ]
-    })
+    template = Template(
+        **{"templateType": "raw",
+           "entities": [
+               {"position": {"x": 0, "y": 0}, "looksLike": "player"},
+           ]
+           })
     room = template.create_room()
     room.get_entities()[0].position.x = 1
     assert template.entities[0].position.x == 0

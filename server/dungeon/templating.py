@@ -5,14 +5,16 @@ import re
 from typing import List, Dict, Union
 import uuid
 
-from pydantic import BaseModel
+from typing_extensions import Literal
+from pydantic import BaseModel, Field
 
 from errors import ResourceNotFoundError
 from dungeon.entity import Entity, Position
 from dungeon.room import Room
 
 
-class Template(BaseModel):
+class RawTemplate(BaseModel):
+    template_type: Literal["raw"] = Field(..., alias="templateType")
     entities: List[Entity]
 
     def create_room(self):
@@ -20,6 +22,9 @@ class Template(BaseModel):
         for entity in self.entities:
             new_room.add_entity(entity.copy(deep=True))
         return new_room
+
+
+Template = Union[RawTemplate]
 
 
 class TemplateKeeper:
@@ -122,4 +127,4 @@ def template_from_txt(txt):
                     entities.append(new_entity)
             else:
                 raise ParseError(f"Unknown symbol: {symbol}")
-    return Template(entities=entities)
+    return Template(**{"templateType": "raw", "entities": entities})

@@ -4,6 +4,7 @@ import pytest
 @pytest.fixture
 def template(client):
     client.put("/api/templates/testtemplate", json={
+        "templateType": "raw",
         "entities": [
             {
                 "label": "entityOne",
