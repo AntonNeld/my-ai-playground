@@ -6,7 +6,7 @@
       "looksLike": "player",
       "pickupper": {},
       "score": 0,
-      "ai": {"kind": "pathfinder"},
+      "ai": {"kind": "getNearestCoin"},
       "perception": {},
       "actions": {
         "move_up": {},

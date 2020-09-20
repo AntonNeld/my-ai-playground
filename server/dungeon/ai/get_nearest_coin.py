@@ -5,8 +5,8 @@ from dungeon.ai.lib.perception import get_coordinates
 from dungeon.ai.lib.pathfinding import shortest_breadth_first
 
 
-class PathfinderAI(BaseModel):
-    kind: Literal["pathfinder"]
+class GetNearestCoinAI(BaseModel):
+    kind: Literal["getNearestCoin"]
     manual_pickup: bool = Field(False, alias="manualPickup")
 
     def next_move(self, percept):

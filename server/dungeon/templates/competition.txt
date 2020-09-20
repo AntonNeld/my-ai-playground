@@ -1,4 +1,4 @@
-// This room has two pathfinders who both want to pick up coins
+// This room has two players who both want to pick up coins
 {
   "definitions": {
     "1": {
@@ -6,7 +6,7 @@
       "looksLike": "player",
       "pickupper": {},
       "score": 0,
-      "ai": {"kind": "pathfinder"},
+      "ai": {"kind": "getNearestCoin"},
       "perception": {},
       "actions": {
         "move_up": {},
@@ -20,7 +20,7 @@
       "looksLike": "player",
       "pickupper": {},
       "score": 0,
-      "ai": {"kind": "pathfinder"},
+      "ai": {"kind": "getNearestCoin"},
       "perception": {},
       "actions": {
         "move_up": {},

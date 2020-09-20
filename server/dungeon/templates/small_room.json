@@ -2,8 +2,8 @@
   "entities": [
     {
       "position": { "x": 0, "y": 0 },
-      "ai": { "kind": "pathfinder" },
-      "scoring": { "kind": "heldItems" },
+      "ai": { "kind": "getNearestCoin" },
+      "score": 0,
       "pickupper": {},
       "label": "player",
       "looksLike": "player",
@@ -32,12 +32,12 @@
     },
     {
       "position": { "x": 1, "y": 0 },
-      "pickup": { "kind": "item" },
+      "pickup": { "kind": "addScore", "score": 1 },
       "looksLike": "coin"
     },
     {
       "position": { "x": -1, "y": 0 },
-      "pickup": { "kind": "item" },
+      "pickup": { "kind": "addScore", "score": 1 },
       "looksLike": "coin"
     }
   ]
