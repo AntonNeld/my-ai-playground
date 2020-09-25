@@ -1,11 +1,12 @@
 import json
 import yaml
 from pathlib import Path
-from typing import List, Dict, Union
+from typing import List, Dict, Union, Any, Optional
 import uuid
 
 from typing_extensions import Literal
 from pydantic import BaseModel, Field
+import jsonpath_ng
 
 from errors import ResourceNotFoundError
 from dungeon.entity import Entity, Position
@@ -72,10 +73,19 @@ Template = Union[RawTemplate, VisualTemplate]
 
 
 class Challenge(BaseModel):
+    variants: Optional[Dict[str, Dict[str, Any]]]
     template: Template
 
-    def create_room(self):
-        return self.template.create_room()
+    def create_room(self, variant=None):
+        if variant is None:
+            return self.template.create_room()
+        template_dict = self.template.dict(by_alias=True)
+        for path, value in self.variants[variant].items():
+            path_expression = jsonpath_ng.parse(path)
+            template_dict = path_expression.update(template_dict, value)
+        TemplateClass = self.template.__class__
+        template = TemplateClass(**template_dict)
+        return template.create_room()
 
 
 class ChallengeKeeper:

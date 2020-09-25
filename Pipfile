@@ -16,6 +16,7 @@ uvicorn = "~=0.11.8"
 aiofiles = "~=0.5.0"
 typing-extensions = "~=3.7.4.3"
 pyyaml = "~=5.3.1"
+jsonpath-ng = "~=1.5.2"
 
 [requires]
 python_version = "3.7"

@@ -31,41 +31,47 @@ def evaluate_routes(state_keeper):
     @router.post("/evaluate", response_model=EvaluateResponse,
                  response_model_exclude_none=True)
     async def evaluate(body: EvaluateBody):
-        room = state_keeper.challenge_keeper.get_challenge(
-            body.challenge).create_room()
-        if body.profile_time:
-            time_profiling.start()
-        if body.profile_memory:
-            memory_profiling.start()
-        room.step(steps=body.duration)
-        if body.profile_time:
-            time_profiling.stop()
-        if body.profile_memory:
-            memory_profiling.stop()
-        result = {
-            "entities": {
-                e.label: {
-                    "score": room.get_entity_score(e),
-                    # Initialize time and memory to 0, in case there is no AI
-                    # to measure
-                    "time": 0 if body.profile_time else None,
-                    "memory": 0 if body.profile_memory else None
+        challenge = state_keeper.challenge_keeper.get_challenge(
+            body.challenge)
+        response = {"entities": {}}
+        for variant in challenge.variants or [None]:
+            room = state_keeper.challenge_keeper.get_challenge(
+                body.challenge).create_room(variant=variant)
+
+            if body.profile_time:
+                time_profiling.start()
+            if body.profile_memory:
+                memory_profiling.start()
+            room.step(steps=body.duration)
+            if body.profile_time:
+                time_profiling.stop()
+                time_result = time_profiling.get_result()
+                if "processTime" not in response:
+                    response["processTime"] = 0
+                response["processTime"] += time_result["process_time"]
+            if body.profile_memory:
+                memory_profiling.stop()
+                memory_result = memory_profiling.get_result()
+
+            for entity in [e for e in room.get_entities()
+                           if e.label is not None]:
+                label = (entity.label if variant is None
+                         else f"{variant}:{entity.label}")
+                response["entities"][label] = {
+                    "score": room.get_entity_score(entity)
                 }
-                for e in room.get_entities()
-                if e.label is not None
-            }
-        }
-        if body.profile_time:
-            profile_result = time_profiling.get_result()
-            result["processTime"] = profile_result["process_time"]
-            for entity, entity_time in profile_result["contexts"].items():
-                if entity in result["entities"]:
-                    result["entities"][entity]["time"] = entity_time
-        if body.profile_memory:
-            profile_result = memory_profiling.get_result()
-            for entity, entity_memory in profile_result.items():
-                if entity in result["entities"]:
-                    result["entities"][entity]["memory"] = entity_memory
-        return result
+                if body.profile_time:
+                    if entity.label in time_result["contexts"]:
+                        ai_time = time_result["contexts"][entity.label]
+                    else:
+                        ai_time = 0
+                    response["entities"][label]["time"] = ai_time
+                if body.profile_memory:
+                    if entity.label in memory_result:
+                        ai_memory = memory_result[entity.label]
+                    else:
+                        ai_memory = 0
+                    response["entities"][label]["memory"] = ai_memory
+        return response
 
     return router
