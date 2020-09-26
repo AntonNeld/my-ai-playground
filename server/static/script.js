@@ -5,13 +5,16 @@ const roomId = "testroom";
 let room;
 let highlighted;
 let currentChallenge = "maze";
+let currentVariant = null;
 let autoStepTimer = null;
 
 async function getChallenges() {
   const response = await fetch("/api/challenges");
   const challenges = await response.json();
   const select = document.querySelector("#challenge-dropdown");
-  select.childNodes.forEach((child) => select.removeChild(child));
+  while (select.lastChild) {
+    select.lastChild.remove();
+  }
   challenges.forEach((challenge) => {
     const option = document.createElement("option");
     option.textContent = challenge;
@@ -21,13 +24,39 @@ async function getChallenges() {
   select.value = currentChallenge;
 }
 
-async function initRoom(challenge) {
-  currentChallenge = challenge;
+async function getVariants(challenge) {
+  const response = await fetch(`/api/challenges/${challenge}/variants`);
+  const variants = await response.json();
+  const select = document.querySelector("#variant-dropdown");
+  if (variants.length == 0) {
+    currentVariant = null;
+    select.classList.add("hidden");
+  } else {
+    currentVariant = variants[0];
+    select.classList.remove("hidden");
+  }
+  while (select.lastChild) {
+    select.lastChild.remove();
+  }
+  variants.forEach((variant) => {
+    const option = document.createElement("option");
+    option.textContent = variant;
+    option.value = variant;
+    select.appendChild(option);
+  });
+}
+
+async function initRoom(challenge, variant) {
   clearInterval(autoStepTimer);
   autoStepTimer = null;
-  await fetch(`/api/rooms/${roomId}?from_challenge=${challenge}`, {
-    method: "PUT",
-  });
+  await fetch(
+    `/api/rooms/${roomId}?from_challenge=${challenge}${
+      variant !== null ? `&variant=${variant}` : ""
+    }`,
+    {
+      method: "PUT",
+    }
+  );
   room = new Room(document.querySelector(".room-area"));
   highlighted = null;
   room.addEventListener("highlighted", ({ detail: { id } }) => {
@@ -155,18 +184,29 @@ async function evaluateChallenge(challenge, duration) {
 }
 
 getChallenges();
-initRoom(currentChallenge);
+getVariants(currentChallenge);
+initRoom(currentChallenge, currentVariant);
 document
   .querySelector("#restart-button")
   .addEventListener("click", function () {
-    initRoom(currentChallenge);
+    initRoom(currentChallenge, currentVariant);
     this.blur();
   });
 document
   .querySelector("#challenge-dropdown")
-  .addEventListener("change", function (event) {
+  .addEventListener("change", async function (event) {
     const challenge = event.target.value;
-    initRoom(challenge);
+    currentChallenge = challenge;
+    await getVariants(challenge);
+    initRoom(currentChallenge, currentVariant);
+    this.blur();
+  });
+document
+  .querySelector("#variant-dropdown")
+  .addEventListener("change", async function (event) {
+    const variant = event.target.value;
+    currentVariant = variant;
+    initRoom(currentChallenge, currentVariant);
     this.blur();
   });
 document

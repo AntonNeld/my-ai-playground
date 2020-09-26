@@ -24,3 +24,7 @@ body {
   font-size: 10pt;
   font-family: monospace;
 }
+
+.hidden {
+  display: none;
+}

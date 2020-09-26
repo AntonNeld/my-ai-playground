@@ -34,4 +34,12 @@ def challenges_routes(state_keeper):
         return state_keeper.challenge_keeper.remove_challenge_by_id(
             challenge_id)
 
+    @router.get("/challenges/{challenge_id}/variants",
+                response_model=List[str])
+    async def get_challenge_variants(challenge_id: str):
+        challenge = state_keeper.challenge_keeper.get_challenge(challenge_id)
+        if challenge.variants is not None:
+            return list(challenge.variants.keys())
+        return []
+
     return router
