@@ -15,6 +15,8 @@ template:
       ai:
         kind: "pathfinder"
         obstacles: ["wall"]
+        penalties:
+          evilCoin: 100
         # Location of coin relative to player
         goal:
           x: 17
@@ -37,6 +39,11 @@ template:
       pickup:
         kind: "addScore"
         score: 1000
+    e:
+      looksLike: "evilCoin"
+      pickup:
+        kind: "addScore"
+        score: -100
   room: |-
     ####################
     # #   #     #     c#
@@ -45,7 +52,7 @@ template:
     # # ##### # ###### #
     # #   # # # #    # #
     #   #   ### # ## # #
-    ###### ##      # # #
+    ###### ## e    # # #
     #   #   # #### #   #
     # #   # # # #    # #
     # ##### #   # ## # #

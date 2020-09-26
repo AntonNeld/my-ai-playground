@@ -48,7 +48,7 @@ TESTS = [
         "challenge": "compare_search",
         "duration": 30,
         "scores": {
-            "breadthFirstGraph:player": 971,
+            "breadthFirstGraph:player": 871,
             "breadthFirstTree:player": 0
         }
     },
