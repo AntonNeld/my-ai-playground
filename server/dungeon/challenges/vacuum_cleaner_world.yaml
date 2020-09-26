@@ -1,14 +1,138 @@
-# A simple vacuum cleaner world with two locations,
-# from exercise 2.9 of Artificial Intelligence: A Modern Approach
+# A vacuum cleaner world from Artificial Intelligence: A Modern Approach
+variants:
+  # Exercise 2.9
+  "standard":
+    "definitions.vacuum.ai":
+      kind: "reflexVacuumAgent"
+  # Exercise 2.10b
+  "withMoveCost":
+    "definitions.vacuum.actions.move_left.cost": 1
+    "definitions.vacuum.actions.move_right.cost": 1
+    "definitions.vacuum.ai":
+      kind: "reflexVacuumWithState"
+  # Exercise 2.10c
+  "withMoveCostBetterSensors":
+    "definitions.vacuum.actions.move_left.cost": 1
+    "definitions.vacuum.actions.move_right.cost": 1
+    "definitions.vacuum.perception.distance": null
+    "definitions.vacuum.ai":
+      kind: "reflexVacuumSeeAll"
+  # Exercise 2.11b
+  "unknown1Random":
+    "definitions.vacuum.ai":
+      kind: "randomVacuum"
+      seed: 12345
+    "definitions.v":
+      - "vacuum"
+      - "."
+    "room": |-
+      ####
+      ##d###
+      #d..v#
+      #.#d##
+      #.#.#
+      #####
+  "unknown2Random":
+    "definitions.vacuum.ai":
+      kind: "randomVacuum"
+      seed: 12345
+    "definitions.v":
+      - "vacuum"
+      - "."
+    "room": |-
+      #####
+      #v..##
+      #d..d#
+      ##d.##
+       ####
+  "unknown3Random":
+    "definitions.vacuum.ai":
+      kind: "randomVacuum"
+      seed: 12345
+    "definitions.v":
+      - "vacuum"
+      - "."
+    "room": |-
+      #####
+      #d..#
+      #.#d#
+      #v..#
+      #d###
+      ###
+  "unknownPoorRandom":
+    "definitions.vacuum.ai":
+      kind: "randomVacuum"
+      seed: 12345
+    "definitions.v":
+      - "vacuum"
+      - "."
+    "room": |-
+      #########
+      ###..ddd#
+      ###.#####
+      #v..#
+      #####
+  # Exercise 2.11c
+  "unknown1Exploring":
+    "definitions.vacuum.ai":
+      kind: "exploringVacuum"
+    "definitions.v":
+      - "vacuum"
+      - "."
+    "room": |-
+      ####
+      ##d###
+      #d..v#
+      #.#d##
+      #.#.#
+      #####
+  "unknown2Exploring":
+    "definitions.vacuum.ai":
+      kind: "exploringVacuum"
+    "definitions.v":
+      - "vacuum"
+      - "."
+    "room": |-
+      #####
+      #v..##
+      #d..d#
+      ##d.##
+       ####
+  "unknown3Exploring":
+    "definitions.vacuum.ai":
+      kind: "exploringVacuum"
+    "definitions.v":
+      - "vacuum"
+      - "."
+    "room": |-
+      #####
+      #d..#
+      #.#d#
+      #v..#
+      #d###
+      ###
+  "unknownPoorExploring":
+    "definitions.vacuum.ai":
+      kind: "exploringVacuum"
+    "definitions.v":
+      - "vacuum"
+      - "."
+    "room": |-
+      #########
+      ###..ddd#
+      ###.#####
+      #v..#
+      #####
 template:
   templateType: "visual"
   definitions:
     d:
-      looksLike: "dirt"
-      pickup:
-        kind: "vanish"
-      tags:
-        - "dirt"
+      - "."
+      - looksLike: "dirt"
+        pickup:
+          kind: "vanish"
+        tags:
+          - "dirt"
     "#":
       looksLike: "wall"
       blocksMovement: true
@@ -18,7 +142,7 @@ template:
         score: 1
         tags:
           dirt: 0
-    v:
+    vacuum:
       label: "vacuum"
       looksLike: "vacuum"
       pickupper:
@@ -26,19 +150,17 @@ template:
       perception:
         distance: 0
         includePosition: true
-      ai:
-        kind: "reflexVacuumAgent"
       score: 0
       actions:
         move_left: {}
         move_right: {}
+        move_up: {}
+        move_down: {}
         pick_up: {}
-    a:
-      - "."
-      - "v"
+    v:
       - "d"
-    b:
-      - "."
-      - "d"
+      - "vacuum"
   room: |-
-    #ab#
+    ####
+    #vd#
+    ####

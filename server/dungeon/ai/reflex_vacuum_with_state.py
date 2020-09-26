@@ -5,7 +5,7 @@ from typing_extensions import Literal
 class ReflexVacuumWithStateAI(BaseModel):
     # Reflex vacuum cleaner agent for exercise 2.10b
     kind: Literal["reflexVacuumWithState"]
-    moved: bool
+    moved: bool = False
 
     def next_move(self, percept):
         if {"x": 0, "y": 0, "looks_like": "dirt"} in percept["entities"]:
