@@ -7,24 +7,15 @@ from app import create_app
 
 TESTS = [
     {
-        "challenge": "competition",
-        "duration": 15,
-        "scores": {"playerOne": 2, "playerTwo": 2}
-    },
-    {
         "challenge": "maze",
         "duration": 13,
-        "scores": {"player": 3}
-    },
-    {
-        "challenge": "maze_action_pickup",
-        "duration": 13,
-        "scores": {"player": 2}
-    },
-    {
-        "challenge": "maze_with_nearsighted_agent",
-        "duration": 25,
-        "scores": {"player": 1}
+        "scores": {
+            "standard:player": 3,
+            "actionPickup:player": 2,
+            "nearsighted:player": 1,
+            "competition:playerOne": 2,
+            "competition:playerTwo": 2
+        }
     },
     {
         "challenge": "singular_agent",

@@ -1,9 +1,54 @@
 # This room is a maze that demonstrates pathfinding ability
+variants:
+  standard: {}
+  actionPickup:
+    "definitions.p.ai.manualPickup": true
+    "definitions.p.pickupper.mode": "action"
+    "definitions.p.actions":
+      move_up: {}
+      move_down: {}
+      move_left: {}
+      move_right: {}
+      pick_up: {}
+  nearsighted:
+    "definitions.p.perception.distance": 3
+  competition:
+    "definitions.p.label": "playerOne"
+    "room": |-
+      ####################
+      #c#   #  c  #     p#
+      # # # # # # # # ####
+      # # # c # #  c#    #
+      # # ##### # ###### #
+      # #c  # #c# #  c # #
+      #   #   ### # ## # #
+      ######c##  c   # # #
+      #   #   # #### #  c#
+      # # c # # #c# c  # #
+      # ##### #   # ## # #
+      #c#c      # #  # # #
+      #### ## # # ## #   #
+      #q   #c #c#  c # #c#
+      ####################
+
 template:
   templateType: "visual"
   definitions:
     p:
       label: "player"
+      looksLike: "player"
+      pickupper: {}
+      score: 0
+      ai:
+        kind: "getNearestCoin"
+      perception: {}
+      actions:
+        move_up: {}
+        move_down: {}
+        move_left: {}
+        move_right: {}
+    q:
+      label: "playerTwo"
       looksLike: "player"
       pickupper: {}
       score: 0
