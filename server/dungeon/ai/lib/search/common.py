@@ -23,3 +23,8 @@ class Node:
         if self.parent is None:
             return []
         return self.parent.solution() + [self.action]
+
+    def states_in_solution(self):
+        if self.parent is None:
+            return [self.state]
+        return self.parent.states_in_solution() + [self.state]

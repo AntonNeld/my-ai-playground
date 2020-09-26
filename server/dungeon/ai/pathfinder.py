@@ -7,6 +7,9 @@ from dungeon.consts import LooksLike, Position, Move
 from dungeon.ai.lib.search import (
     breadth_first_graph,
     breadth_first_tree,
+    depth_first_graph,
+    depth_first_tree,
+    depth_first_tree_check_path,
     uniform_cost_graph,
     uniform_cost_tree,
     NoSolutionError
@@ -25,17 +28,17 @@ class PathfindingProblem:
         return self.start
 
     def actions(self, state):
-        actions = set()
+        actions = []
         x = state[0]
         y = state[1]
         if (x, y+1) not in self.obstacles:
-            actions.add("move_up")
+            actions.append("move_up")
         if (x, y-1) not in self.obstacles:
-            actions.add("move_down")
+            actions.append("move_down")
         if (x+1, y) not in self.obstacles:
-            actions.add("move_right")
+            actions.append("move_right")
         if (x-1, y) not in self.obstacles:
-            actions.add("move_left")
+            actions.append("move_left")
         return actions
 
     def result(self, state, action):
@@ -68,6 +71,9 @@ class PathfinderAI(BaseModel):
     algorithm: Union[
         Literal["breadthFirstGraph"],
         Literal["breadthFirstTree"],
+        Literal["depthFirstGraph"],
+        Literal["depthFirstTree"],
+        Literal["depthFirstTreeCheckPath"],
         Literal["uniformCostGraph"],
         Literal["uniformCostTree"],
     ] = "breadthFirstGraph"
@@ -89,6 +95,12 @@ class PathfinderAI(BaseModel):
                     self.plan = breadth_first_graph(problem)
                 elif self.algorithm == "breadthFirstTree":
                     self.plan = breadth_first_tree(problem)
+                if self.algorithm == "depthFirstGraph":
+                    self.plan = depth_first_graph(problem)
+                elif self.algorithm == "depthFirstTree":
+                    self.plan = depth_first_tree(problem)
+                elif self.algorithm == "depthFirstTreeCheckPath":
+                    self.plan = depth_first_tree_check_path(problem)
                 elif self.algorithm == "uniformCostGraph":
                     self.plan = uniform_cost_graph(problem)
                 elif self.algorithm == "uniformCostTree":

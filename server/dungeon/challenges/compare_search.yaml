@@ -4,6 +4,12 @@ variants:
     "definitions.p.ai.algorithm": "breadthFirstGraph"
   "breadthFirstTree":
     "definitions.p.ai.algorithm": "breadthFirstTree"
+  "depthFirstGraph":
+    "definitions.p.ai.algorithm": "depthFirstGraph"
+  "depthFirstTree":
+    "definitions.p.ai.algorithm": "depthFirstTree"
+  "depthFirstTreeCheckPath":
+    "definitions.p.ai.algorithm": "depthFirstTreeCheckPath"
   "uniformCostGraph":
     "definitions.p.ai.algorithm": "uniformCostGraph"
   "uniformCostTree":
