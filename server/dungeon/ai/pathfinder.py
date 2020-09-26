@@ -1,10 +1,11 @@
-from typing import List
+from typing import List, Union
 
 from pydantic import BaseModel
 from typing_extensions import Literal
 
 from dungeon.consts import LooksLike, Position
-from dungeon.ai.lib.search import breadth_first_graph, NoSolutionError
+from dungeon.ai.lib.search import (breadth_first_graph, breadth_first_tree,
+                                   NoSolutionError)
 
 
 class PathfindingProblem:
@@ -55,6 +56,8 @@ class PathfinderAI(BaseModel):
     kind: Literal["pathfinder"]
     obstacles: List[LooksLike]
     goal: Position
+    algorithm: Union[Literal["breadthFirstGraph"],
+                     Literal["breadthFirstTree"]] = "breadthFirstGraph"
 
     def next_move(self, percept):
         obstacles = set(
@@ -64,7 +67,10 @@ class PathfinderAI(BaseModel):
         problem = PathfindingProblem(
             (0, 0), (self.goal.x, self.goal.y), obstacles)
         try:
-            solution = breadth_first_graph(problem)
+            if self.algorithm == "breadthFirstGraph":
+                solution = breadth_first_graph(problem)
+            elif self.algorithm == "breadthFirstTree":
+                solution = breadth_first_tree(problem)
             if len(solution) == 0:
                 return "none"
             return solution[0]
@@ -74,9 +80,9 @@ class PathfinderAI(BaseModel):
     def update_state_action(self, action):
         if action == "move_up":
             self.goal.y -= 1
-        if action == "move_down":
+        elif action == "move_down":
             self.goal.y += 1
-        if action == "move_right":
+        elif action == "move_right":
             self.goal.x -= 1
-        if action == "move_left":
+        elif action == "move_left":
             self.goal.x += 1

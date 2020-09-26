@@ -46,8 +46,11 @@ TESTS = [
     },
     {
         "challenge": "compare_search",
-        "duration": 100,
-        "scores": {"player": -29}
+        "duration": 30,
+        "scores": {
+            "breadthFirstGraph:player": 971,
+            "breadthFirstTree:player": 0
+        }
     },
 ]
 

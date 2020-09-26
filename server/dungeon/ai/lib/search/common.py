@@ -1,5 +1,7 @@
 class NoSolutionError(Exception):
-    pass
+
+    def __init__(self, iteration_limit=None):
+        self.iteration_limit = iteration_limit
 
 
 class Node:
