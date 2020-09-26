@@ -1,9 +1,9 @@
-from typing import Dict, List, Union
+from typing import Dict, List, Union, Optional
 
 from pydantic import BaseModel
 from typing_extensions import Literal
 
-from dungeon.consts import LooksLike, Position
+from dungeon.consts import LooksLike, Position, Move
 from dungeon.ai.lib.search import (
     breadth_first_graph,
     breadth_first_tree,
@@ -71,38 +71,36 @@ class PathfinderAI(BaseModel):
         Literal["uniformCostGraph"],
         Literal["uniformCostTree"],
     ] = "breadthFirstGraph"
+    plan: Optional[List[Move]]
+
+    def update_state_percept(self, percept):
+        if self.plan is None:
+            obstacles = set(
+                map(lambda e: (e["x"], e["y"]),
+                    [e for e in percept["entities"]
+                     if e["looks_like"] in self.obstacles]))
+            penalties = {(e["x"], e["y"]): self.penalties[e["looks_like"]]
+                         for e in percept["entities"]
+                         if e["looks_like"] in self.penalties}
+            problem = PathfindingProblem(
+                (0, 0), (self.goal.x, self.goal.y), obstacles, penalties)
+            try:
+                if self.algorithm == "breadthFirstGraph":
+                    self.plan = breadth_first_graph(problem)
+                elif self.algorithm == "breadthFirstTree":
+                    self.plan = breadth_first_tree(problem)
+                elif self.algorithm == "uniformCostGraph":
+                    self.plan = uniform_cost_graph(problem)
+                elif self.algorithm == "uniformCostTree":
+                    self.plan = uniform_cost_tree(problem)
+            except NoSolutionError:
+                self.plan = []
 
     def next_move(self, percept):
-        obstacles = set(
-            map(lambda e: (e["x"], e["y"]),
-                [e for e in percept["entities"]
-                 if e["looks_like"] in self.obstacles]))
-        penalties = {(e["x"], e["y"]): self.penalties[e["looks_like"]]
-                     for e in percept["entities"]
-                     if e["looks_like"] in self.penalties}
-        problem = PathfindingProblem(
-            (0, 0), (self.goal.x, self.goal.y), obstacles, penalties)
-        try:
-            if self.algorithm == "breadthFirstGraph":
-                solution = breadth_first_graph(problem)
-            elif self.algorithm == "breadthFirstTree":
-                solution = breadth_first_tree(problem)
-            elif self.algorithm == "uniformCostGraph":
-                solution = uniform_cost_graph(problem)
-            elif self.algorithm == "uniformCostTree":
-                solution = uniform_cost_tree(problem)
-            if len(solution) == 0:
-                return "none"
-            return solution[0]
-        except NoSolutionError:
-            return "none"
+        if self.plan:
+            return self.plan[0]
+        return "none"
 
     def update_state_action(self, action):
-        if action == "move_up":
-            self.goal.y -= 1
-        elif action == "move_down":
-            self.goal.y += 1
-        elif action == "move_right":
-            self.goal.x -= 1
-        elif action == "move_left":
-            self.goal.x += 1
+        if action != "none":
+            self.plan.pop(0)
