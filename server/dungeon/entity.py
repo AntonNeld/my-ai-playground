@@ -6,16 +6,7 @@ from typing_extensions import Literal
 
 from dungeon.ai import AI
 from dungeon.scoring import Scoring
-from dungeon.consts import Move
-
-LooksLike = Union[Literal["player"], Literal["coin"], Literal["wall"],
-                  Literal["vacuum"], Literal["dirt"], Literal["labelA"],
-                  Literal["labelB"]]
-
-
-class Position(BaseModel):
-    x: int
-    y: int
+from dungeon.consts import Move, LooksLike, Position
 
 
 class ScorePickup(BaseModel):

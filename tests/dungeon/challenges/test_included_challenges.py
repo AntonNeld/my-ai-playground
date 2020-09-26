@@ -44,6 +44,11 @@ TESTS = [
             "unknownPoorExploring:vacuum": 844,
         }
     },
+    {
+        "challenge": "compare_search",
+        "duration": 100,
+        "scores": {"player": -29}
+    },
 ]
 
 root_dir = Path(__file__).parent.parent.parent.parent

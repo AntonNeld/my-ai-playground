@@ -1,0 +1,45 @@
+# This challenge compares search algorithms by pathfinding to a specific location
+template:
+  templateType: "visual"
+  definitions:
+    p:
+      label: "player"
+      looksLike: "player"
+      pickupper: {}
+      score: 0
+      ai:
+        kind: "pathfinder"
+        obstacles: ["wall"]
+        # Upper right corner, relative to player
+        goal:
+          x: 17
+          y: 12
+      perception: {}
+      actions:
+        move_up:
+          cost: 1
+        move_down:
+          cost: 1
+        move_left:
+          cost: 1
+        move_right:
+          cost: 1
+    "#":
+      looksLike: "wall"
+      blocksMovement: true
+  room: |-
+    ####################
+    # #   #     #      #
+    # # # # # # # # ####
+    # # #   # #   #    #
+    # # ##### # ###### #
+    # #   # # # #    # #
+    #   #   ### # ## # #
+    ###### ##      # # #
+    #   #   # #### #   #
+    # #   # # # #    # #
+    # ##### #   # ## # #
+    # #       # #  # # #
+    #### ## # # ## #   #
+    #p   #  # #    # # #
+    ####################
