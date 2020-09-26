@@ -5,7 +5,7 @@ const roomId = "testroom";
 let room;
 let highlighted;
 let currentChallenge = "maze";
-let currentVariant = null;
+let currentVariant = "standard";
 let autoStepTimer = null;
 
 async function getChallenges() {
