@@ -4,6 +4,10 @@ variants:
     "definitions.p.ai.algorithm": "breadthFirstGraph"
   "breadthFirstTree":
     "definitions.p.ai.algorithm": "breadthFirstTree"
+  "uniformCostGraph":
+    "definitions.p.ai.algorithm": "uniformCostGraph"
+  "uniformCostTree":
+    "definitions.p.ai.algorithm": "uniformCostTree"
 template:
   templateType: "visual"
   definitions:

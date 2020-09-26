@@ -4,8 +4,13 @@ from pydantic import BaseModel
 from typing_extensions import Literal
 
 from dungeon.consts import LooksLike, Position
-from dungeon.ai.lib.search import (breadth_first_graph, breadth_first_tree,
-                                   NoSolutionError)
+from dungeon.ai.lib.search import (
+    breadth_first_graph,
+    breadth_first_tree,
+    uniform_cost_graph,
+    uniform_cost_tree,
+    NoSolutionError
+)
 
 
 class PathfindingProblem:
@@ -60,8 +65,12 @@ class PathfinderAI(BaseModel):
     obstacles: List[LooksLike] = []
     penalties: Dict[LooksLike, int] = {}
     goal: Position
-    algorithm: Union[Literal["breadthFirstGraph"],
-                     Literal["breadthFirstTree"]] = "breadthFirstGraph"
+    algorithm: Union[
+        Literal["breadthFirstGraph"],
+        Literal["breadthFirstTree"],
+        Literal["uniformCostGraph"],
+        Literal["uniformCostTree"],
+    ] = "breadthFirstGraph"
 
     def next_move(self, percept):
         obstacles = set(
@@ -78,6 +87,10 @@ class PathfinderAI(BaseModel):
                 solution = breadth_first_graph(problem)
             elif self.algorithm == "breadthFirstTree":
                 solution = breadth_first_tree(problem)
+            elif self.algorithm == "uniformCostGraph":
+                solution = uniform_cost_graph(problem)
+            elif self.algorithm == "uniformCostTree":
+                solution = uniform_cost_tree(problem)
             if len(solution) == 0:
                 return "none"
             return solution[0]
