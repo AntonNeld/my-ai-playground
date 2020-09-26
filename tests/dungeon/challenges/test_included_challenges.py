@@ -42,8 +42,26 @@ TESTS = [
         "duration": 100,
         "scores": {"vacuum": 196}
     },
-    # We can't include the randomized vacuum agents since tests should
-    # be deterministic
+    {
+        "challenge": "vacuum_cleaner_world_unknown_1_randomized",
+        "duration": 100,
+        "scores": {"vacuum": 794}
+    },
+    {
+        "challenge": "vacuum_cleaner_world_unknown_2_randomized",
+        "duration": 100,
+        "scores": {"vacuum": 802}
+    },
+    {
+        "challenge": "vacuum_cleaner_world_unknown_3_randomized",
+        "duration": 100,
+        "scores": {"vacuum": 853}
+    },
+    {
+        "challenge": "vacuum_cleaner_world_unknown_poor_randomized",
+        "duration": 100,
+        "scores": {"vacuum": 600}
+    },
     {
         "challenge": "vacuum_cleaner_world_unknown_1_exploring",
         "duration": 100,

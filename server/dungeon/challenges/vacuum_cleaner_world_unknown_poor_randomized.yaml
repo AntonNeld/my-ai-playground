@@ -31,6 +31,7 @@ template:
           includePosition: true
         ai:
           kind: "randomVacuum"
+          seed: 12345
         score: 0
         actions:
           move_left: {}
