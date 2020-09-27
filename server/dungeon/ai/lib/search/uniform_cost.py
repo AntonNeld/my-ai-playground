@@ -12,14 +12,21 @@ def uniform_cost_graph(problem, iteration_limit=10000):
     iterations = 0
     while frontier:
         node = frontier.pop()
+        if problem.goal_test(node.state):
+            return node.solution()
         explored.add(node.state)
         for action in problem.actions(node.state):
             child = node.get_child(problem, action)
-            if (child.state not in explored and
-                    child.state not in [n.state for n in frontier]):
-                if problem.goal_test(child.state):
-                    return child.solution()
+            child_in_frontier = child.state in [n.state for n in frontier]
+            if (child.state not in explored and not child_in_frontier):
                 frontier.add(child)
+            elif child_in_frontier:
+                index = [n.state for n in frontier].index(child.state)
+                other_node = frontier[index]
+                if child.path_cost < other_node.path_cost:
+                    frontier.remove(other_node)
+                    frontier.add(child)
+
         iterations += 1
         if iterations > iteration_limit:
             raise NoSolutionError(iteration_limit=iteration_limit)
@@ -34,10 +41,10 @@ def uniform_cost_tree(problem, iteration_limit=10000):
     iterations = 0
     while frontier:
         node = frontier.pop()
+        if problem.goal_test(node.state):
+            return node.solution()
         for action in problem.actions(node.state):
             child = node.get_child(problem, action)
-            if problem.goal_test(child.state):
-                return child.solution()
             frontier.add(child)
         iterations += 1
         if iterations > iteration_limit:
