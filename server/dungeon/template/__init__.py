@@ -1,8 +1,8 @@
 from typing import Union
 
 from .common import ParseError
-from .raw_template import RawTemplate
-from .visual_template import VisualTemplate
+from .raw import RawTemplate
+from .visual import VisualTemplate
 
 Template = Union[RawTemplate, VisualTemplate]
 
