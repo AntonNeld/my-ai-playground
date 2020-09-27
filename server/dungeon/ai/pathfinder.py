@@ -13,6 +13,9 @@ from dungeon.ai.lib.search import (
     depth_limited_graph,
     depth_limited_tree,
     depth_limited_tree_check_path,
+    iterative_deepening_graph,
+    iterative_deepening_tree,
+    iterative_deepening_tree_check_path,
     uniform_cost_graph,
     uniform_cost_tree,
     NoSolutionError
@@ -80,6 +83,9 @@ class PathfinderAI(BaseModel):
         Literal["depthLimitedGraph"],
         Literal["depthLimitedTree"],
         Literal["depthLimitedTreeCheckPath"],
+        Literal["iterativeDeepeningGraph"],
+        Literal["iterativeDeepeningTree"],
+        Literal["iterativeDeepeningTreeCheckPath"],
         Literal["uniformCostGraph"],
         Literal["uniformCostTree"],
     ] = "breadthFirstGraph"
@@ -117,6 +123,12 @@ class PathfinderAI(BaseModel):
                 elif self.algorithm == "depthLimitedTreeCheckPath":
                     self.plan = depth_limited_tree_check_path(
                         problem, self.depth_limit)
+                elif self.algorithm == "iterativeDeepeningGraph":
+                    self.plan = iterative_deepening_graph(problem)
+                elif self.algorithm == "iterativeDeepeningTree":
+                    self.plan = iterative_deepening_tree(problem)
+                elif self.algorithm == "iterativeDeepeningTreeCheckPath":
+                    self.plan = iterative_deepening_tree_check_path(problem)
                 elif self.algorithm == "uniformCostGraph":
                     self.plan = uniform_cost_graph(problem)
                 elif self.algorithm == "uniformCostTree":

@@ -56,6 +56,9 @@ TESTS = [
             "depthLimitedGraph:player": 702,
             "depthLimitedTree:player": 0,
             "depthLimitedTreeCheckPath:player": 0,
+            "iterativeDeepeningGraph:player": 716,
+            "iterativeDeepeningTree:player": 0,
+            "iterativeDeepeningTreeCheckPath:player": 0,
             "uniformCostGraph:player": 924,
             "uniformCostTree:player": 0
         }

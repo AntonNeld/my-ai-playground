@@ -19,6 +19,12 @@ variants:
   "depthLimitedTreeCheckPath":
     "definitions.p.ai.algorithm": "depthLimitedTreeCheckPath"
     "definitions.p.ai.depthLimit": 100
+  "iterativeDeepeningGraph":
+    "definitions.p.ai.algorithm": "iterativeDeepeningGraph"
+  "iterativeDeepeningTree":
+    "definitions.p.ai.algorithm": "iterativeDeepeningTree"
+  "iterativeDeepeningTreeCheckPath":
+    "definitions.p.ai.algorithm": "iterativeDeepeningTreeCheckPath"
   "uniformCostGraph":
     "definitions.p.ai.algorithm": "uniformCostGraph"
   "uniformCostTree":
