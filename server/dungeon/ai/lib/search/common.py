@@ -1,7 +1,8 @@
 class NoSolutionError(Exception):
 
-    def __init__(self, iteration_limit=None):
+    def __init__(self, depth_limited=False, iteration_limit=None):
         self.iteration_limit = iteration_limit
+        self.depth_limited = depth_limited
 
 
 class Node:
@@ -28,3 +29,8 @@ class Node:
         if self.parent is None:
             return [self.state]
         return self.parent.states_in_solution() + [self.state]
+
+    def depth(self):
+        if self.parent is None:
+            return 0
+        return self.parent.depth() + 1

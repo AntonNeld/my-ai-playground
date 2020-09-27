@@ -53,6 +53,9 @@ TESTS = [
             "depthFirstGraph:player": 576,
             "depthFirstTree:player": 0,
             "depthFirstTreeCheckPath:player": 446,
+            "depthLimitedGraph:player": 702,
+            "depthLimitedTree:player": 0,
+            "depthLimitedTreeCheckPath:player": 0,
             "uniformCostGraph:player": 924,
             "uniformCostTree:player": 0
         }

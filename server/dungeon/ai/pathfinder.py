@@ -1,6 +1,6 @@
 from typing import Dict, List, Union, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing_extensions import Literal
 
 from dungeon.consts import LooksLike, Move
@@ -10,6 +10,9 @@ from dungeon.ai.lib.search import (
     depth_first_graph,
     depth_first_tree,
     depth_first_tree_check_path,
+    depth_limited_graph,
+    depth_limited_tree,
+    depth_limited_tree_check_path,
     uniform_cost_graph,
     uniform_cost_tree,
     NoSolutionError
@@ -74,9 +77,14 @@ class PathfinderAI(BaseModel):
         Literal["depthFirstGraph"],
         Literal["depthFirstTree"],
         Literal["depthFirstTreeCheckPath"],
+        Literal["depthLimitedGraph"],
+        Literal["depthLimitedTree"],
+        Literal["depthLimitedTreeCheckPath"],
         Literal["uniformCostGraph"],
         Literal["uniformCostTree"],
     ] = "breadthFirstGraph"
+    # This one is only used for depthLimitedGraph and depthLimitedTree
+    depth_limit: Optional[int] = Field(None, alias="depthLimit")
     plan: Optional[List[Move]]
 
     def update_state_percept(self, percept):
@@ -96,12 +104,19 @@ class PathfinderAI(BaseModel):
                     self.plan = breadth_first_graph(problem)
                 elif self.algorithm == "breadthFirstTree":
                     self.plan = breadth_first_tree(problem)
-                if self.algorithm == "depthFirstGraph":
+                elif self.algorithm == "depthFirstGraph":
                     self.plan = depth_first_graph(problem)
                 elif self.algorithm == "depthFirstTree":
                     self.plan = depth_first_tree(problem)
                 elif self.algorithm == "depthFirstTreeCheckPath":
                     self.plan = depth_first_tree_check_path(problem)
+                elif self.algorithm == "depthLimitedGraph":
+                    self.plan = depth_limited_graph(problem, self.depth_limit)
+                elif self.algorithm == "depthLimitedTree":
+                    self.plan = depth_limited_tree(problem, self.depth_limit)
+                elif self.algorithm == "depthLimitedTreeCheckPath":
+                    self.plan = depth_limited_tree_check_path(
+                        problem, self.depth_limit)
                 elif self.algorithm == "uniformCostGraph":
                     self.plan = uniform_cost_graph(problem)
                 elif self.algorithm == "uniformCostTree":

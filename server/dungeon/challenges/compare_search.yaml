@@ -10,6 +10,15 @@ variants:
     "definitions.p.ai.algorithm": "depthFirstTree"
   "depthFirstTreeCheckPath":
     "definitions.p.ai.algorithm": "depthFirstTreeCheckPath"
+  "depthLimitedGraph":
+    "definitions.p.ai.algorithm": "depthLimitedGraph"
+    "definitions.p.ai.depthLimit": 100
+  "depthLimitedTree":
+    "definitions.p.ai.algorithm": "depthLimitedTree"
+    "definitions.p.ai.depthLimit": 100
+  "depthLimitedTreeCheckPath":
+    "definitions.p.ai.algorithm": "depthLimitedTreeCheckPath"
+    "definitions.p.ai.depthLimit": 100
   "uniformCostGraph":
     "definitions.p.ai.algorithm": "uniformCostGraph"
   "uniformCostTree":
