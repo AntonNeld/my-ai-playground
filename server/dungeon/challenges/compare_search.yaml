@@ -27,10 +27,7 @@ template:
         obstacles: ["wall"]
         penalties:
           evilCoin: 100
-        # Location of coin relative to player
-        goal:
-          x: 17
-          y: 12
+        goal: "coin"
       perception: {}
       actions:
         move_up:

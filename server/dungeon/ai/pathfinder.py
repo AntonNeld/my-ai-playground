@@ -3,7 +3,7 @@ from typing import Dict, List, Union, Optional
 from pydantic import BaseModel
 from typing_extensions import Literal
 
-from dungeon.consts import LooksLike, Position, Move
+from dungeon.consts import LooksLike, Move
 from dungeon.ai.lib.search import (
     breadth_first_graph,
     breadth_first_tree,
@@ -67,7 +67,7 @@ class PathfinderAI(BaseModel):
     kind: Literal["pathfinder"]
     obstacles: List[LooksLike] = []
     penalties: Dict[LooksLike, int] = {}
-    goal: Position
+    goal: LooksLike
     algorithm: Union[
         Literal["breadthFirstGraph"],
         Literal["breadthFirstTree"],
@@ -81,6 +81,8 @@ class PathfinderAI(BaseModel):
 
     def update_state_percept(self, percept):
         if self.plan is None:
+            goal = [(e["x"], e["y"]) for e in percept["entities"]
+                    if e["looks_like"] == self.goal][0]
             obstacles = set(
                 map(lambda e: (e["x"], e["y"]),
                     [e for e in percept["entities"]
@@ -88,8 +90,7 @@ class PathfinderAI(BaseModel):
             penalties = {(e["x"], e["y"]): self.penalties[e["looks_like"]]
                          for e in percept["entities"]
                          if e["looks_like"] in self.penalties}
-            problem = PathfindingProblem(
-                (0, 0), (self.goal.x, self.goal.y), obstacles, penalties)
+            problem = PathfindingProblem((0, 0), goal, obstacles, penalties)
             try:
                 if self.algorithm == "breadthFirstGraph":
                     self.plan = breadth_first_graph(problem)
