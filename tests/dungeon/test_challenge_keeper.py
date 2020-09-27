@@ -2,7 +2,8 @@ from pathlib import Path
 
 import pytest
 
-from dungeon.challenge_keeper import ChallengeKeeper, Challenge, ParseError
+from dungeon.challenge_keeper import ChallengeKeeper, Challenge
+from dungeon.template import ParseError
 from dungeon.entity import Entity
 
 PARENT_DIR = Path(__file__).parent
