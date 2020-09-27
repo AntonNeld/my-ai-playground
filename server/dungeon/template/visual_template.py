@@ -1,16 +1,14 @@
-from typing import List, Dict, Union
-
 from typing_extensions import Literal
 from pydantic import BaseModel, Field
 
-from dungeon.entity import Entity, Position
+from dungeon.entity import Position
 from dungeon.room import Room
-from .common import ParseError
+from .common import Definitions, translate_definition_symbol
 
 
 class VisualTemplate(BaseModel):
     template_type: Literal["visual"] = Field(..., alias="templateType")
-    definitions: Dict[str, Union[Entity, str, List[Union[Entity, str]]]]
+    definitions: Definitions
     room: str
 
     def create_room(self):
@@ -22,32 +20,12 @@ class VisualTemplate(BaseModel):
                 if symbol == " ":
                     pass
                 else:
-                    for entity in self.translate_symbol(symbol):
+                    for entity in translate_definition_symbol(
+                        symbol,
+                        self.definitions
+                    ):
                         new_entity = entity.copy(deep=True)
                         new_entity.position = Position(
                             x=x, y=len(lines) - y - 1)
                         new_room.add_entity(new_entity)
         return new_room
-
-    def translate_symbol(self, symbol, original_symbol=None):
-        if symbol == original_symbol:
-            raise ParseError(f"Circular reference: {symbol}")
-        if symbol not in self.definitions:
-            raise ParseError(f"Unknown symbol: {symbol}")
-        if isinstance(self.definitions[symbol], list):
-            definition_list = self.definitions[symbol]
-        else:
-            definition_list = [self.definitions[symbol]]
-        entities = []
-        for definition in definition_list:
-            if isinstance(definition, Entity):
-                entities.append(definition)
-            else:
-                entities.extend(
-                    self.translate_symbol(
-                        definition,
-                        (original_symbol if original_symbol is not None
-                         else symbol)
-                    )
-                )
-        return entities
