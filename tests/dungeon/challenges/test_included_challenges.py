@@ -46,14 +46,14 @@ TESTS = [
     },
     {
         "challenge": "compare_search",
-        "duration": 100,
+        "duration": 300,
         "scores": {
-            "breadthFirstGraph:player": 871,
+            "breadthFirstGraph:player": 724,
             "breadthFirstTree:player": 0,
-            "depthFirstGraph:player": 951,
+            "depthFirstGraph:player": 576,
             "depthFirstTree:player": 0,
-            "depthFirstTreeCheckPath:player": 939,
-            "uniformCostGraph:player": 957,
+            "depthFirstTreeCheckPath:player": 446,
+            "uniformCostGraph:player": 924,
             "uniformCostTree:player": 0
         }
     },

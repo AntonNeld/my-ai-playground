@@ -15,7 +15,7 @@ variants:
   "uniformCostTree":
     "definitions.p.ai.algorithm": "uniformCostTree"
 template:
-  templateType: "visual"
+  templateType: "caveGeneration"
   definitions:
     p:
       label: "player"
@@ -51,19 +51,14 @@ template:
       pickup:
         kind: "addScore"
         score: -100
-  room: |-
-    ####################
-    # #   #     #     c#
-    # # # # # # # # ####
-    # # #   # #   #    #
-    # # ##### # ###### #
-    # #   # # # #    # #
-    #   #   ### # ## # #
-    ###### ## e    # # #
-    #   #   # #### #   #
-    # #   # # # #    # #
-    # ##### #   # ## # #
-    # #       # #  # # #
-    #### ## # # ## #   #
-    #p   #  # #    # # #
-    ####################
+  wall: "#"
+  seed: 1337
+  width: 40
+  height: 40
+  stuff:
+    p:
+      amount: 1
+    c:
+      amount: 1
+    e:
+      amount: 20
