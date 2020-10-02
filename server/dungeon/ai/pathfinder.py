@@ -13,6 +13,8 @@ from dungeon.ai.lib.search import (
     depth_limited_graph,
     depth_limited_tree,
     depth_limited_tree_check_path,
+    greedy_best_first_graph,
+    greedy_best_first_tree,
     iterative_deepening_graph,
     iterative_deepening_tree,
     iterative_deepening_tree_check_path,
@@ -69,6 +71,13 @@ class PathfindingProblem:
         return 1
 
 
+def get_heuristic(problem):
+    def heuristic(node):
+        return (abs(problem.goal[0] - node.state[0])
+                + abs(problem.goal[1] - node.state[1]))
+    return heuristic
+
+
 class PathfinderAI(BaseModel):
     kind: Literal["pathfinder"]
     obstacles: List[LooksLike] = []
@@ -83,6 +92,8 @@ class PathfinderAI(BaseModel):
         Literal["depthLimitedGraph"],
         Literal["depthLimitedTree"],
         Literal["depthLimitedTreeCheckPath"],
+        Literal["greedyBestFirstGraph"],
+        Literal["greedyBestFirstTree"],
         Literal["iterativeDeepeningGraph"],
         Literal["iterativeDeepeningTree"],
         Literal["iterativeDeepeningTreeCheckPath"],
@@ -123,6 +134,12 @@ class PathfinderAI(BaseModel):
                 elif self.algorithm == "depthLimitedTreeCheckPath":
                     self.plan = depth_limited_tree_check_path(
                         problem, self.depth_limit)
+                elif self.algorithm == "greedyBestFirstGraph":
+                    self.plan = greedy_best_first_graph(
+                        problem, get_heuristic(problem))
+                elif self.algorithm == "greedyBestFirstTree":
+                    self.plan = greedy_best_first_tree(
+                        problem, get_heuristic(problem))
                 elif self.algorithm == "iterativeDeepeningGraph":
                     self.plan = iterative_deepening_graph(problem)
                 elif self.algorithm == "iterativeDeepeningTree":

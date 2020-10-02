@@ -19,6 +19,10 @@ variants:
   "depthLimitedTreeCheckPath":
     "definitions.p.ai.algorithm": "depthLimitedTreeCheckPath"
     "definitions.p.ai.depthLimit": 30
+  "greedyBestFirstGraph":
+    "definitions.p.ai.algorithm": "greedyBestFirstGraph"
+  "greedyBestFirstTree":
+    "definitions.p.ai.algorithm": "greedyBestFirstTree"
   "iterativeDeepeningGraph":
     "definitions.p.ai.algorithm": "iterativeDeepeningGraph"
   "iterativeDeepeningTree":
