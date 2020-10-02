@@ -12,13 +12,13 @@ variants:
     "definitions.p.ai.algorithm": "depthFirstTreeCheckPath"
   "depthLimitedGraph":
     "definitions.p.ai.algorithm": "depthLimitedGraph"
-    "definitions.p.ai.depthLimit": 100
+    "definitions.p.ai.depthLimit": 30
   "depthLimitedTree":
     "definitions.p.ai.algorithm": "depthLimitedTree"
-    "definitions.p.ai.depthLimit": 100
+    "definitions.p.ai.depthLimit": 30
   "depthLimitedTreeCheckPath":
     "definitions.p.ai.algorithm": "depthLimitedTreeCheckPath"
-    "definitions.p.ai.depthLimit": 100
+    "definitions.p.ai.depthLimit": 30
   "iterativeDeepeningGraph":
     "definitions.p.ai.algorithm": "iterativeDeepeningGraph"
   "iterativeDeepeningTree":
@@ -68,8 +68,8 @@ template:
         score: -100
   wall: "#"
   seed: 1337
-  width: 40
-  height: 40
+  width: 20
+  height: 20
   stuff:
     p:
       amount: 1
