@@ -5,6 +5,8 @@ from typing_extensions import Literal
 
 from dungeon.consts import LooksLike, Move
 from dungeon.ai.lib.search import (
+    a_star_graph,
+    a_star_tree,
     breadth_first_graph,
     breadth_first_tree,
     depth_first_graph,
@@ -84,6 +86,8 @@ class PathfinderAI(BaseModel):
     penalties: Dict[LooksLike, int] = {}
     goal: LooksLike
     algorithm: Union[
+        Literal["aStarGraph"],
+        Literal["aStarTree"],
         Literal["breadthFirstGraph"],
         Literal["breadthFirstTree"],
         Literal["depthFirstGraph"],
@@ -117,7 +121,11 @@ class PathfinderAI(BaseModel):
                          if e["looks_like"] in self.penalties}
             problem = PathfindingProblem((0, 0), goal, obstacles, penalties)
             try:
-                if self.algorithm == "breadthFirstGraph":
+                if self.algorithm == "aStarGraph":
+                    self.plan = a_star_graph(problem, get_heuristic(problem))
+                elif self.algorithm == "aStarTree":
+                    self.plan = a_star_tree(problem, get_heuristic(problem))
+                elif self.algorithm == "breadthFirstGraph":
                     self.plan = breadth_first_graph(problem)
                 elif self.algorithm == "breadthFirstTree":
                     self.plan = breadth_first_tree(problem)

@@ -48,6 +48,8 @@ TESTS = [
         "challenge": "compare_search",
         "duration": 100,
         "scores": {
+            "aStarGraph:player": 647,
+            "aStarTree:player": 0,
             "breadthFirstGraph:player": 379,
             "breadthFirstTree:player": 0,
             "depthFirstGraph:player": 353,

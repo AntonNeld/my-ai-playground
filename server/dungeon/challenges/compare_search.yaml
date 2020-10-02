@@ -1,5 +1,9 @@
 # This challenge compares search algorithms by pathfinding to a specific location
 variants:
+  "aStarGraph":
+    "definitions.p.ai.algorithm": "aStarGraph"
+  "aStarTree":
+    "definitions.p.ai.algorithm": "aStarTree"
   "breadthFirstGraph":
     "definitions.p.ai.algorithm": "breadthFirstGraph"
   "breadthFirstTree":
