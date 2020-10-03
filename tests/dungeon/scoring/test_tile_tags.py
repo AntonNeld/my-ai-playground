@@ -9,6 +9,7 @@ definitions:
     looksLike: "player"
     scoring:
       kind: "tileTags"
+      score: 10
       shouldHaveTags:
         - "goodTag"
       shouldNotHaveTags:
@@ -29,7 +30,7 @@ room: |-
 """)
 
     entity = room.get_entities(looks_like="player")[0]
-    assert entity.scoring.get_score(entity, room) == 1
+    assert entity.scoring.get_score(entity, room) == 10
 
 
 def test_no_double_counting():

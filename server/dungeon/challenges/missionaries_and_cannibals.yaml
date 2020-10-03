@@ -37,7 +37,7 @@ template:
       score: 0
       scoring:
         kind: "tileTags"
-        # TODO: Score
+        score: 1000
         shouldHaveTags:
           - "person"
           - "otherShore"

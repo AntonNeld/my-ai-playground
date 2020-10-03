@@ -6,6 +6,7 @@ from typing_extensions import Literal
 
 class TileTagsScoring(BaseModel):
     kind: Literal["tileTags"]
+    score: int = 1
     should_have_tags: List[str] = Field([], alias="shouldHaveTags")
     should_not_have_tags: List[str] = Field([], alias="shouldNotHaveTags")
 
@@ -22,7 +23,7 @@ class TileTagsScoring(BaseModel):
                         self.should_have_tags))
                     and not any(map(lambda t: tag_in_entities(t, entities),
                                     self.should_not_have_tags))):
-                score += 1
+                score += self.score
             done_positions.add((position.x, position.y))
         return score
 
