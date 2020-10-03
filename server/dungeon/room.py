@@ -145,7 +145,7 @@ class Room(BaseModel):
                             memory_profiling.set_context(entity.label)
                         if hasattr(entity.ai, "update_state_percept"):
                             entity.ai.update_state_percept(percept)
-                        action = entity.ai.next_move(percept)
+                        action = entity.ai.next_action(percept)
                         if hasattr(entity.ai, "update_state_action"):
                             entity.ai.update_state_action(action)
                         if do_time_profiling:

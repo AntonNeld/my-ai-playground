@@ -9,7 +9,7 @@ def challenge(client):
             "entities": [
                 {
                     "label": "entityOne",
-                    "ai": {"kind": "singular", "move": "move_left"},
+                    "ai": {"kind": "singular", "action": "move_left"},
                     "pickupper": {"inventory": [{}]},
                     "scoring": {"kind": "heldItems"},
                     "position": {"x": 0, "y": 0}
@@ -40,7 +40,7 @@ def challenge_with_variants(client):
             "entities": [
                 {
                     "label": "entityOne",
-                    "ai": {"kind": "singular", "move": "move_left"},
+                    "ai": {"kind": "singular", "action": "move_left"},
                     "pickupper": {"inventory": [{}]},
                     "score": 2,
                     "position": {"x": 0, "y": 0}

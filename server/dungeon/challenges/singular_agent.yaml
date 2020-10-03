@@ -9,7 +9,7 @@ template:
       score: 0
       ai:
         kind: "singular"
-        move: "move_right"
+        action: "move_right"
       perception: {}
       actions:
         move_up: {}

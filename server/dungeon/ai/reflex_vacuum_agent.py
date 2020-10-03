@@ -6,7 +6,7 @@ class ReflexVacuumAgentAI(BaseModel):
     # Reflex vacuum cleaner agent from Figure 2.8
     kind: Literal["reflexVacuumAgent"]
 
-    def next_move(self, percept):
+    def next_action(self, percept):
         if {"x": 0, "y": 0, "looks_like": "dirt"} in percept["entities"]:
             return "pick_up"
         if percept["position"]["x"] == 1:

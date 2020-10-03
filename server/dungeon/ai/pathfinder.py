@@ -3,7 +3,7 @@ from typing import Dict, List, Union, Optional
 from pydantic import BaseModel, Field
 from typing_extensions import Literal
 
-from dungeon.consts import LooksLike, Move
+from dungeon.consts import LooksLike, Action
 from .problems.pathfinding import PathfindingProblem, get_heuristic
 from .search import (
     a_star_graph,
@@ -53,7 +53,7 @@ class PathfinderAI(BaseModel):
     ] = "breadthFirstGraph"
     # This one is only used for depthLimitedGraph and depthLimitedTree
     depth_limit: Optional[int] = Field(None, alias="depthLimit")
-    plan: Optional[List[Move]]
+    plan: Optional[List[Action]]
 
     def update_state_percept(self, percept):
         if self.plan is None:
@@ -108,7 +108,7 @@ class PathfinderAI(BaseModel):
             except NoSolutionError:
                 self.plan = []
 
-    def next_move(self, percept):
+    def next_action(self, percept):
         if self.plan:
             return self.plan[0]
         return "none"

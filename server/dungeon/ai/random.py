@@ -8,9 +8,9 @@ class RandomAI(BaseModel):
     kind: Literal["random"]
     seed: int
 
-    def next_move(self, percept):
+    def next_action(self, percept):
         generator = random.Random(self.seed)
-        move = generator.choice(["move_up", "move_down",
-                                 "move_left", "move_right"])
+        action = generator.choice(["move_up", "move_down",
+                                   "move_left", "move_right"])
         self.seed = hash(generator.getstate())
-        return move
+        return action

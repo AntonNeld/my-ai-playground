@@ -139,7 +139,7 @@ async function takeManualAction(action) {
     await fetch(`/api/rooms/${roomId}/entities/${highlighted}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ai: { kind: "singular", move: action }, ...rest }),
+      body: JSON.stringify({ ai: { kind: "singular", action }, ...rest }),
     });
     await fetch(`/api/rooms/${roomId}/step`, { method: "POST" });
     const newResponse = await fetch(

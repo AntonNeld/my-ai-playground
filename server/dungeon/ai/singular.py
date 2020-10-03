@@ -1,12 +1,12 @@
 from pydantic import BaseModel
 from typing_extensions import Literal
 
-from dungeon.consts import Move
+from dungeon.consts import Action
 
 
 class SingularAI(BaseModel):
     kind: Literal["singular"]
-    move: Move
+    action: Action
 
-    def next_move(self, percept):
-        return self.move
+    def next_action(self, percept):
+        return self.action

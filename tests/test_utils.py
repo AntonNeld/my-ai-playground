@@ -31,7 +31,7 @@ definitions:
   p:
     ai:
       kind: "singular"
-      move: "move_up"
+      action: "move_up"
     actions:
       move_up: {}
       move_down: {}
@@ -46,7 +46,7 @@ room: |-
         },
         "ai": {
             "kind": "singular",
-            "move": "move_up"
+            "action": "move_up"
         },
         "actions": {
             "move_up": {},

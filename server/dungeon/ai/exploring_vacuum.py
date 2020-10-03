@@ -3,7 +3,7 @@ from typing import Tuple, Dict
 from pydantic import BaseModel, Field
 from typing_extensions import Literal
 
-from dungeon.consts import Move
+from dungeon.consts import Action
 from .problems.pathfinding import PathfindingProblem, get_heuristic
 from .search import a_star_graph, NoSolutionError
 
@@ -13,7 +13,7 @@ class ExploringVacuumAI(BaseModel):
     kind: Literal["exploringVacuum"]
     passable: Dict[str, bool] = {}
     position: Tuple[int, int] = (0, 0)
-    last_move: Move = Field("none", alias="lastMove")
+    last_move: Action = Field("none", alias="lastMove")
 
     def update_state_percept(self, percept):
         x = percept["position"]["x"]
@@ -30,7 +30,7 @@ class ExploringVacuumAI(BaseModel):
         elif self.last_move == "move_right":
             self.passable[str((x+1, y))] = False
 
-    def next_move(self, percept):
+    def next_action(self, percept):
         if {"x": 0, "y": 0, "looks_like": "dirt"} in percept["entities"]:
             return "pick_up"
 

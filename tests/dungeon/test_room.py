@@ -4,17 +4,17 @@ from test_utils import room_from_yaml
 from dungeon.entity import Entity
 
 
-@pytest.mark.parametrize("move,x,y",
+@pytest.mark.parametrize("action,x,y",
                          [("move_up", 0, 1), ("move_down", 0, -1),
                           ("move_left", -1, 0), ("move_right", 1, 0)])
-def test_action_move(move, x, y):
+def test_action_move(action, x, y):
     room = room_from_yaml(f"""
 templateType: "visual"
 definitions:
   p:
     ai:
       kind: "singular"
-      move: "{move}"
+      action: "{action}"
     actions:
       move_up: {{}}
       move_down: {{}}
@@ -37,7 +37,7 @@ definitions:
     looksLike: "player"
     ai:
       kind: "singular"
-      move: "move_right"
+      action: "move_right"
     actions:
       move_right: {}
   "#":
@@ -58,7 +58,7 @@ definitions:
     looksLike: "player"
     ai:
       kind: "singular"
-      move: "move_right"
+      action: "move_right"
     actions:
       move_right: {}
   "~":
@@ -84,7 +84,7 @@ definitions:
     looksLike: "player"
     ai:
       kind: "singular"
-      move: "move_right"
+      action: "move_right"
     pickupper: {}
     actions:
       move_right: {}
@@ -109,7 +109,7 @@ definitions:
     looksLike: "player"
     ai:
       kind: "singular"
-      move: "move_right"
+      action: "move_right"
     pickupper:
       inventoryLimit: 1
     actions:
@@ -139,7 +139,7 @@ definitions:
     looksLike: "player"
     ai:
       kind: "singular"
-      move: "move_right"
+      action: "move_right"
     pickupper:
       mode: "action"
     actions:
@@ -154,7 +154,7 @@ room: |-
 
     room.step()
     assert len(room.get_entities()) == 2
-    room.get_entities(looks_like="player")[0].ai.move = "pick_up"
+    room.get_entities(looks_like="player")[0].ai.action = "pick_up"
     room.step()
     assert len(room.get_entities()) == 1
     assert room.get_entities()[0].pickupper.inventory == [
@@ -169,7 +169,7 @@ definitions:
     looksLike: "player"
     ai:
       kind: "singular"
-      move: "move_right"
+      action: "move_right"
     score: 0
     pickupper: {}
     actions:
@@ -195,7 +195,7 @@ definitions:
     looksLike: "player"
     ai:
       kind: "singular"
-      move: "move_right"
+      action: "move_right"
     pickupper: {}
     actions:
       move_right: {}
@@ -220,7 +220,7 @@ definitions:
     looksLike: "player"
     ai:
       kind: "singular"
-      move: "move_right"
+      action: "move_right"
     pickupper: {}
     actions:
       move_right: {}
@@ -244,7 +244,7 @@ definitions:
     looksLike: "player"
     ai:
       kind: "singular"
-      move: "move_right"
+      action: "move_right"
     pickupper: {}
     actions:
       move_right: {}
@@ -372,7 +372,7 @@ definitions:
     label: "player"
     ai:
       kind: "singular"
-      move: "move_right"
+      action: "move_right"
     actions:
       move_right:
         cost: 1
