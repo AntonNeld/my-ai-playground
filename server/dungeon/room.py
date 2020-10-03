@@ -8,6 +8,9 @@ from dungeon.entity import Entity, Position
 from profiling import time_profiling, memory_profiling
 from .consts import DoNothing
 
+# Initialize this once instead of in each step
+doNothing = DoNothing()
+
 
 class Room(BaseModel):
     steps: int = 0
@@ -154,11 +157,11 @@ class Room(BaseModel):
                         if do_memory_profiling:
                             memory_profiling.unset_context(entity.label)
                     else:
-                        action = DoNothing()
+                        action = doNothing
                     # Don't perform actions we're not allowed to
                     if (entity.actions is None
                             or action.action_type not in entity.actions):
-                        action = DoNothing()
+                        action = doNothing
                     else:
                         action_type = action.action_type
                         if (entity.actions[action_type].cost is not None
