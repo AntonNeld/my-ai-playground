@@ -3,7 +3,7 @@ from typing import Tuple, Dict
 from pydantic import BaseModel, Field
 from typing_extensions import Literal
 
-from dungeon.consts import Action, PickUp, DoNothing
+from dungeon.consts import Action, PickUp, DoNothing, Move
 from .problems.pathfinding import PathfindingProblem, get_heuristic
 from .search import a_star_graph, NoSolutionError
 
@@ -50,15 +50,13 @@ class ExploringVacuumAI(BaseModel):
                 obstructions.add((x, y))
         if not targets:
             return DoNothing()
-        print("yess")
         my_x = percept["position"]["x"]
         my_y = percept["position"]["y"]
         problem = PathfindingProblem((my_x, my_y), targets, obstructions, [])
         try:
             plan = a_star_graph(problem, get_heuristic(problem))
-            return plan[0]
+            return Move(direction=plan[0])
         except NoSolutionError:
-            print("noo")
             return DoNothing()
 
     def update_state_action(self, action):

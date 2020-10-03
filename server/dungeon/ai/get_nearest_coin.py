@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 from typing_extensions import Literal
 
-from dungeon.consts import PickUp, DoNothing
+from dungeon.consts import PickUp, DoNothing, Move
 from .search import a_star_graph, NoSolutionError
 from .problems.pathfinding import PathfindingProblem, get_heuristic
 
@@ -24,6 +24,6 @@ class GetNearestCoinAI(BaseModel):
         problem = PathfindingProblem((0, 0), coins, walls, [])
         try:
             plan = a_star_graph(problem, get_heuristic(problem))
-            return plan[0]
+            return Move(direction=plan[0])
         except NoSolutionError:
             return DoNothing()

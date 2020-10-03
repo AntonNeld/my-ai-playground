@@ -1,4 +1,3 @@
-from dungeon.consts import Move
 
 
 class PathfindingProblem:
@@ -17,25 +16,25 @@ class PathfindingProblem:
         x = state[0]
         y = state[1]
         if (x, y+1) not in self.obstacles:
-            actions.append(Move(direction="up"))
+            actions.append("up")
         if (x, y-1) not in self.obstacles:
-            actions.append(Move(direction="down"))
+            actions.append("down")
         if (x+1, y) not in self.obstacles:
-            actions.append(Move(direction="right"))
+            actions.append("right")
         if (x-1, y) not in self.obstacles:
-            actions.append(Move(direction="left"))
+            actions.append("left")
         return actions
 
     def result(self, state, action):
         x = state[0]
         y = state[1]
-        if action.direction == "up":
+        if action == "up":
             return (x, y+1)
-        if action.direction == "down":
+        elif action == "down":
             return (x, y-1)
-        if action.direction == "right":
+        elif action == "right":
             return (x+1, y)
-        if action.direction == "left":
+        elif action == "left":
             return (x-1, y)
         return (x, y)
 
