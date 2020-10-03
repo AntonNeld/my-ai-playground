@@ -4,6 +4,7 @@ from pydantic import BaseModel, Field
 from typing_extensions import Literal
 
 from dungeon.consts import LooksLike, Move
+from .problems.pathfinding import PathfindingProblem, get_heuristic
 from dungeon.ai.lib.search import (
     a_star_graph,
     a_star_tree,
@@ -24,60 +25,6 @@ from dungeon.ai.lib.search import (
     uniform_cost_tree,
     NoSolutionError
 )
-
-
-class PathfindingProblem:
-
-    def __init__(self, start, goal, obstacles, penalties):
-        self.start = start
-        self.goal = goal
-        self.obstacles = obstacles
-        self.penalties = penalties
-
-    def initial_state(self):
-        return self.start
-
-    def actions(self, state):
-        actions = []
-        x = state[0]
-        y = state[1]
-        if (x, y+1) not in self.obstacles:
-            actions.append("move_up")
-        if (x, y-1) not in self.obstacles:
-            actions.append("move_down")
-        if (x+1, y) not in self.obstacles:
-            actions.append("move_right")
-        if (x-1, y) not in self.obstacles:
-            actions.append("move_left")
-        return actions
-
-    def result(self, state, action):
-        x = state[0]
-        y = state[1]
-        if action == "move_up":
-            return (x, y+1)
-        if action == "move_down":
-            return (x, y-1)
-        if action == "move_right":
-            return (x+1, y)
-        if action == "move_left":
-            return (x-1, y)
-        return (x, y)
-
-    def goal_test(self, state):
-        return state == self.goal
-
-    def step_cost(self, state, action, result):
-        if result in self.penalties:
-            return 1 + self.penalties[result]
-        return 1
-
-
-def get_heuristic(problem):
-    def heuristic(node):
-        return (abs(problem.goal[0] - node.state[0])
-                + abs(problem.goal[1] - node.state[1]))
-    return heuristic
 
 
 class PathfinderAI(BaseModel):
@@ -119,7 +66,7 @@ class PathfinderAI(BaseModel):
             penalties = {(e["x"], e["y"]): self.penalties[e["looks_like"]]
                          for e in percept["entities"]
                          if e["looks_like"] in self.penalties}
-            problem = PathfindingProblem((0, 0), goal, obstacles, penalties)
+            problem = PathfindingProblem((0, 0), [goal], obstacles, penalties)
             try:
                 if self.algorithm == "aStarGraph":
                     self.plan = a_star_graph(problem, get_heuristic(problem))
