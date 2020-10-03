@@ -38,10 +38,10 @@ TESTS = [
             "unknown2Random:vacuum": 802,
             "unknown3Random:vacuum": 853,
             "unknownPoorRandom:vacuum": 600,
-            "unknown1Exploring:vacuum": 851,
-            "unknown2Exploring:vacuum": 870,
-            "unknown3Exploring:vacuum": 871,
-            "unknownPoorExploring:vacuum": 844,
+            "unknown1Exploring:vacuum": 855,
+            "unknown2Exploring:vacuum": 860,
+            "unknown3Exploring:vacuum": 862,
+            "unknownPoorExploring:vacuum": 855,
         }
     },
     {

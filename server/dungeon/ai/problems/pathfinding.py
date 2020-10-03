@@ -49,5 +49,7 @@ def get_heuristic(problem):
     def heuristic(node):
         distances = [abs(goal[0] - node.state[0]) +
                      abs(goal[1] - node.state[1]) for goal in problem.goals]
-        return min(distances)
+        if distances:
+            return min(distances)
+        return 0
     return heuristic

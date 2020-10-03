@@ -4,7 +4,8 @@ from pydantic import BaseModel, Field
 from typing_extensions import Literal
 
 from dungeon.consts import Move
-from dungeon.ai.lib.pathfinding import shortest_breadth_first
+from .problems.pathfinding import PathfindingProblem, get_heuristic
+from .search import a_star_graph, NoSolutionError
 
 
 class ExploringVacuumAI(BaseModel):
@@ -46,10 +47,17 @@ class ExploringVacuumAI(BaseModel):
                         targets.add(pos)
             else:
                 obstructions.add((x, y))
+        if not targets:
+            return "none"
 
         my_x = percept["position"]["x"]
         my_y = percept["position"]["y"]
-        return shortest_breadth_first((my_x, my_y), targets, obstructions)[0]
+        problem = PathfindingProblem((my_x, my_y), targets, obstructions, [])
+        try:
+            plan = a_star_graph(problem, get_heuristic(problem))
+            return plan[0]
+        except NoSolutionError:
+            return "none"
 
     def update_state_action(self, action):
         self.last_move = action

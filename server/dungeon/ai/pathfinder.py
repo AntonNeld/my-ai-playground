@@ -5,7 +5,7 @@ from typing_extensions import Literal
 
 from dungeon.consts import LooksLike, Move
 from .problems.pathfinding import PathfindingProblem, get_heuristic
-from dungeon.ai.lib.search import (
+from .search import (
     a_star_graph,
     a_star_tree,
     breadth_first_graph,

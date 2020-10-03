@@ -1,8 +1,8 @@
 from pydantic import BaseModel, Field
 from typing_extensions import Literal
 
-from dungeon.ai.lib.perception import get_coordinates
-from dungeon.ai.lib.pathfinding import shortest_breadth_first
+from .search import a_star_graph, NoSolutionError
+from .problems.pathfinding import PathfindingProblem, get_heuristic
 
 
 class GetNearestCoinAI(BaseModel):
@@ -14,8 +14,15 @@ class GetNearestCoinAI(BaseModel):
                 in percept["entities"]):
             return "pick_up"
 
-        walls = get_coordinates(percept["entities"], "wall")
-        coins = get_coordinates(percept["entities"], "coin")
-        plan = shortest_breadth_first((0, 0), coins, walls)
-
-        return plan[0]
+        walls = [(e["x"], e["y"]) for e in percept["entities"]
+                 if e["looks_like"] == "wall"]
+        coins = [(e["x"], e["y"]) for e in percept["entities"]
+                 if e["looks_like"] == "coin"]
+        if not coins:
+            return "none"
+        problem = PathfindingProblem((0, 0), coins, walls, [])
+        try:
+            plan = a_star_graph(problem, get_heuristic(problem))
+            return plan[0]
+        except NoSolutionError:
+            return "none"
