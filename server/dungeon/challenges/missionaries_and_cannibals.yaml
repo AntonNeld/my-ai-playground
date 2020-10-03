@@ -58,6 +58,7 @@ template:
         kind: "item"
         providesTags:
           - "crewed"
+      vulnerable: {}
       tags:
         - "person"
     c:
@@ -71,7 +72,7 @@ template:
         - "person"
       actions:
         move: {}
-        # TODO: Kill
+        attack: {}
     ".":
       looksLike: "dirt"
       tags:

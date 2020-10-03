@@ -56,6 +56,10 @@ class BlocksMovement(BaseModel):
     passable_for_tags: List[str] = Field([], alias="passableForTags")
 
 
+class Vulnerable(BaseModel):
+    pass
+
+
 class Entity(BaseModel):
     position: Optional[Position]
     ai: Optional[AI]
@@ -69,6 +73,7 @@ class Entity(BaseModel):
     looks_like: Optional[LooksLike] = Field(None, alias="looksLike")
     tags: Optional[List[str]]
     label: Optional[str]
+    vulnerable: Optional[Vulnerable]
     count_tags_score: Optional[CountTagsScore] = Field(
         None, alias="countTagsScore")
     actions: Optional[Dict[str, ActionDetails]]

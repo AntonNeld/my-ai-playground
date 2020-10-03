@@ -32,4 +32,10 @@ class DoNothing(BaseModel):
     action_type: Literal["none"] = Field("none", alias="actionType")
 
 
-Action = Union[Move, PickUp, Drop, DoNothing]
+class Attack(BaseModel):
+    action_type: Literal["attack"] = Field("attack", alias="actionType")
+    direction: Union[Literal["up"], Literal["down"],
+                     Literal["left"], Literal["right"]]
+
+
+Action = Union[Move, PickUp, Drop, Attack, DoNothing]

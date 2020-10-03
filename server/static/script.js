@@ -247,6 +247,18 @@ document.addEventListener("keydown", (event) => {
     case "2":
       takeManualAction({ actionType: "drop", index: 1 });
       break;
+    case "j":
+      takeManualAction({ actionType: "attack", direction: "left" });
+      break;
+    case "l":
+      takeManualAction({ actionType: "attack", direction: "right" });
+      break;
+    case "k":
+      takeManualAction({ actionType: "attack", direction: "down" });
+      break;
+    case "i":
+      takeManualAction({ actionType: "attack", direction: "up" });
+      break;
     case "a":
       toggleAutoStep();
       break;

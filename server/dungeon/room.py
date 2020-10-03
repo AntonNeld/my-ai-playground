@@ -247,4 +247,23 @@ class Room(BaseModel):
                             self.add_entity(dropped_entity)
                         except IndexError:
                             pass
+                    if action.action_type == "attack":
+                        dx = dy = 0
+                        if action.direction == "up":
+                            dy = 1
+                        elif action.direction == "down":
+                            dy = -1
+                        elif action.direction == "left":
+                            dx = -1
+                        elif action.direction == "right":
+                            dx = 1
+
+                        target_x = entity.position.x + dx
+                        target_y = entity.position.y + dy
+
+                        targets = self.get_entities_at(target_x, target_y)
+                        for target in targets:
+                            if target.vulnerable is not None:
+                                self.remove_entity(target)
+
             self.steps += 1
