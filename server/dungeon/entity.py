@@ -52,13 +52,17 @@ class ActionDetails(BaseModel):
     cost: Optional[int]
 
 
+class BlocksMovement(BaseModel):
+    passable_for_tags: List[str] = Field([], alias="passableForTags")
+
+
 class Entity(BaseModel):
     position: Optional[Position]
     ai: Optional[AI]
     perception: Optional[Perception]
     score: Optional[int]
     scoring: Optional[Scoring]
-    blocks_movement: Optional[Literal[True]] = Field(
+    blocks_movement: Optional[BlocksMovement] = Field(
         None, alias="blocksMovement")
     pickupper: Optional[Pickupper]
     pickup: Optional[Pickup]

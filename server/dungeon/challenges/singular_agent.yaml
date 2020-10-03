@@ -23,7 +23,7 @@ template:
         score: 1
     "#":
       looksLike: "wall"
-      blocksMovement: true
+      blocksMovement: {}
   room: |-
     ################
     #     c        #

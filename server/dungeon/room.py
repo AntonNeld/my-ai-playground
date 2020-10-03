@@ -181,7 +181,10 @@ class Room(BaseModel):
                             e for e in self.get_entities_at(new_x, new_y)
                             if e is not entity
                         ]
-                        if not any(map(lambda e: e.blocks_movement is True,
+                        if not any(map(lambda e: e.blocks_movement is not None
+                                       and not set(entity.get_tags()) & set(
+                                           e.blocks_movement.passable_for_tags
+                                       ),
                                        colliding_entities)):
                             self.move_entity(entity, new_x, new_y)
 

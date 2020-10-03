@@ -24,10 +24,12 @@ template:
   definitions:
     "#":
       looksLike: "wall"
-      blocksMovement: true
+      blocksMovement: {}
     "~":
       looksLike: "water"
-      # TODO: Blocks movement if no "crewed" tag
+      blocksMovement:
+        passableForTags:
+          - "crewed"
     b:
       label: "boat"
       looksLike: "player"

@@ -31,7 +31,7 @@ template:
           cost: 1
     "#":
       looksLike: "wall"
-      blocksMovement: true
+      blocksMovement: {}
     c:
       looksLike: "coin"
       pickup:

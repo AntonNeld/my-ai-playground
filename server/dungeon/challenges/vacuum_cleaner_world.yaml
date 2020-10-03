@@ -135,7 +135,7 @@ template:
           - "dirt"
     "#":
       looksLike: "wall"
-      blocksMovement: true
+      blocksMovement: {}
     ".":
       countTagsScore:
         addTo: "vacuum"

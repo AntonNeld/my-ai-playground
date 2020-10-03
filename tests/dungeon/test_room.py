@@ -41,13 +41,39 @@ definitions:
     actions:
       move_right: {}
   "#":
-    blocksMovement: true
+    blocksMovement: {}
 room: |-
   p#
 """)
 
     room.step()
     assert room.get_entities(looks_like="player")[0].position.x == 0
+
+
+def test_blocks_movement_except_tags():
+    room = room_from_yaml("""
+templateType: "visual"
+definitions:
+  p:
+    looksLike: "player"
+    ai:
+      kind: "singular"
+      move: "move_right"
+    actions:
+      move_right: {}
+  "~":
+    blocksMovement:
+      passableForTags:
+        - "pass"
+room: |-
+  p~
+""")
+
+    room.step()
+    assert room.get_entities(looks_like="player")[0].position.x == 0
+    room.get_entities(looks_like="player")[0].tags = ["pass"]
+    room.step()
+    assert room.get_entities(looks_like="player")[0].position.x == 1
 
 
 def test_pickup():
@@ -352,7 +378,7 @@ definitions:
         cost: 1
     score: 0
   "#":
-    blocksMovement: true
+    blocksMovement: {}
 room: |-
   p#
 """)

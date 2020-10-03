@@ -8,7 +8,7 @@ def template():
     return CaveGenerationTemplate(**{
         "templateType": "caveGeneration",
         "definitions": {
-            "#": {"looksLike": "wall", "blocksMovement": True},
+            "#": {"looksLike": "wall", "blocksMovement": {}},
             "p": {"looksLike": "player"},
             "c": {"looksLike": "coin"},
         },
@@ -57,7 +57,7 @@ def test_correct_amount_of_stuff(template):
 
 def test_template_not_modified_by_room(template):
     room = template.create_room()
-    wall_entity = room.get_entities(blocks_movement=True)[0]
+    wall_entity = room.get_entities(looks_like="wall")[0]
     wall_entity.looks_like = "coin"
     player_entity = room.get_entities(looks_like="player")[0]
     player_entity.looks_like = "coin"
