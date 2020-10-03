@@ -75,6 +75,36 @@ room: |-
         Entity(**{"pickup": {"kind": "item"}})]
 
 
+def test_inventory_limit():
+    room = room_from_yaml("""
+templateType: "visual"
+definitions:
+  p:
+    looksLike: "player"
+    ai:
+      kind: "singular"
+      move: "move_right"
+    pickupper:
+      inventoryLimit: 1
+    actions:
+      move_right: {}
+  c:
+    pickup:
+      kind: "item"
+room: |-
+  pcc
+""")
+
+    room.step()
+    assert len(room.get_entities()) == 2
+    assert room.get_entities(looks_like="player")[0].pickupper.inventory == [
+        Entity(**{"pickup": {"kind": "item"}})]
+    room.step()
+    assert len(room.get_entities()) == 2
+    assert room.get_entities(looks_like="player")[0].pickupper.inventory == [
+        Entity(**{"pickup": {"kind": "item"}})]
+
+
 def test_pickup_action():
     room = room_from_yaml("""
 templateType: "visual"

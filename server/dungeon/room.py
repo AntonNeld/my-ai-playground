@@ -213,15 +213,17 @@ class Room(BaseModel):
                             if e.pickup is not None
                         ]
                         for pickup in pickups:
-                            self.remove_entity(pickup)
                             kind = pickup.pickup.kind
-                            if kind == "item":
+                            if (kind == "item"
+                                    and not entity.pickupper.full_inventory()):
+                                self.remove_entity(pickup)
                                 pickup.position = None
                                 entity.pickupper.inventory.append(
                                     pickup)
                             elif kind == "vanish":
-                                pass
+                                self.remove_entity(pickup)
                             elif kind == "addScore":
+                                self.remove_entity(pickup)
                                 added_score = pickup.pickup.score
                                 if entity.score is not None:
                                     entity.score += added_score

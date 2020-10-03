@@ -28,6 +28,12 @@ Pickup = Union[ItemPickup, ScorePickup, VanishPickup]
 class Pickupper(BaseModel):
     mode: Union[Literal["auto"], Literal["action"]] = "auto"
     inventory: List[Entity] = []
+    inventory_limit: Optional[int] = Field(None, alias="inventoryLimit")
+
+    def full_inventory(self):
+        if self.inventory_limit is None:
+            return False
+        return len(self.inventory) >= self.inventory_limit
 
 
 class Perception(BaseModel):

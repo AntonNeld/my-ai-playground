@@ -33,7 +33,7 @@ template:
       looksLike: "player"
       pickupper:
         mode: "action"
-        # TODO: Inventory limit
+        inventoryLimit: 2
       score: 0
       scoring:
         kind: "tileTags"
