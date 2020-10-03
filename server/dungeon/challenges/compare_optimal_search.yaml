@@ -1,0 +1,56 @@
+# This challenge compares the characteristics of optimal search algorithms
+# by pathfinding to a specific location
+variants:
+  "aStarGraph":
+    "definitions.p.ai.algorithm": "aStarGraph"
+  "uniformCostGraph":
+    "definitions.p.ai.algorithm": "uniformCostGraph"
+template:
+  templateType: "caveGeneration"
+  definitions:
+    p:
+      label: "player"
+      looksLike: "player"
+      pickupper: {}
+      score: 0
+      ai:
+        kind: "pathfinder"
+        obstacles: ["wall"]
+        penalties:
+          evilCoin: 100
+        goal: "coin"
+      perception: {}
+      actions:
+        move_up:
+          cost: 1
+        move_down:
+          cost: 1
+        move_left:
+          cost: 1
+        move_right:
+          cost: 1
+    "#":
+      looksLike: "wall"
+      blocksMovement: true
+    c:
+      looksLike: "coin"
+      pickup:
+        kind: "addScore"
+        score: 1000
+    e:
+      looksLike: "evilCoin"
+      pickup:
+        kind: "addScore"
+        score: -100
+  wall: "#"
+  seed: 1232123
+  width: 50
+  height: 50
+  bypassNeighbourChance: 0.2
+  stuff:
+    p:
+      amount: 1
+    c:
+      amount: 1
+    e:
+      amount: 100

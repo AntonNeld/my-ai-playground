@@ -67,6 +67,14 @@ TESTS = [
             "uniformCostTree:player": 0
         }
     },
+    {
+        "challenge": "compare_optimal_search",
+        "duration": 50,
+        "scores": {
+            "aStarGraph:player": 951,
+            "uniformCostGraph:player": 951
+        }
+    }
 ]
 
 root_dir = Path(__file__).parent.parent.parent.parent

@@ -20,7 +20,7 @@ class CaveGenerationTemplate(BaseModel):
     width: int
     height: int
     wall: str
-    bypass_neighbour_chance: float = 0.1
+    bypass_neighbour_chance: float = Field(0.1, alias="bypassNeighbourChance")
     stuff: Dict[str, PlacementDetails]
 
     def create_room(self):
