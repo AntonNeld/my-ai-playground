@@ -59,7 +59,8 @@ template:
       looksLike: "coin"
       pickup:
         kind: "item"
-        # TODO: Provides tags
+        providesTags:
+          - "crewed"
       tags:
         - "person"
     c:
@@ -67,7 +68,8 @@ template:
       # TODO: ai
       pickup:
         kind: "item"
-        # TODO: Provides tags
+        providesTags:
+          - "crewed"
       tags:
         - "person"
       actions:

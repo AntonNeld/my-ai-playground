@@ -30,6 +30,6 @@ class TileTagsScoring(BaseModel):
 
 def tag_in_entities(tag, entities):
     for entity in entities:
-        if entity.tags is not None and tag in entity.tags:
+        if tag in entity.get_tags():
             return True
     return False

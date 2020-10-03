@@ -210,6 +210,36 @@ room: |-
     assert room.get_entities()[0].pickupper.inventory == []
 
 
+def test_item_provides_tags():
+    room = room_from_yaml("""
+templateType: "visual"
+definitions:
+  p:
+    looksLike: "player"
+    ai:
+      kind: "singular"
+      move: "move_right"
+    pickupper: {}
+    actions:
+      move_right: {}
+    tags:
+      - "tagZero"
+  c:
+    pickup:
+      kind: "item"
+      providesTags:
+        - "tagOne"
+        - "tagTwo"
+room: |-
+  pc
+""")
+    room.step()
+    tags = room.get_entities(looks_like="player")[0].get_tags()
+    assert "tagZero" in tags
+    assert "tagOne" in tags
+    assert "tagTwo" in tags
+
+
 def test_get_view():
     room = room_from_yaml("""
 templateType: "visual"

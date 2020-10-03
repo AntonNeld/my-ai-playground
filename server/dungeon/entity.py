@@ -16,6 +16,7 @@ class ScorePickup(BaseModel):
 
 class ItemPickup(BaseModel):
     kind: Literal["item"]
+    provides_tags: List[str] = Field([], alias="providesTags")
 
 
 class VanishPickup(BaseModel):
@@ -67,6 +68,17 @@ class Entity(BaseModel):
     count_tags_score: Optional[CountTagsScore] = Field(
         None, alias="countTagsScore")
     actions: Optional[Dict[Move, ActionDetails]]
+
+    def get_tags(self):
+        innate_tags = set(self.tags if self.tags is not None else [])
+        item_tags = set()
+
+        if self.pickupper is not None:
+            for item in self.pickupper.inventory:
+                for tag in item.pickup.provides_tags:
+                    item_tags.add(tag)
+
+        return innate_tags | item_tags
 
 
 Pickupper.update_forward_refs()

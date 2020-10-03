@@ -195,10 +195,9 @@ class Room(BaseModel):
                         tags = {
                             tag: 0 for tag in entity.count_tags_score.tags}
                         for overlapping_entity in overlapping_entities:
-                            if overlapping_entity.tags is not None:
-                                for tag in overlapping_entity.tags:
-                                    if tag in tags:
-                                        tags[tag] += 1
+                            for tag in overlapping_entity.get_tags():
+                                if tag in tags:
+                                    tags[tag] += 1
                         if tags == entity.count_tags_score.tags:
                             add_to = self.get_entities(
                                 label=entity.count_tags_score.add_to)[0]
