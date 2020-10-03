@@ -1,0 +1,93 @@
+# The missionaries and cannibals problem, from exercise 3.9.
+# Three missionaries and three cannibals must cross a river.
+# The boat can cross the river with 1 or 2 people at a time.
+# If there are missionaries on a side of the river, they
+# cannot be outnumbered by the cannibals or they will be eaten.
+
+# Under construction.
+# Sketch:
+#    - Player is a boat that can pick up missionaries or cannibals.
+#      It cannot cross the river with an empty inventory.
+#    - Cannibals check how many missionaries and cannibals they can
+#      reach. If there are more cannibals (including itself), they
+#      go to the nearest missionary and kill it.
+#    - Score for the player is calculated by tile tag scoring on the other
+#      side of the river. There is also a move penalty to keep it short.
+#
+# Needed:
+#    - Entity that can only be passed by holding something with a tag
+#    - Drop item
+#    - Killing
+
+template:
+  templateType: "visual"
+  definitions:
+    "#":
+      looksLike: "wall"
+      blocksMovement: true
+    "~":
+      looksLike: "water"
+      # TODO: Blocks movement if no "crewed" tag
+    b:
+      label: "boat"
+      looksLike: "player"
+      pickupper:
+        mode: "action"
+        # TODO: Inventory limit
+      score: 0
+      scoring:
+        kind: "tileTags"
+        # TODO: Score
+        shouldHaveTags:
+          - "person"
+          - "otherShore"
+      # TODO: ai
+      perception: {}
+      actions:
+        move_up:
+          cost: 1
+        move_down:
+          cost: 1
+        move_left:
+          cost: 1
+        move_right:
+          cost: 1
+        pick_up:
+          cost: 1
+        # TODO: Drop
+    m:
+      looksLike: "coin"
+      pickup:
+        kind: "item"
+        # TODO: Provides tags
+      tags:
+        - "person"
+    c:
+      looksLike: "evilCoin"
+      # TODO: ai
+      pickup:
+        kind: "item"
+        # TODO: Provides tags
+      tags:
+        - "person"
+      actions:
+        move_up: {}
+        move_down: {}
+        move_left: {}
+        move_right: {}
+        # TODO: Kill
+    ".":
+      looksLike: "dirt"
+      tags:
+        - "otherShore"
+  room: |-
+    ###############
+    #.............#
+    #.............#
+    #.............#
+    #~~~~~~~~~~~~~#
+    #~~~~~~~~~~~~~#
+    #      b      #
+    # m c m c m c #
+    #             #
+    ###############

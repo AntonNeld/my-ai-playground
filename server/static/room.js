@@ -1,9 +1,11 @@
 const drawOrder = [
   "player",
   "vacuum",
-  "dirt",
+  "evilCoin",
   "coin",
+  "dirt",
   "wall",
+  "water",
   "labelA",
   "labelB",
 ];

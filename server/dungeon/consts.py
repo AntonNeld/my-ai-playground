@@ -9,7 +9,7 @@ Move = Union[Literal["move_up"], Literal["move_down"],
 
 LooksLike = Union[Literal["player"], Literal["coin"], Literal["evilCoin"],
                   Literal["wall"], Literal["vacuum"], Literal["dirt"],
-                  Literal["labelA"], Literal["labelB"]]
+                  Literal["water"], Literal["labelA"], Literal["labelB"]]
 
 
 class Position(BaseModel):
