@@ -241,6 +241,12 @@ document.addEventListener("keydown", (event) => {
     case "Control":
       takeManualAction({ actionType: "pick_up" });
       break;
+    case "1":
+      takeManualAction({ actionType: "drop", index: 0 });
+      break;
+    case "2":
+      takeManualAction({ actionType: "drop", index: 1 });
+      break;
     case "a":
       toggleAutoStep();
       break;

@@ -50,7 +50,8 @@ template:
           cost: 1
         pick_up:
           cost: 1
-        # TODO: Drop
+        drop:
+          cost: 1
     m:
       looksLike: "coin"
       pickup:

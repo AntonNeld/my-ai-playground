@@ -236,4 +236,15 @@ class Room(BaseModel):
                                 added_score = pickup.pickup.score
                                 if entity.score is not None:
                                     entity.score += added_score
+                    # Drop items (do this after collisions to not immediately
+                    # pick them up again)
+                    if action.action_type == "drop":
+                        try:
+                            dropped_entity = entity.pickupper.inventory.pop(
+                                action.index)
+                            dropped_entity.position = entity.position.copy(
+                                deep=True)
+                            self.add_entity(dropped_entity)
+                        except IndexError:
+                            pass
             self.steps += 1
