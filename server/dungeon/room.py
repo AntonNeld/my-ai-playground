@@ -6,6 +6,7 @@ from pydantic import BaseModel
 from errors import ResourceNotFoundError
 from dungeon.entity import Entity, Position
 from profiling import time_profiling, memory_profiling
+from .consts import DoNothing
 
 
 class Room(BaseModel):
@@ -153,26 +154,29 @@ class Room(BaseModel):
                         if do_memory_profiling:
                             memory_profiling.unset_context(entity.label)
                     else:
-                        action = "none"
+                        action = DoNothing()
                     # Don't perform actions we're not allowed to
-                    if entity.actions is None or action not in entity.actions:
-                        action = "none"
+                    if (entity.actions is None
+                            or action.action_type not in entity.actions):
+                        action = DoNothing()
                     else:
-                        if (entity.actions[action].cost is not None
+                        action_type = action.action_type
+                        if (entity.actions[action_type].cost is not None
                                 and entity.score is not None):
-                            entity.score -= entity.actions[action].cost
+                            entity.score -= entity.actions[action_type].cost
 
                     # Move
                     dx = dy = 0
 
-                    if action == "move_up":
-                        dy = 1
-                    elif action == "move_down":
-                        dy = -1
-                    elif action == "move_left":
-                        dx = -1
-                    elif action == "move_right":
-                        dx = 1
+                    if action.action_type == "move":
+                        if action.direction == "up":
+                            dy = 1
+                        elif action.direction == "down":
+                            dy = -1
+                        elif action.direction == "left":
+                            dx = -1
+                        elif action.direction == "right":
+                            dx = 1
 
                     if dx != 0 or dy != 0:
                         new_x = entity.position.x + dx
@@ -209,7 +213,7 @@ class Room(BaseModel):
                                 add_to.score += score
                     if (entity.pickupper is not None
                             and (entity.pickupper.mode == "auto"
-                                 or action == "pick_up")):
+                                 or action.action_type == "pick_up")):
                         pickups = [
                             e for e in overlapping_entities
                             if e.pickup is not None

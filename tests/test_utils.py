@@ -31,10 +31,11 @@ definitions:
   p:
     ai:
       kind: "singular"
-      action: "move_up"
+      action:
+        actionType: "move"
+        direction: "up"
     actions:
-      move_up: {}
-      move_down: {}
+      move: {}
 room: |-
   p
 """
@@ -46,10 +47,9 @@ room: |-
         },
         "ai": {
             "kind": "singular",
-            "action": "move_up"
+            "action": {"actionType": "move", "direction": "up"}
         },
         "actions": {
-            "move_up": {},
-            "move_down": {}
+            "move": {}
         }
     })]

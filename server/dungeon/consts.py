@@ -1,11 +1,7 @@
 from typing import Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing_extensions import Literal
-
-Action = Union[Literal["move_up"], Literal["move_down"],
-               Literal["move_left"], Literal["move_right"],
-               Literal["pick_up"], Literal["none"]]
 
 LooksLike = Union[Literal["player"], Literal["coin"], Literal["evilCoin"],
                   Literal["wall"], Literal["vacuum"], Literal["dirt"],
@@ -15,3 +11,20 @@ LooksLike = Union[Literal["player"], Literal["coin"], Literal["evilCoin"],
 class Position(BaseModel):
     x: int
     y: int
+
+
+class Move(BaseModel):
+    action_type: Literal["move"] = Field("move", alias="actionType")
+    direction: Union[Literal["up"], Literal["down"],
+                     Literal["left"], Literal["right"]]
+
+
+class PickUp(BaseModel):
+    action_type: Literal["pick_up"] = Field("pick_up", alias="actionType")
+
+
+class DoNothing(BaseModel):
+    action_type: Literal["none"] = Field("none", alias="actionType")
+
+
+Action = Union[Move, PickUp, DoNothing]

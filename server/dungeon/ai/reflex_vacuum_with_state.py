@@ -1,6 +1,8 @@
 from pydantic import BaseModel
 from typing_extensions import Literal
 
+from dungeon.consts import Move, PickUp, DoNothing
+
 
 class ReflexVacuumWithStateAI(BaseModel):
     # Reflex vacuum cleaner agent for exercise 2.10b
@@ -9,13 +11,13 @@ class ReflexVacuumWithStateAI(BaseModel):
 
     def next_action(self, percept):
         if {"x": 0, "y": 0, "looks_like": "dirt"} in percept["entities"]:
-            return "pick_up"
+            return PickUp()
         if percept["position"]["x"] == 1 and not self.moved:
-            return "move_right"
+            return Move(direction="right")
         if percept["position"]["x"] == 2 and not self.moved:
-            return "move_left"
-        return "none"
+            return Move(direction="left")
+        return DoNothing()
 
     def update_state_action(self, action):
-        if action in ["move_left", "move_right"]:
+        if action.action_type == "move":
             self.moved = True

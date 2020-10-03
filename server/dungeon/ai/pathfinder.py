@@ -3,7 +3,7 @@ from typing import Dict, List, Union, Optional
 from pydantic import BaseModel, Field
 from typing_extensions import Literal
 
-from dungeon.consts import LooksLike, Action
+from dungeon.consts import LooksLike, Action, DoNothing
 from .problems.pathfinding import PathfindingProblem, get_heuristic
 from .search import (
     a_star_graph,
@@ -111,8 +111,8 @@ class PathfinderAI(BaseModel):
     def next_action(self, percept):
         if self.plan:
             return self.plan[0]
-        return "none"
+        return DoNothing()
 
     def update_state_action(self, action):
-        if action != "none":
+        if action.action_type != "none":
             self.plan.pop(0)

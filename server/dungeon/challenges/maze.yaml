@@ -5,10 +5,7 @@ variants:
     "definitions.p.ai.manualPickup": true
     "definitions.p.pickupper.mode": "action"
     "definitions.p.actions":
-      move_up: {}
-      move_down: {}
-      move_left: {}
-      move_right: {}
+      move: {}
       pick_up: {}
   nearsighted:
     "definitions.p.perception.distance": 3
@@ -43,10 +40,7 @@ template:
         kind: "getNearestCoin"
       perception: {}
       actions:
-        move_up: {}
-        move_down: {}
-        move_left: {}
-        move_right: {}
+        move: {}
     q:
       label: "playerTwo"
       looksLike: "player"
@@ -56,10 +50,7 @@ template:
         kind: "getNearestCoin"
       perception: {}
       actions:
-        move_up: {}
-        move_down: {}
-        move_left: {}
-        move_right: {}
+        move: {}
     c:
       looksLike: "coin"
       pickup:

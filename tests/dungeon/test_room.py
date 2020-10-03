@@ -2,24 +2,24 @@ import pytest
 
 from test_utils import room_from_yaml
 from dungeon.entity import Entity
+from dungeon.consts import PickUp
 
 
-@pytest.mark.parametrize("action,x,y",
-                         [("move_up", 0, 1), ("move_down", 0, -1),
-                          ("move_left", -1, 0), ("move_right", 1, 0)])
-def test_action_move(action, x, y):
+@pytest.mark.parametrize("direction,x,y",
+                         [("up", 0, 1), ("down", 0, -1),
+                          ("left", -1, 0), ("right", 1, 0)])
+def test_action_move(direction, x, y):
     room = room_from_yaml(f"""
 templateType: "visual"
 definitions:
   p:
     ai:
       kind: "singular"
-      action: "{action}"
+      action:
+        actionType: "move"
+        direction: "{direction}"
     actions:
-      move_up: {{}}
-      move_down: {{}}
-      move_left: {{}}
-      move_right: {{}}
+      move: {{}}
 room: |-
   p
 """)
@@ -37,9 +37,11 @@ definitions:
     looksLike: "player"
     ai:
       kind: "singular"
-      action: "move_right"
+      action:
+        actionType: "move"
+        direction: "right"
     actions:
-      move_right: {}
+      move: {}
   "#":
     blocksMovement: {}
 room: |-
@@ -58,9 +60,11 @@ definitions:
     looksLike: "player"
     ai:
       kind: "singular"
-      action: "move_right"
+      action:
+        actionType: "move"
+        direction: "right"
     actions:
-      move_right: {}
+      move: {}
   "~":
     blocksMovement:
       passableForTags:
@@ -84,10 +88,12 @@ definitions:
     looksLike: "player"
     ai:
       kind: "singular"
-      action: "move_right"
+      action:
+        actionType: "move"
+        direction: "right"
     pickupper: {}
     actions:
-      move_right: {}
+      move: {}
   c:
     pickup:
       kind: "item"
@@ -109,11 +115,13 @@ definitions:
     looksLike: "player"
     ai:
       kind: "singular"
-      action: "move_right"
+      action:
+        actionType: "move"
+        direction: "right"
     pickupper:
       inventoryLimit: 1
     actions:
-      move_right: {}
+      move: {}
   c:
     pickup:
       kind: "item"
@@ -139,11 +147,13 @@ definitions:
     looksLike: "player"
     ai:
       kind: "singular"
-      action: "move_right"
+      action:
+        actionType: "move"
+        direction: "right"
     pickupper:
       mode: "action"
     actions:
-      move_right: {}
+      move: {}
       pick_up: {}
   c:
     pickup:
@@ -154,7 +164,7 @@ room: |-
 
     room.step()
     assert len(room.get_entities()) == 2
-    room.get_entities(looks_like="player")[0].ai.action = "pick_up"
+    room.get_entities(looks_like="player")[0].ai.action = PickUp()
     room.step()
     assert len(room.get_entities()) == 1
     assert room.get_entities()[0].pickupper.inventory == [
@@ -169,11 +179,13 @@ definitions:
     looksLike: "player"
     ai:
       kind: "singular"
-      action: "move_right"
+      action:
+        actionType: "move"
+        direction: "right"
     score: 0
     pickupper: {}
     actions:
-      move_right: {}
+      move: {}
   c:
     pickup:
       kind: "addScore"
@@ -195,10 +207,12 @@ definitions:
     looksLike: "player"
     ai:
       kind: "singular"
-      action: "move_right"
+      action:
+        actionType: "move"
+        direction: "right"
     pickupper: {}
     actions:
-      move_right: {}
+      move: {}
   c:
     pickup:
       kind: "addScore"
@@ -220,10 +234,12 @@ definitions:
     looksLike: "player"
     ai:
       kind: "singular"
-      action: "move_right"
+      action:
+        actionType: "move"
+        direction: "right"
     pickupper: {}
     actions:
-      move_right: {}
+      move: {}
   c:
     pickup:
       kind: "vanish"
@@ -244,10 +260,12 @@ definitions:
     looksLike: "player"
     ai:
       kind: "singular"
-      action: "move_right"
+      action:
+        actionType: "move"
+        direction: "right"
     pickupper: {}
     actions:
-      move_right: {}
+      move: {}
     tags:
       - "tagZero"
   c:
@@ -372,9 +390,11 @@ definitions:
     label: "player"
     ai:
       kind: "singular"
-      action: "move_right"
+      action:
+        actionType: "move"
+        direction: "right"
     actions:
-      move_right:
+      move:
         cost: 1
     score: 0
   "#":

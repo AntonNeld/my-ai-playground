@@ -6,14 +6,12 @@ variants:
       kind: "reflexVacuumAgent"
   # Exercise 2.10b
   "withMoveCost":
-    "definitions.vacuum.actions.move_left.cost": 1
-    "definitions.vacuum.actions.move_right.cost": 1
+    "definitions.vacuum.actions.move.cost": 1
     "definitions.vacuum.ai":
       kind: "reflexVacuumWithState"
   # Exercise 2.10c
   "withMoveCostBetterSensors":
-    "definitions.vacuum.actions.move_left.cost": 1
-    "definitions.vacuum.actions.move_right.cost": 1
+    "definitions.vacuum.actions.move.cost": 1
     "definitions.vacuum.perception.distance": null
     "definitions.vacuum.ai":
       kind: "reflexVacuumSeeAll"
@@ -152,10 +150,7 @@ template:
         includePosition: true
       score: 0
       actions:
-        move_left: {}
-        move_right: {}
-        move_up: {}
-        move_down: {}
+        move: {}
         pick_up: {}
     v:
       - "d"

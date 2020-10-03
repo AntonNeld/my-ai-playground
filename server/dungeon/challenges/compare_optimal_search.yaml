@@ -21,13 +21,7 @@ template:
         goal: "coin"
       perception: {}
       actions:
-        move_up:
-          cost: 1
-        move_down:
-          cost: 1
-        move_left:
-          cost: 1
-        move_right:
+        move:
           cost: 1
     "#":
       looksLike: "wall"

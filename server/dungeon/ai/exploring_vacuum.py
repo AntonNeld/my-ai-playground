@@ -3,7 +3,7 @@ from typing import Tuple, Dict
 from pydantic import BaseModel, Field
 from typing_extensions import Literal
 
-from dungeon.consts import Action
+from dungeon.consts import Action, PickUp, DoNothing
 from .problems.pathfinding import PathfindingProblem, get_heuristic
 from .search import a_star_graph, NoSolutionError
 
@@ -13,7 +13,7 @@ class ExploringVacuumAI(BaseModel):
     kind: Literal["exploringVacuum"]
     passable: Dict[str, bool] = {}
     position: Tuple[int, int] = (0, 0)
-    last_move: Action = Field("none", alias="lastMove")
+    last_action: Action = Field(DoNothing(), alias="lastMove")
 
     def update_state_percept(self, percept):
         x = percept["position"]["x"]
@@ -21,18 +21,19 @@ class ExploringVacuumAI(BaseModel):
         if self.position != (x, y):
             self.position = (x, y)
             self.passable[str((x, y))] = True
-        elif self.last_move == "move_up":
-            self.passable[str((x, y+1))] = False
-        elif self.last_move == "move_down":
-            self.passable[str((x, y-1))] = False
-        elif self.last_move == "move_left":
-            self.passable[str((x-1, y))] = False
-        elif self.last_move == "move_right":
-            self.passable[str((x+1, y))] = False
+        elif self.last_action.action_type == "move":
+            if self.last_action.direction == "up":
+                self.passable[str((x, y+1))] = False
+            elif self.last_action.direction == "down":
+                self.passable[str((x, y-1))] = False
+            elif self.last_action.direction == "left":
+                self.passable[str((x-1, y))] = False
+            elif self.last_action.direction == "right":
+                self.passable[str((x+1, y))] = False
 
     def next_action(self, percept):
         if {"x": 0, "y": 0, "looks_like": "dirt"} in percept["entities"]:
-            return "pick_up"
+            return PickUp()
 
         targets = set()
         obstructions = set()
@@ -48,8 +49,8 @@ class ExploringVacuumAI(BaseModel):
             else:
                 obstructions.add((x, y))
         if not targets:
-            return "none"
-
+            return DoNothing()
+        print("yess")
         my_x = percept["position"]["x"]
         my_y = percept["position"]["y"]
         problem = PathfindingProblem((my_x, my_y), targets, obstructions, [])
@@ -57,7 +58,8 @@ class ExploringVacuumAI(BaseModel):
             plan = a_star_graph(problem, get_heuristic(problem))
             return plan[0]
         except NoSolutionError:
-            return "none"
+            print("noo")
+            return DoNothing()
 
     def update_state_action(self, action):
-        self.last_move = action
+        self.last_action = action

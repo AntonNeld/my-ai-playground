@@ -227,19 +227,19 @@ document.addEventListener("keydown", (event) => {
       step();
       break;
     case "ArrowLeft":
-      takeManualAction("move_left");
+      takeManualAction({ actionType: "move", direction: "left" });
       break;
     case "ArrowRight":
-      takeManualAction("move_right");
+      takeManualAction({ actionType: "move", direction: "right" });
       break;
     case "ArrowDown":
-      takeManualAction("move_down");
+      takeManualAction({ actionType: "move", direction: "down" });
       break;
     case "ArrowUp":
-      takeManualAction("move_up");
+      takeManualAction({ actionType: "move", direction: "up" });
       break;
     case "Control":
-      takeManualAction("pick_up");
+      takeManualAction({ actionType: "pick_up" });
       break;
     case "a":
       toggleAutoStep();

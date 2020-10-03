@@ -6,7 +6,7 @@ from typing_extensions import Literal
 
 from dungeon.ai import AI
 from dungeon.scoring import Scoring
-from dungeon.consts import Action, LooksLike, Position
+from dungeon.consts import LooksLike, Position
 
 
 class ScorePickup(BaseModel):
@@ -71,7 +71,7 @@ class Entity(BaseModel):
     label: Optional[str]
     count_tags_score: Optional[CountTagsScore] = Field(
         None, alias="countTagsScore")
-    actions: Optional[Dict[Action, ActionDetails]]
+    actions: Optional[Dict[str, ActionDetails]]
 
     def get_tags(self):
         innate_tags = set(self.tags if self.tags is not None else [])

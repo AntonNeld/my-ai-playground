@@ -46,13 +46,7 @@ template:
       # TODO: ai
       perception: {}
       actions:
-        move_up:
-          cost: 1
-        move_down:
-          cost: 1
-        move_left:
-          cost: 1
-        move_right:
+        move:
           cost: 1
         pick_up:
           cost: 1
@@ -75,10 +69,7 @@ template:
       tags:
         - "person"
       actions:
-        move_up: {}
-        move_down: {}
-        move_left: {}
-        move_right: {}
+        move: {}
         # TODO: Kill
     ".":
       looksLike: "dirt"

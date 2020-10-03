@@ -9,13 +9,12 @@ template:
       score: 0
       ai:
         kind: "singular"
-        action: "move_right"
+        action:
+          actionType: "move"
+          direction: "right"
       perception: {}
       actions:
-        move_up: {}
-        move_down: {}
-        move_left: {}
-        move_right: {}
+        move: {}
     c:
       looksLike: "coin"
       pickup:
