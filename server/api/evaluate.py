@@ -4,6 +4,7 @@ from pydantic import BaseModel, Field
 from fastapi import APIRouter
 
 from profiling import time_profiling, memory_profiling
+from util.formatting import format_prefix
 
 
 class EvaluateBody(BaseModel):
@@ -15,12 +16,12 @@ class EvaluateBody(BaseModel):
 
 class EvaluateEntityInfo(BaseModel):
     score: int
-    time: Optional[float]
-    memory: Optional[float]
+    time: Optional[str]
+    memory: Optional[str]
 
 
 class EvaluateResponse(BaseModel):
-    process_time: Optional[float] = Field(None, alias="processTime")
+    process_time: Optional[str] = Field(None, alias="processTime")
     entities: Dict[str, EvaluateEntityInfo]
 
 
@@ -65,13 +66,18 @@ def evaluate_routes(state_keeper):
                         ai_time = time_result["contexts"][entity.label]
                     else:
                         ai_time = 0
-                    response["entities"][label]["time"] = ai_time
+                    response["entities"][label]["time"] = format_prefix(
+                        ai_time, "s")
                 if body.profile_memory:
                     if entity.label in memory_result:
                         ai_memory = memory_result[entity.label]
                     else:
                         ai_memory = 0
-                    response["entities"][label]["memory"] = ai_memory
+                    response["entities"][label]["memory"] = format_prefix(
+                        ai_memory, "B")
+        if body.profile_time:
+            response["processTime"] = format_prefix(
+                response["processTime"], "s")
         return response
 
     return router
