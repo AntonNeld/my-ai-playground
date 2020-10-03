@@ -1,5 +1,6 @@
 from typing import Union
 
+from .cannibal import CannibalAI
 from .get_nearest_coin import GetNearestCoinAI
 from .singular import SingularAI
 from .random import RandomAI
@@ -12,6 +13,6 @@ from .pathfinder import PathfinderAI
 
 AI = Union[SingularAI, GetNearestCoinAI, RandomAI, ReflexVacuumAgentAI,
            ReflexVacuumWithStateAI, ReflexVacuumSeeAllAI, RandomVacuumAI,
-           ExploringVacuumAI, PathfinderAI]
+           CannibalAI, ExploringVacuumAI, PathfinderAI]
 
 __all__ = ("AI",)

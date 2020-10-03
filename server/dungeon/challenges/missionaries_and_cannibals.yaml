@@ -63,7 +63,9 @@ template:
         - "person"
     c:
       looksLike: "evilCoin"
-      # TODO: ai
+      ai:
+        kind: "cannibal"
+      perception: {}
       pickup:
         kind: "item"
         providesTags:
