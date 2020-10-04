@@ -117,6 +117,10 @@ class Room(BaseModel):
         if perceptor.perception.include_position:
             percept["position"] = {
                 "x": perceptor.position.x, "y": perceptor.position.y}
+        if perceptor.pickupper is not None:
+            percept["inventory"] = [
+                e.looks_like for e in perceptor.pickupper.inventory
+            ]
         return percept
 
     def get_entity_score(self, entity):

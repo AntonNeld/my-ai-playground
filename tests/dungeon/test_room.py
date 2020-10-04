@@ -444,6 +444,24 @@ room: |-2
     assert position["y"] == 0
 
 
+def test_get_view_inventory():
+    room = room_from_yaml("""
+templateType: "visual"
+definitions:
+  p:
+    looksLike: "player"
+    perception: {}
+    pickupper:
+      inventory:
+        - looksLike: "coin"
+        - looksLike: "evilCoin"
+room: |-
+  p
+""")
+    perceptor = room.get_entities(looks_like="player")[0]
+    assert room.get_view(perceptor)["inventory"] == ["coin", "evilCoin"]
+
+
 def test_count_tags_score():
     room = room_from_yaml("""
 templateType: "visual"
