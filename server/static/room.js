@@ -4,6 +4,7 @@ const drawOrder = [
   "evilCoin",
   "coin",
   "dirt",
+  "grass",
   "wall",
   "water",
   "labelA",

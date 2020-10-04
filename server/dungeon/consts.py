@@ -5,7 +5,8 @@ from typing_extensions import Literal
 
 LooksLike = Union[Literal["player"], Literal["coin"], Literal["evilCoin"],
                   Literal["wall"], Literal["vacuum"], Literal["dirt"],
-                  Literal["water"], Literal["labelA"], Literal["labelB"]]
+                  Literal["water"], Literal["grass"],
+                  Literal["labelA"], Literal["labelB"]]
 
 
 class Position(BaseModel):

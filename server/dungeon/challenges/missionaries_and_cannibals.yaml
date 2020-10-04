@@ -31,62 +31,67 @@ template:
         passableForTags:
           - "crewed"
     b:
-      label: "boat"
-      looksLike: "player"
-      pickupper:
-        mode: "action"
-        inventoryLimit: 2
-      score: 0
-      scoring:
-        kind: "tileTags"
-        score: 1000
-        shouldHaveTags:
-          - "person"
-          - "otherShore"
-      # TODO: ai
-      perception: {}
-      actions:
-        move:
-          cost: 1
-        pick_up:
-          cost: 1
-        drop:
-          cost: 1
+      - "."
+      - label: "boat"
+        looksLike: "player"
+        pickupper:
+          mode: "action"
+          inventoryLimit: 2
+        score: 0
+        scoring:
+          kind: "tileTags"
+          score: 1000
+          shouldHaveTags:
+            - "person"
+            - "otherShore"
+        # TODO: ai
+        perception: {}
+        actions:
+          move:
+            cost: 1
+          pick_up:
+            cost: 1
+          drop:
+            cost: 1
     m:
-      looksLike: "coin"
-      pickup:
-        kind: "item"
-        providesTags:
-          - "crewed"
-      vulnerable: {}
-      tags:
-        - "person"
+      - "."
+      - looksLike: "coin"
+        pickup:
+          kind: "item"
+          providesTags:
+            - "crewed"
+        vulnerable: {}
+        tags:
+          - "person"
     c:
-      looksLike: "evilCoin"
-      ai:
-        kind: "cannibal"
-      perception: {}
-      pickup:
-        kind: "item"
-        providesTags:
-          - "crewed"
-      tags:
-        - "person"
-      actions:
-        move: {}
-        attack: {}
+      - "."
+      - looksLike: "evilCoin"
+        ai:
+          kind: "cannibal"
+        perception: {}
+        pickup:
+          kind: "item"
+          providesTags:
+            - "crewed"
+        tags:
+          - "person"
+        actions:
+          move: {}
+          attack: {}
     ".":
       looksLike: "dirt"
+    ",":
+      looksLike: "grass"
       tags:
         - "otherShore"
   room: |-
     ###############
-    #.............#
-    #.............#
-    #.............#
+    #,,,,,,,,,,,,,#
+    #,,,,,,,,,,,,,#
+    #,,,,,,,,,,,,,#
     #~~~~~~~~~~~~~#
     #~~~~~~~~~~~~~#
-    #      b      #
-    # m c m c m c #
-    #             #
+    #......b......#
+    #.m.c.m.c.m.c.#
+    #.............#
     ###############
