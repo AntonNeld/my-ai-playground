@@ -74,6 +74,13 @@ TESTS = [
             "aStarGraph:player": 951,
             "uniformCostGraph:player": 951
         }
+    },
+    {
+        "challenge": "missionaries_and_cannibals",
+        "duration": 110,
+        "scores": {
+            "boat": 5893,
+        }
     }
 ]
 

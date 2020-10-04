@@ -4,21 +4,6 @@
 # If there are missionaries on a side of the river, they
 # cannot be outnumbered by the cannibals or they will be eaten.
 
-# Under construction.
-# Sketch:
-#    - Player is a boat that can pick up missionaries or cannibals.
-#      It cannot cross the river with an empty inventory.
-#    - Cannibals check how many missionaries and cannibals they can
-#      reach. If there are more cannibals (including itself), they
-#      go to the nearest missionary and kill it.
-#    - Score for the player is calculated by tile tag scoring on the other
-#      side of the river. There is also a move penalty to keep it short.
-#
-# Needed:
-#    - Entity that can only be passed by holding something with a tag
-#    - Drop item
-#    - Killing
-
 template:
   templateType: "visual"
   definitions:
@@ -44,7 +29,8 @@ template:
           shouldHaveTags:
             - "person"
             - "otherShore"
-        # TODO: ai
+        ai:
+          kind: "missionariesAndCannibals"
         perception: {}
         actions:
           move:
