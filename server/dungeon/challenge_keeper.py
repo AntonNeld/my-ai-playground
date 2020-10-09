@@ -1,6 +1,3 @@
-import json
-import yaml
-from pathlib import Path
 from typing import Dict, Any, Optional
 import uuid
 
@@ -50,14 +47,3 @@ class ChallengeKeeper:
 
     def list_challenges(self):
         return list(self._challenges.keys())
-
-    def load_directory(self, directory):
-        parent_dir = Path(directory)
-        for p in parent_dir.glob("./*.json"):
-            with p.open() as f:
-                challenge = Challenge(**json.load(f))
-                self.add_challenge(challenge, challenge_id=p.stem)
-        for p in parent_dir.glob("./*.yaml"):
-            with p.open() as f:
-                challenge = Challenge(**yaml.safe_load(f))
-                self.add_challenge(challenge, challenge_id=p.stem)
