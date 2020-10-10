@@ -1,5 +1,5 @@
 import uuid
-from typing import Dict, Tuple, List
+from typing import Dict, List
 
 from pydantic import BaseModel
 
@@ -11,6 +11,7 @@ from dungeon.entity import (
 from dungeon.ai import AI
 from profiling import time_profiling, memory_profiling
 from .consts import DoNothing
+from dungeon.position_dict import PositionDict
 
 # Initialize this once instead of in each step
 doNothing = DoNothing()
@@ -38,9 +39,8 @@ class Room(BaseModel):
     steps: int = 0
     # Private fields
     entity_ids: List[str] = []
-    entities_by_location: Dict[Tuple[int, int], str] = {}
     # Components, also private
-    position: Dict[str, Position] = {}
+    position: Dict[str, Position] = PositionDict()
     ai: Dict[str, AI] = {}
     perception: Dict[str, Perception] = {}
     score: Dict[str, int] = {}
@@ -86,38 +86,13 @@ class Room(BaseModel):
             component = getattr(entity, component_name)
             if component is not None:
                 getattr(self, component_name)[entity_id] = component
-        if entity.position is not None:
-            x = entity.position.x
-            y = entity.position.y
-            self._add_entity_to_locations(entity_id, x, y)
         return entity_id
 
     def remove_entity_by_id(self, entity_id):
-        if entity_id in self.position:
-            x = self.position[entity_id].x
-            y = self.position[entity_id].y
-            self._remove_entity_from_locations(entity_id, x, y)
         for component_name in COMPONENTS:
             if entity_id in getattr(self, component_name):
                 del getattr(self, component_name)[entity_id]
         self.entity_ids.remove(entity_id)
-
-    def _add_entity_to_locations(self, entity_id, x, y):
-        if (x, y) not in self.entities_by_location:
-            self.entities_by_location[(x, y)] = []
-        self.entities_by_location[(x, y)].append(entity_id)
-
-    def _remove_entity_from_locations(self, entity_id, x, y):
-        self.entities_by_location[(x, y)].remove(entity_id)
-        if len(self.entities_by_location[(x, y)]) == 0:
-            del self.entities_by_location[(x, y)]
-
-    def move_entity(self, entity_id, x, y):
-        old_x = self.position[entity_id].x
-        old_y = self.position[entity_id].y
-        self._remove_entity_from_locations(entity_id, old_x, old_y)
-        self.position[entity_id] = Position(x=x, y=y)
-        self._add_entity_to_locations(entity_id, x, y)
 
     def list_entities(self):
         return self.entity_ids
@@ -141,11 +116,6 @@ class Room(BaseModel):
         if include_id:
             return filtered
         return [e for i, e in filtered]
-
-    def get_entities_at(self, x, y):
-        if (x, y) in self.entities_by_location:
-            return self.entities_by_location[(x, y)]
-        return []
 
     def get_view(self, perceptor_id):
         perceptor = self.get_entity(perceptor_id)
@@ -257,7 +227,7 @@ class Room(BaseModel):
                         new_y = self.position[entity_id].y + dy
                         colliding_entities = [
                             self.get_entity(e) for e in
-                            self.get_entities_at(new_x, new_y)
+                            self.position.get_entities_at(new_x, new_y)
                             if e is not entity_id
                         ]
                         if not any(
@@ -269,11 +239,12 @@ class Room(BaseModel):
                                     self.get_entity(entity_id).get_tags()
                                 ),
                                 colliding_entities)):
-                            self.move_entity(entity_id, new_x, new_y)
+                            self.position[entity_id] = Position(
+                                x=new_x, y=new_y)
 
                     # Handle colissions
                     overlapping_entities = [
-                        e for e in self.get_entities_at(
+                        e for e in self.position.get_entities_at(
                             self.position[entity_id].x,
                             self.position[entity_id].y
                         )
@@ -348,7 +319,7 @@ class Room(BaseModel):
                         target_y = self.position[entity_id].y + dy
 
                         targets = [(e, self.get_entity(
-                            e)) for e in self.get_entities_at(
+                            e)) for e in self.position.get_entities_at(
                                 target_x, target_y)]
                         for target_id, target in targets:
                             if target.vulnerable is not None:
