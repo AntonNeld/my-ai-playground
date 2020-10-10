@@ -14,23 +14,32 @@ doNothing = DoNothing()
 
 class Room(BaseModel):
     steps: int = 0
-    entities: Dict[str, Entity] = {}
     # Private fields
+    private_entities: Dict[str, Entity] = {}
     entities_by_location: Dict[Tuple[int, int], Entity] = {}
 
-    def dict(self, exclude=None, **kwargs):
-        private_fields = {'entities_by_location'}
-        new_exclude = (exclude | private_fields if exclude is not None
-                       else private_fields)
-        return super().dict(**{'exclude': new_exclude, **kwargs})
+    def __init__(self, entities=None, **kwargs):
+        super().__init__(**kwargs)
+        if entities is not None:
+            for identifier, entity in entities.items():
+                entity_obj = entity if isinstance(
+                    entity, Entity) else Entity(**entity)
+                self.add_entity(entity_obj, entity_id=identifier)
+
+    def dict(self, include=None, **kwargs):
+        public_fields = {"steps"}
+        new_include = (include | public_fields if include is not None
+                       else public_fields)
+        only_public = super().dict(**{"include": new_include, **kwargs})
+        return {**only_public, "entities": self.private_entities}
 
     def add_entity(self, entity, entity_id=None):
         if entity_id is None:
             entity_id = uuid.uuid4().hex
         # Replace the entity if it already exists
-        if entity_id in self.entities:
+        if entity_id in self.private_entities:
             self.remove_entity_by_id(entity_id)
-        self.entities[entity_id] = entity
+        self.private_entities[entity_id] = entity
         if entity.position is not None:
             x = entity.position.x
             y = entity.position.y
@@ -39,20 +48,20 @@ class Room(BaseModel):
 
     def remove_entity(self, entity):
         id_to_remove = None
-        for entity_id, entity_object in self.entities.items():
+        for entity_id, entity_object in self.private_entities.items():
             if entity_object == entity:
                 id_to_remove = entity_id
         self.remove_entity_by_id(id_to_remove)
 
     def remove_entity_by_id(self, entity_id):
-        if entity_id in self.entities:
-            entity = self.entities[entity_id]
+        if entity_id in self.private_entities:
+            entity = self.private_entities[entity_id]
             if (entity.position is not None):
                 x = entity.position.x
                 y = entity.position.y
                 self._remove_entity_from_locations(entity, x, y)
 
-            del self.entities[entity_id]
+            del self.private_entities[entity_id]
 
     def _add_entity_to_locations(self, entity, x, y):
         if (x, y) not in self.entities_by_location:
@@ -72,18 +81,18 @@ class Room(BaseModel):
         self._add_entity_to_locations(entity, x, y)
 
     def list_entities(self):
-        return list(self.entities.keys())
+        return list(self.private_entities.keys())
 
     def get_entity(self, entity_id):
         try:
-            return self.entities[entity_id]
+            return self.private_entities[entity_id]
         except KeyError:
             raise ResourceNotFoundError
 
     def get_entities(self, **kwargs):
         return list(filter(lambda e: all(getattr(e, key) == value
                                          for key, value in kwargs.items()),
-                           self.entities.values()))
+                           self.private_entities.values()))
 
     def get_entities_at(self, x, y):
         if (x, y) in self.entities_by_location:
