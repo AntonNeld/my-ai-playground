@@ -16,7 +16,7 @@ class Room(BaseModel):
     steps: int = 0
     # Private fields
     private_entities: Dict[str, Entity] = {}
-    entities_by_location: Dict[Tuple[int, int], Entity] = {}
+    entities_by_location: Dict[Tuple[int, int], str] = {}
 
     def __init__(self, entities=None, **kwargs):
         super().__init__(**kwargs)
@@ -43,7 +43,7 @@ class Room(BaseModel):
         if entity.position is not None:
             x = entity.position.x
             y = entity.position.y
-            self._add_entity_to_locations(entity, x, y)
+            self._add_entity_to_locations(entity_id, x, y)
         return entity_id
 
     def remove_entity(self, entity):
@@ -59,26 +59,26 @@ class Room(BaseModel):
             if (entity.position is not None):
                 x = entity.position.x
                 y = entity.position.y
-                self._remove_entity_from_locations(entity, x, y)
+                self._remove_entity_from_locations(entity_id, x, y)
 
             del self.private_entities[entity_id]
 
-    def _add_entity_to_locations(self, entity, x, y):
+    def _add_entity_to_locations(self, entity_id, x, y):
         if (x, y) not in self.entities_by_location:
             self.entities_by_location[(x, y)] = []
-        self.entities_by_location[(x, y)].append(entity)
+        self.entities_by_location[(x, y)].append(entity_id)
 
-    def _remove_entity_from_locations(self, entity, x, y):
-        self.entities_by_location[(x, y)].remove(entity)
+    def _remove_entity_from_locations(self, entity_id, x, y):
+        self.entities_by_location[(x, y)].remove(entity_id)
         if len(self.entities_by_location[(x, y)]) == 0:
             del self.entities_by_location[(x, y)]
 
-    def move_entity(self, entity, x, y):
+    def move_entity(self, entity_id, entity, x, y):
         old_x = entity.position.x
         old_y = entity.position.y
-        self._remove_entity_from_locations(entity, old_x, old_y)
+        self._remove_entity_from_locations(entity_id, old_x, old_y)
         entity.position = Position(x=x, y=y)
-        self._add_entity_to_locations(entity, x, y)
+        self._add_entity_to_locations(entity_id, x, y)
 
     def list_entities(self):
         return list(self.private_entities.keys())
@@ -89,10 +89,13 @@ class Room(BaseModel):
         except KeyError:
             raise ResourceNotFoundError
 
-    def get_entities(self, **kwargs):
-        return list(filter(lambda e: all(getattr(e, key) == value
-                                         for key, value in kwargs.items()),
-                           self.private_entities.values()))
+    def get_entities(self, include_id=False, **kwargs):
+        with_id = list(filter(lambda e: all(getattr(e[1], key) == value
+                                            for key, value in kwargs.items()),
+                              self.private_entities.items()))
+        if include_id:
+            return with_id
+        return [e for i, e in with_id]
 
     def get_entities_at(self, x, y):
         if (x, y) in self.entities_by_location:
@@ -144,7 +147,7 @@ class Room(BaseModel):
 
     def step(self, steps=1):
         for _ in range(steps):
-            for entity in self.get_entities():
+            for entity_id, entity in self.get_entities(include_id=True):
                 # Only entities with a position can act
                 # This is a proxy for not being picked up,
                 # and should be fixed.
@@ -198,21 +201,23 @@ class Room(BaseModel):
                         new_x = entity.position.x + dx
                         new_y = entity.position.y + dy
                         colliding_entities = [
-                            e for e in self.get_entities_at(new_x, new_y)
-                            if e is not entity
+                            self.get_entity(e) for e in
+                            self.get_entities_at(new_x, new_y)
+                            if e is not entity_id
                         ]
                         if not any(map(lambda e: e.blocks_movement is not None
                                        and not set(entity.get_tags()) & set(
                                            e.blocks_movement.passable_for_tags
                                        ),
                                        colliding_entities)):
-                            self.move_entity(entity, new_x, new_y)
+                            self.move_entity(entity_id, entity, new_x, new_y)
 
                     # Handle colissions
                     overlapping_entities = [
-                        e for e in self.get_entities_at(entity.position.x,
-                                                        entity.position.y)
-                        if e is not entity
+                        self.get_entity(e) for e
+                        in self.get_entities_at(entity.position.x,
+                                                entity.position.y)
+                        if e is not entity_id
                     ]
                     if entity.count_tags_score is not None:
                         tags = {
@@ -274,7 +279,9 @@ class Room(BaseModel):
                         target_x = entity.position.x + dx
                         target_y = entity.position.y + dy
 
-                        targets = self.get_entities_at(target_x, target_y)
+                        targets = [self.get_entity(
+                            e) for e in self.get_entities_at(
+                                target_x, target_y)]
                         for target in targets:
                             if target.vulnerable is not None:
                                 self.remove_entity(target)

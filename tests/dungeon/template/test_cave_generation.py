@@ -99,5 +99,5 @@ def test_outside_is_not_connected_with_inside(template):
             if (location not in filled
                     and not [e for e in room.get_entities_at(
                         location[0], location[1]
-                    ) if e.looks_like == "wall"]):
+                    ) if room.get_entity(e).looks_like == "wall"]):
                 edge.append(location)
