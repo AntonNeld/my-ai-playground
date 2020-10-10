@@ -52,7 +52,7 @@ room: |-
     assert room.get_entities(looks_like="player")[0].position.x == 0
 
 
-def test_blocks_movement_except_tags():
+def test_blocks_movement_wrong_tags():
     room = room_from_yaml("""
 templateType: "visual"
 definitions:
@@ -75,7 +75,31 @@ room: |-
 
     room.step()
     assert room.get_entities(looks_like="player")[0].position.x == 0
-    room.get_entities(looks_like="player")[0].tags = ["pass"]
+
+
+def test_blocks_movement_right_tags():
+    room = room_from_yaml("""
+templateType: "visual"
+definitions:
+  p:
+    looksLike: "player"
+    ai:
+      kind: "singular"
+      action:
+        actionType: "move"
+        direction: "right"
+    tags:
+      - "pass"
+    actions:
+      move: {}
+  "~":
+    blocksMovement:
+      passableForTags:
+        - "pass"
+room: |-
+  p~
+""")
+
     room.step()
     assert room.get_entities(looks_like="player")[0].position.x == 1
 
@@ -392,8 +416,9 @@ room: |-2
   p  c
 """)
 
-    perceptor = room.get_entities(looks_like="player")[0]
-    entities = room.get_view(perceptor)["entities"]
+    perceptor_id, _ = room.get_entities(
+        include_id=True, looks_like="player")[0]
+    entities = room.get_view(perceptor_id)["entities"]
     assert len(entities) == 2
     assert {"x": 3, "y": 0, "looks_like": "coin"} in entities
     assert {"x": 3, "y": 1, "looks_like": "wall"} in entities
@@ -417,8 +442,9 @@ room: |-
   #     #
 """)
 
-    perceptor = room.get_entities(looks_like="player")[0]
-    entities = room.get_view(perceptor)["entities"]
+    perceptor_id, _ = room.get_entities(
+        include_id=True, looks_like="player")[0]
+    entities = room.get_view(perceptor_id)["entities"]
     assert len(entities) == 1
     assert {"x": 3, "y": 0, "looks_like": "coin"} in entities
 
@@ -438,8 +464,9 @@ room: |-2
   # p
 """)
 
-    perceptor = room.get_entities(looks_like="player")[0]
-    position = room.get_view(perceptor)["position"]
+    perceptor_id, _ = room.get_entities(
+        include_id=True, looks_like="player")[0]
+    position = room.get_view(perceptor_id)["position"]
     assert position["x"] == 2
     assert position["y"] == 0
 
@@ -458,8 +485,9 @@ definitions:
 room: |-
   p
 """)
-    perceptor = room.get_entities(looks_like="player")[0]
-    assert room.get_view(perceptor)["inventory"] == ["coin", "evilCoin"]
+    perceptor_id, _ = room.get_entities(
+        include_id=True, looks_like="player")[0]
+    assert room.get_view(perceptor_id)["inventory"] == ["coin", "evilCoin"]
 
 
 def test_count_tags_score():
@@ -485,10 +513,11 @@ room: |-
   p  a..
 """)
 
-    player = room.get_entities(label="player")[0]
     room.step()
+    player = room.get_entities(label="player")[0]
     assert player.score == 2
     room.step()
+    player = room.get_entities(label="player")[0]
     assert player.score == 4
 
 
