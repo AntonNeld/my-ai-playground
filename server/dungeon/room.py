@@ -8,7 +8,7 @@ from dungeon.entity import Entity, Position
 
 from .consts import DoNothing
 from dungeon.position_dict import PositionDict
-from dungeon.systems import PerceptSystem, ActionSystem
+from dungeon.systems import PerceptSystem, ActionSystem, TagSystem
 
 # Initialize this once instead of in each step
 doNothing = DoNothing()
@@ -60,6 +60,7 @@ class Room(BaseModel):
         # Systems
         self.percept_system = PerceptSystem()
         self.action_system = ActionSystem()
+        self.tag_system = TagSystem()
         if entities is not None:
             for identifier, entity in entities.items():
                 entity_obj = entity if isinstance(
@@ -136,6 +137,8 @@ class Room(BaseModel):
                 self.pickupper)
             actions = self.action_system.get_actions(
                 self.ai, percepts, self.actions, self.score, self.label)
+            tags_before_moving = self.tag_system.get_tags(
+                self.tags, self.pickupper)
             for entity_id in list(self.entity_ids):
                 # Skip if the entity has already been removed
                 if entity_id not in self.list_entities():
@@ -175,7 +178,8 @@ class Room(BaseModel):
                                 and not set(
                                     e.blocks_movement.passable_for_tags
                                 ) & set(
-                                    self.get_entity(entity_id).get_tags()
+                                    tags_before_moving[entity_id]
+                                    if entity_id in tags_before_moving else []
                                 ),
                                 colliding_entities)):
                             self.position[entity_id] = Position(
