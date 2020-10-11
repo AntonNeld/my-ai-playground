@@ -10,7 +10,7 @@ from .consts import DoNothing
 from dungeon.position_dict import PositionDict
 from dungeon.systems import (PerceptSystem, ActionSystem, TagSystem,
                              MovementSystem, PickUpSystem, DropSystem,
-                             AttackSystem)
+                             AttackSystem, CountTagsScoreSystem)
 
 # Initialize this once instead of in each step
 doNothing = DoNothing()
@@ -67,6 +67,7 @@ class Room(BaseModel):
         self.pick_up_system = PickUpSystem()
         self.drop_system = DropSystem()
         self.attack_system = AttackSystem()
+        self.count_tags_score_system = CountTagsScoreSystem()
         if entities is not None:
             for identifier, entity in entities.items():
                 entity_obj = entity if isinstance(
@@ -167,38 +168,10 @@ class Room(BaseModel):
                 actions, self.position, self.vulnerable)
             for removed_id in removed_entities:
                 self.remove_entity_by_id(removed_id)
-            for entity_id in list(self.entity_ids):
-                # Skip if the entity has already been removed
-                if entity_id not in self.list_entities():
-                    continue
-                # Only entities with a position can act
-                # This is a proxy for not being picked up,
-                # and should be fixed.
-                if entity_id in self.position:
+            final_tags = self.tag_system.get_tags(
+                self.tags, self.pickupper)
+            self.count_tags_score_system.add_tag_scores(
+                self.count_tags_score, self.position, final_tags, self.label,
+                self.score)
 
-                    # Handle colissions
-                    overlapping_entities = [
-                        e for e in self.position.get_entities_at(
-                            self.position[entity_id].x,
-                            self.position[entity_id].y
-                        )
-                        if e is not entity_id
-                    ]
-                    if entity_id in self.count_tags_score:
-                        tags = {
-                            tag: 0 for tag
-                            in self.count_tags_score[entity_id].tags}
-                        for overlapping_entity in overlapping_entities:
-                            for tag in self.get_entity(
-                                    overlapping_entity).get_tags():
-                                if tag in tags:
-                                    tags[tag] += 1
-                        if tags == self.count_tags_score[entity_id].tags:
-                            add_to_id, add_to = self.get_entities(
-                                include_id=True,
-                                label=self.count_tags_score[entity_id].add_to
-                            )[0]
-                            if add_to.score is not None:
-                                score = self.count_tags_score[entity_id].score
-                                self.score[add_to_id] += score
             self.steps += 1
