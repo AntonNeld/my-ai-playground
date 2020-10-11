@@ -3,35 +3,6 @@ from dungeon.entity import Entity
 from dungeon.consts import PickUp
 
 
-def test_attack():
-    room = room_from_yaml("""
-templateType: "visual"
-definitions:
-  p:
-    looksLike: "player"
-    ai:
-      kind: "singular"
-      action:
-        actionType: "attack"
-        direction: "right"
-    actions:
-      attack: {}
-  e:
-    vulnerable: {}
-  "#": {}
-room: |-
- #pe
-""")
-
-    room.step()
-    assert len(room.get_entities()) == 2
-    room.step()
-    assert len(room.get_entities()) == 2
-    room.get_entities(looks_like="player")[0].ai.action.direction = "left"
-    room.step()
-    assert len(room.get_entities()) == 2
-
-
 def test_pickup():
     room = room_from_yaml("""
 templateType: "visual"
@@ -123,69 +94,6 @@ room: |-
         Entity(**{"pickup": {"kind": "item"}})]
 
 
-def test_drop():
-    room = room_from_yaml("""
-templateType: "visual"
-definitions:
-  p:
-    looksLike: "player"
-    ai:
-      kind: "singular"
-      action:
-        actionType: "drop"
-        index: 1
-    pickupper:
-      mode: "action"
-      inventory:
-        - looksLike: "coin"
-          pickup:
-            kind: "item"
-        - looksLike: "evilCoin"
-          pickup:
-            kind: "item"
-            providesTags:
-              - "evil"
-    actions:
-      drop: {}
-room: |-
-  p
-""")
-
-    room.step()
-    assert len(room.get_entities()) == 2
-    assert room.get_entities(looks_like="player")[0].pickupper.inventory == [
-        Entity(**{"looksLike": "coin", "pickup": {"kind": "item"}})]
-    assert not room.get_entities(looks_like="player")[0].get_tags()
-    room.step()
-    assert len(room.get_entities()) == 2
-    assert room.get_entities(looks_like="player")[0].pickupper.inventory == [
-        Entity(**{"looksLike": "coin", "pickup": {"kind": "item"}})]
-
-
-def test_drop_autopickup():
-    room = room_from_yaml("""
-templateType: "visual"
-definitions:
-  p:
-    looksLike: "player"
-    ai:
-      kind: "singular"
-      action:
-        actionType: "drop"
-    pickupper:
-      mode: "auto"
-      inventory:
-        - pickup:
-            kind: "item"
-    actions:
-      drop: {}
-room: |-
-  p
-""")
-    room.step()
-    assert len(room.get_entities()) == 2
-
-
 def test_score_pickup():
     room = room_from_yaml("""
 templateType: "visual"
@@ -265,34 +173,3 @@ room: |-
     room.step()
     assert len(room.get_entities()) == 1
     assert room.get_entities()[0].pickupper.inventory == []
-
-
-def test_count_tags_score():
-    room = room_from_yaml("""
-templateType: "visual"
-definitions:
-  p:
-    label: "player"
-    score: 0
-  d:
-    tags:
-      - "dirt"
-  ".":
-    countTagsScore:
-      addTo: "player"
-      score: 1
-      tags:
-        dirt: 0
-  a:
-    - "d"
-    - "."
-room: |-
-  p  a..
-""")
-
-    room.step()
-    player = room.get_entities(label="player")[0]
-    assert player.score == 2
-    room.step()
-    player = room.get_entities(label="player")[0]
-    assert player.score == 4
