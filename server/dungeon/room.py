@@ -3,12 +3,13 @@ import uuid
 from pydantic import BaseModel
 
 from errors import ResourceNotFoundError
-from dungeon.entity import Entity, Position
+from dungeon.entity import Entity
 
 
 from .consts import DoNothing
 from dungeon.position_dict import PositionDict
-from dungeon.systems import PerceptSystem, ActionSystem, TagSystem
+from dungeon.systems import (PerceptSystem, ActionSystem, TagSystem,
+                             MovementSystem)
 
 # Initialize this once instead of in each step
 doNothing = DoNothing()
@@ -61,6 +62,7 @@ class Room(BaseModel):
         self.percept_system = PerceptSystem()
         self.action_system = ActionSystem()
         self.tag_system = TagSystem()
+        self.movement_system = MovementSystem()
         if entities is not None:
             for identifier, entity in entities.items():
                 entity_obj = entity if isinstance(
@@ -139,6 +141,9 @@ class Room(BaseModel):
                 self.ai, percepts, self.actions, self.score, self.label)
             tags_before_moving = self.tag_system.get_tags(
                 self.tags, self.pickupper)
+            self.movement_system.move_entities(
+                actions, self.position, self.blocks_movement,
+                tags_before_moving)
             for entity_id in list(self.entity_ids):
                 # Skip if the entity has already been removed
                 if entity_id not in self.list_entities():
@@ -151,39 +156,6 @@ class Room(BaseModel):
                         action = actions[entity_id]
                     except KeyError:
                         action = doNothing
-                    # Move
-                    dx = dy = 0
-
-                    if action.action_type == "move":
-                        if action.direction == "up":
-                            dy = 1
-                        elif action.direction == "down":
-                            dy = -1
-                        elif action.direction == "left":
-                            dx = -1
-                        elif action.direction == "right":
-                            dx = 1
-
-                    if dx != 0 or dy != 0:
-                        new_x = self.position[entity_id].x + dx
-                        new_y = self.position[entity_id].y + dy
-                        colliding_entities = [
-                            self.get_entity(e) for e in
-                            self.position.get_entities_at(new_x, new_y)
-                            if e is not entity_id
-                        ]
-                        if not any(
-                            map(
-                                lambda e: e.blocks_movement is not None
-                                and not set(
-                                    e.blocks_movement.passable_for_tags
-                                ) & set(
-                                    tags_before_moving[entity_id]
-                                    if entity_id in tags_before_moving else []
-                                ),
-                                colliding_entities)):
-                            self.position[entity_id] = Position(
-                                x=new_x, y=new_y)
 
                     # Handle colissions
                     overlapping_entities = [
