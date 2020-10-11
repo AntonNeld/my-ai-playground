@@ -12,6 +12,7 @@ from dungeon.ai import AI
 from profiling import time_profiling, memory_profiling
 from .consts import DoNothing
 from dungeon.position_dict import PositionDict
+from dungeon.systems import PerceptSystem
 
 # Initialize this once instead of in each step
 doNothing = DoNothing()
@@ -55,8 +56,12 @@ class Room(BaseModel):
     count_tags_score: Dict[str, CountTagsScore] = {}
     actions: Dict[str, Dict[str, ActionDetails]] = {}
 
+    class Config:
+        extra = "allow"
+
     def __init__(self, entities=None, **kwargs):
         super().__init__(**kwargs)
+        self.percept_system = PerceptSystem()
         if entities is not None:
             for identifier, entity in entities.items():
                 entity_obj = entity if isinstance(
@@ -117,42 +122,6 @@ class Room(BaseModel):
             return filtered
         return [e for i, e in filtered]
 
-    def get_view(self, perceptor_id):
-        perceptor = self.get_entity(perceptor_id)
-        if perceptor.perception is None or perceptor.position is None:
-            return {}
-
-        percept = {}
-        my_x = perceptor.position.x
-        my_y = perceptor.position.y
-        entities_view = []
-        for entity_id in self.entity_ids:
-            if entity_id == perceptor_id:
-                continue
-            if (entity_id not in self.position
-                    or entity_id not in self.looks_like):
-                continue
-            other_x = self.position[entity_id].x
-            other_y = self.position[entity_id].y
-            max_dist = perceptor.perception.distance
-            if (max_dist is not None
-                    and abs(other_x-my_x) + abs(other_y-my_y) > max_dist):
-                continue
-            entity_view = {"x":          other_x - my_x,
-                           "y":          other_y - my_y,
-                           "looks_like": self.looks_like[entity_id]}
-            entities_view.append(entity_view)
-        percept["entities"] = entities_view
-
-        if perceptor.perception.include_position:
-            percept["position"] = {
-                "x": perceptor.position.x, "y": perceptor.position.y}
-        if perceptor.pickupper is not None:
-            percept["inventory"] = [
-                e.looks_like for e in perceptor.pickupper.inventory
-            ]
-        return percept
-
     def get_entity_score(self, entity):
         if isinstance(entity, str):
             entity = self.get_entity(entity)
@@ -165,6 +134,9 @@ class Room(BaseModel):
 
     def step(self, steps=1):
         for _ in range(steps):
+            percepts = self.percept_system.get_percepts(
+                self.perception, self.position, self.looks_like,
+                self.pickupper)
             for entity_id in list(self.entity_ids):
                 # Skip if the entity has already been removed
                 if entity_id not in self.list_entities():
@@ -175,7 +147,10 @@ class Room(BaseModel):
                 if entity_id in self.position:
                     # Update AI state and find next action
                     if entity_id in self.ai:
-                        percept = self.get_view(entity_id)
+                        try:
+                            percept = percepts[entity_id]
+                        except KeyError:
+                            percept = {}
                         do_time_profiling = (entity_id in self.label
                                              and time_profiling.started)
                         do_memory_profiling = (entity_id in self.label
