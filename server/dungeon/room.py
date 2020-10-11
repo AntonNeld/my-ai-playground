@@ -9,7 +9,7 @@ from dungeon.entity import Entity
 from .consts import DoNothing
 from dungeon.position_dict import PositionDict
 from dungeon.systems import (PerceptSystem, ActionSystem, TagSystem,
-                             MovementSystem)
+                             MovementSystem, PickUpSystem)
 
 # Initialize this once instead of in each step
 doNothing = DoNothing()
@@ -63,6 +63,7 @@ class Room(BaseModel):
         self.action_system = ActionSystem()
         self.tag_system = TagSystem()
         self.movement_system = MovementSystem()
+        self.pick_up_system = PickUpSystem()
         if entities is not None:
             for identifier, entity in entities.items():
                 entity_obj = entity if isinstance(
@@ -144,6 +145,17 @@ class Room(BaseModel):
             self.movement_system.move_entities(
                 actions, self.position, self.blocks_movement,
                 tags_before_moving)
+            picked_up, removed = self.pick_up_system.pick_up_items(
+                self.pickupper, actions, self.position, self.pickup,
+                self.score)
+            for pickup_id, pickupper_id in picked_up.items():
+                pickup = self.get_entity(pickup_id)
+                pickup.position = None
+                self.pickupper[pickupper_id].inventory.append(
+                    pickup)
+                self.remove_entity_by_id(pickup_id)
+            for removed_id in removed:
+                self.remove_entity_by_id(removed_id)
             for entity_id in list(self.entity_ids):
                 # Skip if the entity has already been removed
                 if entity_id not in self.list_entities():
@@ -182,31 +194,6 @@ class Room(BaseModel):
                             if add_to.score is not None:
                                 score = self.count_tags_score[entity_id].score
                                 self.score[add_to_id] += score
-                    if (entity_id in self.pickupper
-                            and (self.pickupper[entity_id].mode == "auto"
-                                 or action.action_type == "pick_up")):
-                        pickups = [
-                            (e, self.get_entity(e)) for e
-                            in overlapping_entities
-                            if self.get_entity(e).pickup is not None
-                        ]
-                        for pickup_id, pickup in pickups:
-                            kind = pickup.pickup.kind
-                            if (
-                                kind == "item" and not
-                                self.pickupper[entity_id].full_inventory()
-                            ):
-                                self.remove_entity_by_id(pickup_id)
-                                pickup.position = None
-                                self.pickupper[entity_id].inventory.append(
-                                    pickup)
-                            elif kind == "vanish":
-                                self.remove_entity_by_id(pickup_id)
-                            elif kind == "addScore":
-                                self.remove_entity_by_id(pickup_id)
-                                added_score = pickup.pickup.score
-                                if entity_id in self.score:
-                                    self.score[entity_id] += added_score
                     # Drop items (do this after collisions to not immediately
                     # pick them up again)
                     if action.action_type == "drop":
