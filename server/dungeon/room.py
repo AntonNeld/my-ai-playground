@@ -9,7 +9,7 @@ from dungeon.entity import Entity
 from .consts import DoNothing
 from dungeon.position_dict import PositionDict
 from dungeon.systems import (PerceptSystem, ActionSystem, TagSystem,
-                             MovementSystem, PickUpSystem)
+                             MovementSystem, PickUpSystem, DropSystem)
 
 # Initialize this once instead of in each step
 doNothing = DoNothing()
@@ -64,6 +64,7 @@ class Room(BaseModel):
         self.tag_system = TagSystem()
         self.movement_system = MovementSystem()
         self.pick_up_system = PickUpSystem()
+        self.drop_system = DropSystem()
         if entities is not None:
             for identifier, entity in entities.items():
                 entity_obj = entity if isinstance(
@@ -156,6 +157,10 @@ class Room(BaseModel):
                 self.remove_entity_by_id(pickup_id)
             for removed_id in removed:
                 self.remove_entity_by_id(removed_id)
+            created_entities = self.drop_system.drop_items(
+                self.pickupper, actions, self.position)
+            for entity in created_entities:
+                self.add_entity(entity)
             for entity_id in list(self.entity_ids):
                 # Skip if the entity has already been removed
                 if entity_id not in self.list_entities():
@@ -194,18 +199,6 @@ class Room(BaseModel):
                             if add_to.score is not None:
                                 score = self.count_tags_score[entity_id].score
                                 self.score[add_to_id] += score
-                    # Drop items (do this after collisions to not immediately
-                    # pick them up again)
-                    if action.action_type == "drop":
-                        try:
-                            inventory = self.pickupper[entity_id].inventory
-                            dropped_entity = inventory.pop(action.index)
-                            new_position = self.position[entity_id].copy(
-                                deep=True)
-                            dropped_entity.position = new_position
-                            self.add_entity(dropped_entity)
-                        except IndexError:
-                            pass
                     if action.action_type == "attack":
                         dx = dy = 0
                         if action.direction == "up":
