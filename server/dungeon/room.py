@@ -1,14 +1,10 @@
 import uuid
-from typing import Dict, List
 
 from pydantic import BaseModel
 
 from errors import ResourceNotFoundError
-from dungeon.entity import (
-    Entity, Position, Perception, Scoring, Vulnerable, CountTagsScore,
-    ActionDetails, BlocksMovement, Pickup, Pickupper, LooksLike,
-)
-from dungeon.ai import AI
+from dungeon.entity import Entity, Position
+
 from profiling import time_profiling, memory_profiling
 from .consts import DoNothing
 from dungeon.position_dict import PositionDict
@@ -38,29 +34,30 @@ COMPONENTS = {
 
 class Room(BaseModel):
     steps: int = 0
-    # Private fields
-    entity_ids: List[str] = []
-    # Components, also private
-    position: Dict[str, Position] = PositionDict()
-    ai: Dict[str, AI] = {}
-    perception: Dict[str, Perception] = {}
-    score: Dict[str, int] = {}
-    scoring: Dict[str, Scoring] = {}
-    blocks_movement: Dict[str, BlocksMovement] = {}
-    pickupper: Dict[str, Pickupper] = {}
-    pickup: Dict[str, Pickup] = {}
-    looks_like: Dict[str, LooksLike] = {}
-    tags: Dict[str, List[str]] = {}
-    label: Dict[str, str] = {}
-    vulnerable: Dict[str, Vulnerable] = {}
-    count_tags_score: Dict[str, CountTagsScore] = {}
-    actions: Dict[str, Dict[str, ActionDetails]] = {}
 
     class Config:
         extra = "allow"
 
     def __init__(self, entities=None, **kwargs):
         super().__init__(**kwargs)
+        # Entities
+        self.entity_ids = []
+        # Components
+        self.position = PositionDict()
+        self.ai = {}
+        self.perception = {}
+        self.score = {}
+        self.scoring = {}
+        self.blocks_movement = {}
+        self.pickupper = {}
+        self.pickup = {}
+        self.looks_like = {}
+        self.tags = {}
+        self.label = {}
+        self.vulnerable = {}
+        self.count_tags_score = {}
+        self.actions = {}
+        # Systems
         self.percept_system = PerceptSystem()
         if entities is not None:
             for identifier, entity in entities.items():
@@ -69,10 +66,9 @@ class Room(BaseModel):
                 self.add_entity(entity_obj, entity_id=identifier)
 
     def dict(self, include=None, **kwargs):
-        public_fields = {"steps"}
-        new_include = (include | public_fields if include is not None
-                       else public_fields)
-        only_public = super().dict(**{"include": new_include, **kwargs})
+        if include is None:
+            include = set(self.__fields__.keys())
+        only_public = super().dict(include=include, **kwargs)
         return {
             **only_public, "entities": {
                 entity_id: entity for entity_id, entity
