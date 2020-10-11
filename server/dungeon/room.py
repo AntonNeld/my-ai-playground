@@ -9,7 +9,8 @@ from dungeon.entity import Entity
 from .consts import DoNothing
 from dungeon.position_dict import PositionDict
 from dungeon.systems import (PerceptSystem, ActionSystem, TagSystem,
-                             MovementSystem, PickUpSystem, DropSystem)
+                             MovementSystem, PickUpSystem, DropSystem,
+                             AttackSystem)
 
 # Initialize this once instead of in each step
 doNothing = DoNothing()
@@ -65,6 +66,7 @@ class Room(BaseModel):
         self.movement_system = MovementSystem()
         self.pick_up_system = PickUpSystem()
         self.drop_system = DropSystem()
+        self.attack_system = AttackSystem()
         if entities is not None:
             for identifier, entity in entities.items():
                 entity_obj = entity if isinstance(
@@ -161,6 +163,10 @@ class Room(BaseModel):
                 self.pickupper, actions, self.position)
             for entity in created_entities:
                 self.add_entity(entity)
+            removed_entities = self.attack_system.do_attacks(
+                actions, self.position, self.vulnerable)
+            for removed_id in removed_entities:
+                self.remove_entity_by_id(removed_id)
             for entity_id in list(self.entity_ids):
                 # Skip if the entity has already been removed
                 if entity_id not in self.list_entities():
@@ -169,10 +175,6 @@ class Room(BaseModel):
                 # This is a proxy for not being picked up,
                 # and should be fixed.
                 if entity_id in self.position:
-                    try:
-                        action = actions[entity_id]
-                    except KeyError:
-                        action = doNothing
 
                     # Handle colissions
                     overlapping_entities = [
@@ -199,25 +201,4 @@ class Room(BaseModel):
                             if add_to.score is not None:
                                 score = self.count_tags_score[entity_id].score
                                 self.score[add_to_id] += score
-                    if action.action_type == "attack":
-                        dx = dy = 0
-                        if action.direction == "up":
-                            dy = 1
-                        elif action.direction == "down":
-                            dy = -1
-                        elif action.direction == "left":
-                            dx = -1
-                        elif action.direction == "right":
-                            dx = 1
-
-                        target_x = self.position[entity_id].x + dx
-                        target_y = self.position[entity_id].y + dy
-
-                        targets = [(e, self.get_entity(
-                            e)) for e in self.position.get_entities_at(
-                                target_x, target_y)]
-                        for target_id, target in targets:
-                            if target.vulnerable is not None:
-                                self.remove_entity_by_id(target_id)
-
             self.steps += 1
