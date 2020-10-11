@@ -5,10 +5,10 @@ from pydantic import BaseModel
 from errors import ResourceNotFoundError
 from dungeon.entity import Entity, Position
 
-from profiling import time_profiling, memory_profiling
+
 from .consts import DoNothing
 from dungeon.position_dict import PositionDict
-from dungeon.systems import PerceptSystem
+from dungeon.systems import PerceptSystem, ActionSystem
 
 # Initialize this once instead of in each step
 doNothing = DoNothing()
@@ -59,6 +59,7 @@ class Room(BaseModel):
         self.actions = {}
         # Systems
         self.percept_system = PerceptSystem()
+        self.action_system = ActionSystem()
         if entities is not None:
             for identifier, entity in entities.items():
                 entity_obj = entity if isinstance(
@@ -133,6 +134,8 @@ class Room(BaseModel):
             percepts = self.percept_system.get_percepts(
                 self.perception, self.position, self.looks_like,
                 self.pickupper)
+            actions = self.action_system.get_actions(
+                self.ai, percepts, self.actions, self.score, self.label)
             for entity_id in list(self.entity_ids):
                 # Skip if the entity has already been removed
                 if entity_id not in self.list_entities():
@@ -141,45 +144,10 @@ class Room(BaseModel):
                 # This is a proxy for not being picked up,
                 # and should be fixed.
                 if entity_id in self.position:
-                    # Update AI state and find next action
-                    if entity_id in self.ai:
-                        try:
-                            percept = percepts[entity_id]
-                        except KeyError:
-                            percept = {}
-                        do_time_profiling = (entity_id in self.label
-                                             and time_profiling.started)
-                        do_memory_profiling = (entity_id in self.label
-                                               and memory_profiling.started)
-                        if do_time_profiling:
-                            time_profiling.set_context(self.label[entity_id])
-                        if do_memory_profiling:
-                            memory_profiling.set_context(self.label[entity_id])
-                        ai = self.ai[entity_id]
-                        if hasattr(ai, "update_state_percept"):
-                            ai.update_state_percept(percept)
-                        action = ai.next_action(percept)
-                        if hasattr(ai, "update_state_action"):
-                            ai.update_state_action(action)
-                        if do_time_profiling:
-                            time_profiling.unset_context(self.label[entity_id])
-                        if do_memory_profiling:
-                            memory_profiling.unset_context(
-                                self.label[entity_id])
-                    else:
+                    try:
+                        action = actions[entity_id]
+                    except KeyError:
                         action = doNothing
-                    # Don't perform actions we're not allowed to
-                    if (entity_id not in self.actions
-                            or action.action_type not in
-                            self.actions[entity_id]):
-                        action = doNothing
-                    else:
-                        action_type = action.action_type
-                        if (self.actions[entity_id][action_type].cost
-                                is not None
-                                and entity_id in self.score):
-                            cost = self.actions[entity_id][action_type].cost
-                            self.score[entity_id] -= cost
                     # Move
                     dx = dy = 0
 
