@@ -7,7 +7,7 @@ from dungeon.entity import Entity
 
 
 from .consts import DoNothing
-from dungeon.position_dict import PositionDict
+from dungeon.custom_component_dicts import PositionDict, LabelDict
 from dungeon.systems import (PerceptSystem, ActionSystem, TagSystem,
                              MovementSystem, PickUpSystem, DropSystem,
                              AttackSystem, CountTagsScoreSystem)
@@ -55,7 +55,7 @@ class Room(BaseModel):
         self.pickup = {}
         self.looks_like = {}
         self.tags = {}
-        self.label = {}
+        self.label = LabelDict()
         self.vulnerable = {}
         self.count_tags_score = {}
         self.actions = {}

@@ -17,7 +17,6 @@ class CountTagsScoreSystem:
                     if tag in tile_tags:
                         tile_tags[tag] += 1
             if tile_tags == counter_details.tags:
-                for entity_id in label:
-                    if (label[entity_id] == counter_details.add_to
-                            and entity_id in score):
-                        score[entity_id] += counter_details.score
+                entity_id = label.get_entity_with_label(counter_details.add_to)
+                if entity_id in score:
+                    score[entity_id] += counter_details.score
