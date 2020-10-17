@@ -3,10 +3,15 @@
 def test_get_evaluated_score(client):
     client.put("/api/rooms/testroom", json={
         "steps": 0,
-        "entities": {"a": {
-            "pickupper": {"inventory": [{}]},
-            "scoring": {"kind": "heldItems"}
-        }
+        "entities": {
+            "a": {
+                "scoring": {
+                    "kind": "tileTags",
+                    "shouldHaveTags": ["tagOne"]
+                },
+                "position": {"x": 0, "y": 0},
+                "tags": ["tagOne"]
+            }
         }
     })
 
@@ -19,9 +24,10 @@ def test_get_evaluated_score(client):
 def test_get_accumulated_score(client):
     client.put("/api/rooms/testroom", json={
         "steps": 0,
-        "entities": {"a": {
-            "score": 5
-        }
+        "entities": {
+            "a": {
+                "score": 5
+            }
         }
     })
 
@@ -34,11 +40,16 @@ def test_get_accumulated_score(client):
 def test_get_both_score(client):
     client.put("/api/rooms/testroom", json={
         "steps": 0,
-        "entities": {"a": {
-            "pickupper": {"inventory": [{}]},
-            "scoring": {"kind": "heldItems"},
-            "score": 5
-        }
+        "entities": {
+            "a": {
+                "scoring": {
+                    "kind": "tileTags",
+                    "shouldHaveTags": ["tagOne"]
+                },
+                "position": {"x": 0, "y": 0},
+                "tags": ["tagOne"],
+                "score": 5
+            }
         }
     })
 

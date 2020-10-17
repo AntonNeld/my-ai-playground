@@ -9,9 +9,12 @@ def challenge(client):
             "entities": [
                 {
                     "label": "entityOne",
-                    "pickupper": {"inventory": [{}]},
-                    "scoring": {"kind": "heldItems"},
-                    "position": {"x": 0, "y": 0}
+                    "scoring": {
+                        "kind": "tileTags",
+                        "shouldHaveTags": ["tagOne"]
+                    },
+                    "position": {"x": 0, "y": 0},
+                    "tags": ["tagOne"],
                 },
                 {
                     "label": "entityTwo",
@@ -29,7 +32,10 @@ def challenge_with_variants(client):
     client.put("/api/challenges/testchallenge", json={
         "variants": {
             "variantOne": {
-                "entities[0].scoring": {"kind": "heldItems"},
+                "entities[0].scoring": {
+                    "kind": "tileTags",
+                    "shouldHaveTags": ["tagOne"]
+                },
                 "entities[0].score": 0
             },
             "variantTwo": {}
@@ -39,9 +45,9 @@ def challenge_with_variants(client):
             "entities": [
                 {
                     "label": "entityOne",
-                    "pickupper": {"inventory": [{}]},
+                    "position": {"x": 0, "y": 0},
+                    "tags": ["tagOne"],
                     "score": 2,
-                    "position": {"x": 0, "y": 0}
                 },
                 {
                     "label": "entityTwo",

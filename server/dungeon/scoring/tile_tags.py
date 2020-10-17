@@ -11,8 +11,8 @@ class TileTagsScoring(BaseModel):
     should_not_have_tags: List[str] = Field([], alias="shouldNotHaveTags")
 
     def get_score(self, entity, room):
-        positions = map(lambda e: e.position,
-                        room.get_entities())
+        positions = [e.position for e in room.get_entities()
+                     if e.position is not None]
         score = 0
         done_positions = set()
         for position in positions:
