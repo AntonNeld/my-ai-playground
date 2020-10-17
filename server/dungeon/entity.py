@@ -5,7 +5,6 @@ from pydantic import BaseModel, Field
 from typing_extensions import Literal
 
 from dungeon.ai import AI
-from dungeon.scoring import Scoring
 from dungeon.consts import LooksLike, Position
 
 
@@ -44,6 +43,8 @@ class Perception(BaseModel):
 
 class CountTagsScore(BaseModel):
     add_to: str = Field(..., alias="addTo")
+    score_type: Union[Literal["constant"],
+                      Literal["additive"]] = Field(..., alias="scoreType")
     score: int
     tags: Dict[str, int]
 
@@ -65,7 +66,6 @@ class Entity(BaseModel):
     ai: Optional[AI]
     perception: Optional[Perception]
     score: Optional[int]
-    scoring: Optional[Scoring]
     blocks_movement: Optional[BlocksMovement] = Field(
         None, alias="blocksMovement")
     pickupper: Optional[Pickupper]
@@ -77,17 +77,6 @@ class Entity(BaseModel):
     count_tags_score: Optional[CountTagsScore] = Field(
         None, alias="countTagsScore")
     actions: Optional[Dict[str, ActionDetails]]
-
-    def get_tags(self):
-        innate_tags = set(self.tags if self.tags is not None else [])
-        item_tags = set()
-
-        if self.pickupper is not None:
-            for item in self.pickupper.inventory:
-                for tag in item.pickup.provides_tags:
-                    item_tags.add(tag)
-
-        return innate_tags | item_tags
 
 
 Pickupper.update_forward_refs()

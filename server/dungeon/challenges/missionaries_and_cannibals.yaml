@@ -23,12 +23,6 @@ template:
           mode: "action"
           inventoryLimit: 2
         score: 0
-        scoring:
-          kind: "tileTags"
-          score: 1000
-          shouldHaveTags:
-            - "person"
-            - "otherShore"
         ai:
           kind: "missionariesAndCannibals"
         perception: {}
@@ -68,8 +62,12 @@ template:
       looksLike: "dirt"
     ",":
       looksLike: "grass"
-      tags:
-        - "otherShore"
+      countTagsScore:
+        score: 1000
+        scoreType: "constant"
+        addTo: "boat"
+        tags:
+          person: 1
   room: |-
     ###############
     #,,,,,,,,,,,,,#

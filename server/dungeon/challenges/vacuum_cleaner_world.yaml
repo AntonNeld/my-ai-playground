@@ -137,6 +137,7 @@ template:
     ".":
       countTagsScore:
         addTo: "vacuum"
+        scoreType: "additive"
         score: 1
         tags:
           dirt: 0

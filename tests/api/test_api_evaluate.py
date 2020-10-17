@@ -9,9 +9,11 @@ def challenge(client):
             "entities": [
                 {
                     "label": "entityOne",
-                    "scoring": {
-                        "kind": "tileTags",
-                        "shouldHaveTags": ["tagOne"]
+                    "countTagsScore": {
+                        "scoreType": "constant",
+                        "addTo": "entityOne",
+                        "score": 1,
+                        "tags": {"tagOne": 1}
                     },
                     "position": {"x": 0, "y": 0},
                     "tags": ["tagOne"],
@@ -32,9 +34,11 @@ def challenge_with_variants(client):
     client.put("/api/challenges/testchallenge", json={
         "variants": {
             "variantOne": {
-                "entities[0].scoring": {
-                    "kind": "tileTags",
-                    "shouldHaveTags": ["tagOne"]
+                "entities[0].countTagsScore": {
+                    "scoreType": "constant",
+                    "addTo": "entityOne",
+                    "score": 1,
+                    "tags": {"tagOne": 1}
                 },
                 "entities[0].score": 0
             },

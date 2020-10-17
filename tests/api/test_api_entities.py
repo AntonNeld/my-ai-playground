@@ -5,9 +5,12 @@ def test_get_evaluated_score(client):
         "steps": 0,
         "entities": {
             "a": {
-                "scoring": {
-                    "kind": "tileTags",
-                    "shouldHaveTags": ["tagOne"]
+                "label": "me",
+                "countTagsScore": {
+                    "scoreType": "constant",
+                    "addTo": "me",
+                    "score": 1,
+                    "tags": {"tagOne": 1}
                 },
                 "position": {"x": 0, "y": 0},
                 "tags": ["tagOne"]
@@ -42,9 +45,12 @@ def test_get_both_score(client):
         "steps": 0,
         "entities": {
             "a": {
-                "scoring": {
-                    "kind": "tileTags",
-                    "shouldHaveTags": ["tagOne"]
+                "label": "me",
+                "countTagsScore": {
+                    "scoreType": "constant",
+                    "addTo": "me",
+                    "score": 1,
+                    "tags": {"tagOne": 1}
                 },
                 "position": {"x": 0, "y": 0},
                 "tags": ["tagOne"],

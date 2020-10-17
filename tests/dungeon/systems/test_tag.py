@@ -27,7 +27,10 @@ room: |-
   pc
 """)
     room.step()
-    tags = room.get_entities(looks_like="player")[0].get_tags()
+    all_tags = room.tag_system.get_tags(
+        room.tags_components, room.pickupper_components)
+    entity_id, _ = room.get_entities(looks_like="player", include_id=True)[0]
+    tags = all_tags[entity_id]
     assert "tagZero" in tags
     assert "tagOne" in tags
     assert "tagTwo" in tags

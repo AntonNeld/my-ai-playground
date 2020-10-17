@@ -21,7 +21,6 @@ COMPONENT_PROPS = {
     "ai": "ai_components",
     "perception": "perception_components",
     "score": "score_components",
-    "scoring": "scoring_components",
     "blocks_movement": "blocks_movement_components",
     "pickupper": "pickupper_components",
     "pickup": "pickup_components",
@@ -49,7 +48,6 @@ class Room(BaseModel):
         self.ai_components = {}
         self.perception_components = {}
         self.score_components = {}
-        self.scoring_components = {}
         self.blocks_movement_components = {}
         self.pickupper_components = {}
         self.pickup_components = {}
@@ -128,14 +126,20 @@ class Room(BaseModel):
         return [e for i, e in filtered]
 
     def get_entity_score(self, entity):
-        if isinstance(entity, str):
-            entity = self.get_entity(entity)
-        if entity.scoring is None and entity.score is None:
+        tags = self.tag_system.get_tags(
+            self.tags_components, self.pickupper_components)
+        tag_scores = self.count_tags_score_system.get_constant_tag_scores(
+            self.count_tags_score_components, self.position_components,
+            tags, self.label_components)
+        scores = {}
+        for score_source in [tag_scores, self.score_components]:
+            for entity_id, score in score_source.items():
+                if entity_id not in scores:
+                    scores[entity_id] = 0
+                scores[entity_id] += score
+        if entity not in scores:
             return None
-        evaluated_score = (entity.scoring.get_score(
-            entity, self) if entity.scoring is not None else 0)
-        accumulated_score = entity.score if entity.score is not None else 0
-        return evaluated_score + accumulated_score
+        return scores[entity]
 
     def step(self, steps=1):
         for _ in range(steps):

@@ -22,8 +22,6 @@ definitions:
         - looksLike: "evilCoin"
           pickup:
             kind: "item"
-            providesTags:
-              - "evil"
     actions:
       drop: {}
 room: |-
@@ -34,7 +32,6 @@ room: |-
     assert len(room.get_entities()) == 2
     assert room.get_entities(looks_like="player")[0].pickupper.inventory == [
         Entity(**{"looksLike": "coin", "pickup": {"kind": "item"}})]
-    assert not room.get_entities(looks_like="player")[0].get_tags()
     room.step()
     assert len(room.get_entities()) == 2
     assert room.get_entities(looks_like="player")[0].pickupper.inventory == [
