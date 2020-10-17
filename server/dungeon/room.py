@@ -16,21 +16,21 @@ from dungeon.systems import (PerceptSystem, ActionSystem, TagSystem,
 doNothing = DoNothing()
 
 
-COMPONENTS = {
-    "position",
-    "ai",
-    "perception",
-    "score",
-    "scoring",
-    "blocks_movement",
-    "pickupper",
-    "pickup",
-    "looks_like",
-    "tags",
-    "label",
-    "vulnerable",
-    "count_tags_score",
-    "actions"
+COMPONENT_PROPS = {
+    "position": "position_components",
+    "ai": "ai_components",
+    "perception": "perception_components",
+    "score": "score_components",
+    "scoring": "scoring_components",
+    "blocks_movement": "blocks_movement_components",
+    "pickupper": "pickupper_components",
+    "pickup": "pickup_components",
+    "looks_like": "looks_like_components",
+    "tags": "tags_components",
+    "label": "label_components",
+    "vulnerable": "vulnerable_components",
+    "count_tags_score": "count_tags_score_components",
+    "actions": "actions_components"
 }
 
 
@@ -45,20 +45,20 @@ class Room(BaseModel):
         # Entities
         self.entity_ids = []
         # Components
-        self.position = PositionDict()
-        self.ai = {}
-        self.perception = {}
-        self.score = {}
-        self.scoring = {}
-        self.blocks_movement = {}
-        self.pickupper = {}
-        self.pickup = {}
-        self.looks_like = {}
-        self.tags = {}
-        self.label = LabelDict()
-        self.vulnerable = {}
-        self.count_tags_score = {}
-        self.actions = {}
+        self.position_components = PositionDict()
+        self.ai_components = {}
+        self.perception_components = {}
+        self.score_components = {}
+        self.scoring_components = {}
+        self.blocks_movement_components = {}
+        self.pickupper_components = {}
+        self.pickup_components = {}
+        self.looks_like_components = {}
+        self.tags_components = {}
+        self.label_components = LabelDict()
+        self.vulnerable_components = {}
+        self.count_tags_score_components = {}
+        self.actions_components = {}
         # Systems
         self.percept_system = PerceptSystem()
         self.action_system = ActionSystem()
@@ -92,16 +92,16 @@ class Room(BaseModel):
         if entity_id in self.entity_ids:
             self.remove_entity_by_id(entity_id)
         self.entity_ids.append(entity_id)
-        for component_name in COMPONENTS:
+        for component_name, component_prop in COMPONENT_PROPS.items():
             component = getattr(entity, component_name)
             if component is not None:
-                getattr(self, component_name)[entity_id] = component
+                getattr(self, component_prop)[entity_id] = component
         return entity_id
 
     def remove_entity_by_id(self, entity_id):
-        for component_name in COMPONENTS:
-            if entity_id in getattr(self, component_name):
-                del getattr(self, component_name)[entity_id]
+        for component_prop in COMPONENT_PROPS.values():
+            if entity_id in getattr(self, component_prop):
+                del getattr(self, component_prop)[entity_id]
         self.entity_ids.remove(entity_id)
 
     def list_entities(self):
@@ -111,9 +111,9 @@ class Room(BaseModel):
         if entity_id not in self.entity_ids:
             raise ResourceNotFoundError
         entity = Entity()
-        for component_name in COMPONENTS:
-            if entity_id in getattr(self, component_name):
-                component = getattr(self, component_name)[entity_id]
+        for component_name, component_prop in COMPONENT_PROPS.items():
+            if entity_id in getattr(self, component_prop):
+                component = getattr(self, component_prop)[entity_id]
                 setattr(entity, component_name, component)
         return entity
 
@@ -139,39 +139,50 @@ class Room(BaseModel):
 
     def step(self, steps=1):
         for _ in range(steps):
+            initial_tags = self.tag_system.get_tags(
+                self.tags_components, self.pickupper_components)
+
             percepts = self.percept_system.get_percepts(
-                self.perception, self.position, self.looks_like,
-                self.pickupper)
+                self.perception_components, self.position_components,
+                self.looks_like_components, self.pickupper_components)
+
             actions = self.action_system.get_actions(
-                self.ai, percepts, self.actions, self.score, self.label)
-            tags_before_moving = self.tag_system.get_tags(
-                self.tags, self.pickupper)
+                self.ai_components, percepts, self.actions_components,
+                self.score_components, self.label_components)
+
             self.movement_system.move_entities(
-                actions, self.position, self.blocks_movement,
-                tags_before_moving)
+                actions, self.position_components,
+                self.blocks_movement_components,
+                initial_tags)
+
             picked_up, removed = self.pick_up_system.pick_up_items(
-                self.pickupper, actions, self.position, self.pickup,
-                self.score)
+                self.pickupper_components, actions, self.position_components,
+                self.pickup_components,
+                self.score_components)
             for pickup_id, pickupper_id in picked_up.items():
                 pickup = self.get_entity(pickup_id)
                 pickup.position = None
-                self.pickupper[pickupper_id].inventory.append(
+                self.pickupper_components[pickupper_id].inventory.append(
                     pickup)
                 self.remove_entity_by_id(pickup_id)
             for removed_id in removed:
                 self.remove_entity_by_id(removed_id)
+
             created_entities = self.drop_system.drop_items(
-                self.pickupper, actions, self.position)
+                self.pickupper_components, actions, self.position_components)
             for entity in created_entities:
                 self.add_entity(entity)
+
             removed_entities = self.attack_system.do_attacks(
-                actions, self.position, self.vulnerable)
+                actions, self.position_components, self.vulnerable_components)
             for removed_id in removed_entities:
                 self.remove_entity_by_id(removed_id)
+
             final_tags = self.tag_system.get_tags(
-                self.tags, self.pickupper)
+                self.tags_components, self.pickupper_components)
+
             self.count_tags_score_system.add_tag_scores(
-                self.count_tags_score, self.position, final_tags, self.label,
-                self.score)
+                self.count_tags_score_components, self.position_components,
+                final_tags, self.label_components, self.score_components)
 
             self.steps += 1

@@ -44,7 +44,7 @@ def test_correct_height(template):
 def test_no_overlap(template):
     room = template.create_room()
     for e in room.get_entities():
-        assert len(room.position.get_entities_at(
+        assert len(room.position_components.get_entities_at(
             e.position.x, e.position.y)) == 1
 
 
@@ -98,7 +98,8 @@ def test_outside_is_not_connected_with_inside(template):
         filled.add((x, y))
         for location in [(x+1, y), (x-1, y), (x, y+1), (x, y-1)]:
             if (location not in filled
-                    and not [e for e in room.position.get_entities_at(
-                        location[0], location[1]
-                    ) if room.get_entity(e).looks_like == "wall"]):
+                    and not [e for e in
+                             room.position_components.get_entities_at(
+                                 location[0], location[1]
+                             ) if room.get_entity(e).looks_like == "wall"]):
                 edge.append(location)

@@ -1,7 +1,7 @@
 from test_utils import room_from_yaml
 
 
-def test_get_view():
+def test_get_percepts():
     room = room_from_yaml("""
 templateType: "visual"
 definitions:
@@ -20,14 +20,15 @@ room: |-2
     perceptor_id, _ = room.get_entities(
         include_id=True, looks_like="player")[0]
     entities = room.percept_system.get_percepts(
-        room.perception, room.position, room.looks_like, room.pickupper
+        room.perception_components, room.position_components,
+        room.looks_like_components, room.pickupper_components
     )[perceptor_id]["entities"]
     assert len(entities) == 2
     assert {"x": 3, "y": 0, "looks_like": "coin"} in entities
     assert {"x": 3, "y": 1, "looks_like": "wall"} in entities
 
 
-def test_get_view_with_max_distance():
+def test_get_percepts_with_max_distance():
     room = room_from_yaml("""
 templateType: "visual"
 definitions:
@@ -48,13 +49,14 @@ room: |-
     perceptor_id, _ = room.get_entities(
         include_id=True, looks_like="player")[0]
     entities = room.percept_system.get_percepts(
-        room.perception, room.position, room.looks_like, room.pickupper
+        room.perception_components, room.position_components,
+        room.looks_like_components, room.pickupper_components
     )[perceptor_id]["entities"]
     assert len(entities) == 1
     assert {"x": 3, "y": 0, "looks_like": "coin"} in entities
 
 
-def test_get_view_with_position():
+def test_get_percepts_with_position():
     room = room_from_yaml("""
 templateType: "visual"
 definitions:
@@ -72,13 +74,14 @@ room: |-2
     perceptor_id, _ = room.get_entities(
         include_id=True, looks_like="player")[0]
     position = room.percept_system.get_percepts(
-        room.perception, room.position, room.looks_like, room.pickupper
+        room.perception_components, room.position_components,
+        room.looks_like_components, room.pickupper_components
     )[perceptor_id]["position"]
     assert position["x"] == 2
     assert position["y"] == 0
 
 
-def test_get_view_inventory():
+def test_get_percepts_inventory():
     room = room_from_yaml("""
 templateType: "visual"
 definitions:
@@ -95,5 +98,6 @@ room: |-
     perceptor_id, _ = room.get_entities(
         include_id=True, looks_like="player")[0]
     assert room.percept_system.get_percepts(
-        room.perception, room.position, room.looks_like, room.pickupper
+        room.perception_components, room.position_components,
+        room.looks_like_components, room.pickupper_components
     )[perceptor_id]["inventory"] == ["coin", "evilCoin"]

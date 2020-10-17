@@ -1,15 +1,15 @@
 class DropSystem:
 
-    def drop_items(self, pickupper, actions, position):
+    def drop_items(self, pickupper_components, actions, position_components):
         created_entities = []
-        for dropper_id in pickupper:
+        for dropper_id, pickupper in pickupper_components.items():
             if (dropper_id not in actions
                     or actions[dropper_id].action_type != "drop"):
                 continue
             try:
-                inventory = pickupper[dropper_id].inventory
+                inventory = pickupper.inventory
                 dropped_entity = inventory.pop(actions[dropper_id].index)
-                new_position = position[dropper_id].copy(
+                new_position = position_components[dropper_id].copy(
                     deep=True)
                 dropped_entity.position = new_position
                 created_entities.append(dropped_entity)
