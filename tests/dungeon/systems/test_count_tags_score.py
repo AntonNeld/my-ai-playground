@@ -59,7 +59,7 @@ room: |-
 
     room.step()
     player_id, _ = room.get_entities(label="player", include_id=True)[0]
-    assert room.get_entity_score(player_id) == 2
+    assert room.get_entity_scores()[player_id] == 2
     room.step()
     player_id, _ = room.get_entities(label="player", include_id=True)[0]
-    assert room.get_entity_score(player_id) == 2
+    assert room.get_entity_scores()[player_id] == 2

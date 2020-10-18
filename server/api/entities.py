@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List
 
 from fastapi import APIRouter
 
@@ -35,8 +35,11 @@ def entities_routes(state_keeper):
 
     @router.get("/rooms/{room_id}/entities/{entity_id}/score",
                 response_model=int)
-    async def get_entity_score(room_id: str, entity_id: Union[str, None]):
-        return state_keeper.dungeon.get_room(
-            room_id).get_entity_score(entity_id)
+    async def get_entity_score(room_id: str, entity_id: str):
+        scores = state_keeper.dungeon.get_room(
+            room_id).get_entity_scores()
+        if entity_id in scores:
+            return scores[entity_id]
+        return None
 
     return router

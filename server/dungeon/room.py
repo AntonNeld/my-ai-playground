@@ -125,7 +125,7 @@ class Room(BaseModel):
             return filtered
         return [e for i, e in filtered]
 
-    def get_entity_score(self, entity):
+    def get_entity_scores(self):
         tags = self.tag_system.get_tags(
             self.tags_components, self.pickupper_components)
         tag_scores = self.count_tags_score_system.get_constant_tag_scores(
@@ -137,9 +137,7 @@ class Room(BaseModel):
                 if entity_id not in scores:
                     scores[entity_id] = 0
                 scores[entity_id] += score
-        if entity not in scores:
-            return None
-        return scores[entity]
+        return scores
 
     def step(self, steps=1):
         for _ in range(steps):

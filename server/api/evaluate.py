@@ -53,14 +53,19 @@ def evaluate_routes(state_keeper):
             if body.profile_memory:
                 memory_profiling.stop()
                 memory_result = memory_profiling.get_result()
+            scores = room.get_entity_scores()
 
             for entity_id, entity in [(e_id, e) for e_id, e in
                                       room.get_entities(include_id=True)
                                       if e.label is not None]:
                 label = (entity.label if variant is None
                          else f"{variant}:{entity.label}")
+                if entity_id in scores:
+                    score = scores[entity_id]
+                else:
+                    score = 0
                 response["entities"][label] = {
-                    "score": room.get_entity_score(entity_id)
+                    "score": score
                 }
                 if body.profile_time:
                     if entity.label in time_result["contexts"]:
