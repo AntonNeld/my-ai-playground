@@ -88,7 +88,7 @@ class Room(BaseModel):
             entity_id = uuid.uuid4().hex
         # Replace the entity if it already exists
         if entity_id in self.entity_ids:
-            self.remove_entity_by_id(entity_id)
+            self.remove_entity(entity_id)
         self.entity_ids.append(entity_id)
         for component_name, component_prop in COMPONENT_PROPS.items():
             component = getattr(entity, component_name)
@@ -96,7 +96,7 @@ class Room(BaseModel):
                 getattr(self, component_prop)[entity_id] = component
         return entity_id
 
-    def remove_entity_by_id(self, entity_id):
+    def remove_entity(self, entity_id):
         for component_prop in COMPONENT_PROPS.values():
             if entity_id in getattr(self, component_prop):
                 del getattr(self, component_prop)[entity_id]
@@ -166,9 +166,9 @@ class Room(BaseModel):
                 pickup.position = None
                 self.pickupper_components[pickupper_id].inventory.append(
                     pickup)
-                self.remove_entity_by_id(pickup_id)
+                self.remove_entity(pickup_id)
             for removed_id in removed:
-                self.remove_entity_by_id(removed_id)
+                self.remove_entity(removed_id)
 
             created_entities = self.drop_system.drop_items(
                 self.pickupper_components, actions, self.position_components)
@@ -178,7 +178,7 @@ class Room(BaseModel):
             removed_entities = self.attack_system.do_attacks(
                 actions, self.position_components, self.vulnerable_components)
             for removed_id in removed_entities:
-                self.remove_entity_by_id(removed_id)
+                self.remove_entity(removed_id)
 
             final_tags = self.tag_system.get_tags(
                 self.tags_components, self.pickupper_components)

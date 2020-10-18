@@ -31,7 +31,7 @@ def entities_routes(state_keeper):
     @router.delete("/rooms/{room_id}/entities/{entity_id}")
     async def delete_entity(room_id: str, entity_id: str):
         return state_keeper.dungeon.get_room(
-            room_id).remove_entity_by_id(entity_id)
+            room_id).remove_entity(entity_id)
 
     @router.get("/rooms/{room_id}/entities/{entity_id}/score",
                 response_model=int)
