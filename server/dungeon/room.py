@@ -6,14 +6,10 @@ from errors import ResourceNotFoundError
 from dungeon.entity import Entity
 
 
-from .consts import DoNothing
 from dungeon.custom_component_dicts import PositionDict, LabelDict
 from dungeon.systems import (PerceptSystem, ActionSystem, TagSystem,
                              MovementSystem, PickUpSystem, DropSystem,
                              AttackSystem, CountTagsScoreSystem)
-
-# Initialize this once instead of in each step
-doNothing = DoNothing()
 
 
 COMPONENT_PROPS = {
@@ -78,7 +74,7 @@ class Room(BaseModel):
         only_public = super().dict(include=include, **kwargs)
         return {
             **only_public, "entities": {
-                entity_id: entity for entity_id, entity
+                entity_id: entity.dict(by_alias=True) for entity_id, entity
                 in self.get_entities(include_id=True)
             }
         }
