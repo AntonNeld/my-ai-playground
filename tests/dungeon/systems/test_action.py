@@ -3,6 +3,7 @@ from unittest import mock
 from dungeon.systems import ActionSystem
 from dungeon.consts import Move, DoNothing
 from dungeon.entity import ActionDetails
+from dungeon.custom_component_dicts import LabelDict
 from profiling import time_profiling, memory_profiling
 
 
@@ -21,7 +22,7 @@ def test_get_action_from_ai():
     percepts = {}
     actions_components = {"a": {"move": ActionDetails()}}
     score_components = {}
-    label_components = {}
+    label_components = LabelDict({})
     actions = system.get_actions(ai_components, percepts, actions_components,
                                  score_components, label_components)
     assert actions == {"a": Move(direction="right")}
@@ -33,7 +34,7 @@ def test_do_not_include_do_nothing():
     percepts = {}
     actions_components = {"a": {"none": ActionDetails()}}
     score_components = {}
-    label_components = {}
+    label_components = LabelDict({})
     actions = system.get_actions(ai_components, percepts, actions_components,
                                  score_components, label_components)
     assert actions == {}
@@ -45,7 +46,7 @@ def test_only_include_allowed_actions():
     percepts = {}
     actions_components = {}
     score_components = {}
-    label_components = {}
+    label_components = LabelDict({})
     actions = system.get_actions(ai_components, percepts, actions_components,
                                  score_components, label_components)
     assert actions == {}
@@ -57,7 +58,7 @@ def test_apply_action_penalty():
     percepts = {}
     actions_components = {"a": {"move": ActionDetails(cost=3)}}
     score_components = {"a": 0}
-    label_components = {}
+    label_components = LabelDict({})
     system.get_actions(ai_components, percepts, actions_components,
                        score_components, label_components)
     assert score_components == {"a": -3}
@@ -69,7 +70,7 @@ def test_no_action_penalty_if_no_score_component():
     percepts = {}
     actions_components = {"a": {"move": ActionDetails(cost=3)}}
     score_components = {}
-    label_components = {}
+    label_components = LabelDict({})
     system.get_actions(ai_components, percepts, actions_components,
                        score_components, label_components)
     assert score_components == {}
@@ -81,7 +82,7 @@ def test_do_profiling():
     percepts = {}
     actions_components = {}
     score_components = {}
-    label_components = {"a": "player"}
+    label_components = LabelDict({"a": "player"})
     time_profiling.start()
     memory_profiling.start()
     system.get_actions(ai_components, percepts, actions_components,
@@ -98,7 +99,7 @@ def test_no_profiling_if_no_label():
     percepts = {}
     actions_components = {}
     score_components = {}
-    label_components = {}
+    label_components = LabelDict({})
     time_profiling.start()
     memory_profiling.start()
     system.get_actions(ai_components, percepts, actions_components,
@@ -131,7 +132,7 @@ def test_call_update_state_percept():
     percepts = {"a": {"entities": []}}
     actions_components = {}
     score_components = {}
-    label_components = {}
+    label_components = LabelDict({})
     with mock.patch.object(ai, "update_state_percept") as update_state_percept:
         system.get_actions(
             ai_components, percepts, actions_components,
@@ -146,7 +147,7 @@ def test_call_next_action_with_percept():
     percepts = {"a": {"entities": []}}
     actions_components = {}
     score_components = {}
-    label_components = {}
+    label_components = LabelDict({})
     with mock.patch.object(
             ai, "next_action", wraps=ai.next_action) as next_action:
         system.get_actions(
@@ -162,7 +163,7 @@ def test_no_percept_means_empty_dict():
     percepts = {}
     actions_components = {}
     score_components = {}
-    label_components = {}
+    label_components = LabelDict({})
     with mock.patch.object(ai, "update_state_percept") as update_state_percept:
         with mock.patch.object(
                 ai, "next_action", wraps=ai.next_action) as next_action:
@@ -180,7 +181,7 @@ def test_call_update_state_action():
     percepts = {}
     actions_components = {"a": {"move": ActionDetails()}}
     score_components = {}
-    label_components = {}
+    label_components = LabelDict({})
     with mock.patch.object(ai, "update_state_action") as update_state_action:
         system.get_actions(
             ai_components, percepts, actions_components,
