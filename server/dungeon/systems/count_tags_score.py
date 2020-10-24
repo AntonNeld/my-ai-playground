@@ -3,7 +3,7 @@ class CountTagsScoreSystem:
     def add_tag_scores(self, count_tags_score_components,
                        position_components, tags_components,
                        label_components, score_components):
-        scores = self.calculate_tag_scores(
+        scores = self._calculate_tag_scores(
             count_tags_score_components,
             position_components, tags_components,
             label_components, score_type="additive"
@@ -15,15 +15,15 @@ class CountTagsScoreSystem:
     def get_constant_tag_scores(self, count_tags_score_components,
                                 position_components, tags_components,
                                 label_components):
-        return self.calculate_tag_scores(
+        return self._calculate_tag_scores(
             count_tags_score_components,
             position_components, tags_components,
             label_components, score_type="constant"
         )
 
-    def calculate_tag_scores(self, count_tags_score_components,
-                             position_components, tags_components,
-                             label_components, score_type):
+    def _calculate_tag_scores(self, count_tags_score_components,
+                              position_components, tags_components,
+                              label_components, score_type):
         scores = {}
         items = count_tags_score_components.items()
         for counter_id, count_tags_score in items:
