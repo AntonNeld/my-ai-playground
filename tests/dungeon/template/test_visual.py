@@ -1,4 +1,3 @@
-from dungeon.entity import Entity
 from dungeon.template.visual import VisualTemplate
 
 
@@ -11,7 +10,8 @@ def test_template_not_modified_by_room():
         "room": "p"
     })
     room = template.create_room()
-    room.get_entities()[0].looks_like = "coin"
+    entity_id = room.list_entities()[0]
+    room.get_entity(entity_id).looks_like = "coin"
     assert template.definitions["p"].looks_like == "player"
 
 
@@ -23,8 +23,7 @@ def test_parse_colocated_entities():
         },
         "room": "a"
     })
-    entities = template.create_room().get_entities()
-    assert Entity(**{"position": {"x": 0, "y": 0},
-                     "looksLike": "player"}) in entities
-    assert Entity(**{"position": {"x": 0, "y": 0},
-                     "looksLike": "wall"}) in entities
+    entities = template.create_room().dict(
+        exclude_none=True, by_alias=True)["entities"].values()
+    assert {"position": {"x": 0, "y": 0}, "looksLike": "player"} in entities
+    assert {"position": {"x": 0, "y": 0}, "looksLike": "wall"} in entities

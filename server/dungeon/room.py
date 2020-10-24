@@ -74,7 +74,7 @@ class Room(BaseModel):
         only_public = super().dict(include=include, **kwargs)
         return {
             **only_public, "entities": {
-                entity_id: entity.dict(by_alias=True) for entity_id, entity
+                entity_id: entity.dict(**kwargs) for entity_id, entity
                 in self.get_entities(include_id=True)
             }
         }

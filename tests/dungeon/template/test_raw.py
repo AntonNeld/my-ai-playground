@@ -9,5 +9,6 @@ def test_template_not_modified_by_room():
         ]
     })
     room = template.create_room()
-    room.get_entities()[0].position.x = 1
+    entity_id = room.list_entities()[0]
+    room.get_entity(entity_id).position.x = 1
     assert template.entities[0].position.x == 0

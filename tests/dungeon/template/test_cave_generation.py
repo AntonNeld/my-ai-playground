@@ -52,7 +52,7 @@ def test_no_overlap(template):
 
 def test_correct_amount_of_stuff(template):
     room = template.create_room().dict()
-    looks_like = [e["looksLike"] for e in room["entities"].values()]
+    looks_like = [e["looks_like"] for e in room["entities"].values()]
     assert looks_like.count("player") == template.stuff["p"].amount
     assert looks_like.count("coin") == template.stuff["c"].amount
 
@@ -91,10 +91,10 @@ def test_outside_is_not_connected_with_inside(template):
     # "Fill" the area and check that we never reach a location
     # with too large/small x or y.
     player = [e for e in room["entities"].values()
-              if e["looksLike"] == "player"][0]
+              if e["looks_like"] == "player"][0]
     wall_locations = [(e["position"]["x"], e["position"]["y"])
                       for e in room["entities"].values()
-                      if e["looksLike"] == "wall"]
+                      if e["looks_like"] == "wall"]
     edge = [(player["position"]["x"], player["position"]["y"])]
 
     filled = set()
