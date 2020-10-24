@@ -1,103 +1,103 @@
-from test_utils import room_from_yaml
+from dungeon.systems import PerceptSystem
+from dungeon.custom_component_dicts import PositionDict
+from dungeon.entity import Perception, Pickupper, Entity
+from dungeon.consts import Position
 
 
-def test_get_percepts():
-    room = room_from_yaml("""
-templateType: "visual"
-definitions:
-  p:
-    looksLike: "player"
-    perception: {}
-  c:
-    looksLike: "coin"
-  "#":
-    looksLike: "wall"
-room: |-2
-     #
-  p  c
-""")
-
-    perceptor_id, _ = room.get_entities(
-        include_id=True, looks_like="player")[0]
-    entities = room.percept_system.get_percepts(
-        room.perception_components, room.position_components,
-        room.looks_like_components, room.pickupper_components
-    )[perceptor_id]["entities"]
-    assert len(entities) == 2
-    assert {"x": 3, "y": 0, "looks_like": "coin"} in entities
-    assert {"x": 3, "y": 1, "looks_like": "wall"} in entities
+def test_percept_include_entities():
+    system = PerceptSystem()
+    perception_components = {"perceptor": Perception()}
+    position_components = PositionDict(
+        {"perceptor": Position(x=0, y=0), "otherEntity": Position(x=1, y=1)})
+    looks_like_components = {"otherEntity": "coin"}
+    pickupper_components = {}
+    percepts = system.get_percepts(perception_components, position_components,
+                                   looks_like_components, pickupper_components)
+    assert percepts == {
+        "perceptor": {
+            "entities": [{"x": 1, "y": 1, "looks_like": "coin"}]
+        }
+    }
 
 
-def test_get_percepts_with_max_distance():
-    room = room_from_yaml("""
-templateType: "visual"
-definitions:
-  p:
-    looksLike: "player"
-    perception:
-      distance: 3
-  c:
-    looksLike: "coin"
-  "#":
-    looksLike: "wall"
-room: |-
-  #     #
-     p  c
-  #     #
-""")
-
-    perceptor_id, _ = room.get_entities(
-        include_id=True, looks_like="player")[0]
-    entities = room.percept_system.get_percepts(
-        room.perception_components, room.position_components,
-        room.looks_like_components, room.pickupper_components
-    )[perceptor_id]["entities"]
-    assert len(entities) == 1
-    assert {"x": 3, "y": 0, "looks_like": "coin"} in entities
+def test_percept_excludes_self():
+    system = PerceptSystem()
+    perception_components = {"perceptor": Perception()}
+    position_components = PositionDict(
+        {"perceptor": Position(x=0, y=0), "otherEntity": Position(x=1, y=1)})
+    looks_like_components = {"otherEntity": "coin", "perceptor": "player"}
+    pickupper_components = {}
+    percepts = system.get_percepts(perception_components, position_components,
+                                   looks_like_components, pickupper_components)
+    assert percepts == {
+        "perceptor": {
+            "entities": [{"x": 1, "y": 1, "looks_like": "coin"}]
+        }
+    }
 
 
-def test_get_percepts_with_position():
-    room = room_from_yaml("""
-templateType: "visual"
-definitions:
-  p:
-    looksLike: "player"
-    perception:
-      includePosition: true
-  "#":
-    looksLike: "wall"
-room: |-2
-     #
-  # p
-""")
+def test_percept_exclude_entities_beyond_max_distance():
+    system = PerceptSystem()
+    perception_components = {"perceptor": Perception(distance=3)}
+    position_components = PositionDict({
+        "perceptor": Position(x=0, y=0),
+        "otherEntity": Position(x=3, y=0),
+        "farEntityOne": Position(x=3, y=1),
+        "farEntityTwo": Position(x=3, y=-1),
+        "farEntityThree": Position(x=-3, y=1),
+        "farEntityFour": Position(x=-3, y=-1),
+    })
+    looks_like_components = {
+        "otherEntity": "coin",
+        "farEntityOne": "wall",
+        "farEntityTwo": "wall",
+        "farEntityThree": "wall",
+        "farEntityFour": "wall",
+    }
+    pickupper_components = {}
+    percepts = system.get_percepts(perception_components, position_components,
+                                   looks_like_components, pickupper_components)
+    assert percepts == {
+        "perceptor": {
+            "entities": [{"x": 3, "y": 0, "looks_like": "coin"}]
+        }
+    }
 
-    perceptor_id, _ = room.get_entities(
-        include_id=True, looks_like="player")[0]
-    position = room.percept_system.get_percepts(
-        room.perception_components, room.position_components,
-        room.looks_like_components, room.pickupper_components
-    )[perceptor_id]["position"]
-    assert position["x"] == 2
-    assert position["y"] == 0
+
+def test_percept_include_position():
+    system = PerceptSystem()
+    perception_components = {"perceptor": Perception(includePosition=True)}
+    position_components = PositionDict({"perceptor": Position(x=0, y=0)})
+    looks_like_components = {}
+    pickupper_components = {}
+    percepts = system.get_percepts(perception_components, position_components,
+                                   looks_like_components, pickupper_components)
+    assert percepts == {
+        "perceptor": {
+            "entities": [],
+            "position": {"x": 0, "y": 0}
+        }
+    }
 
 
-def test_get_percepts_inventory():
-    room = room_from_yaml("""
-templateType: "visual"
-definitions:
-  p:
-    looksLike: "player"
-    perception: {}
-    pickupper:
-      inventory:
-        - looksLike: "coin"
-        - looksLike: "evilCoin"
-room: |-
-  p
-""")
-    perceptor_id, _ = room.get_entities(
-        include_id=True, looks_like="player")[0]
-    assert room.percept_system.get_percepts(
-        room.perception_components, room.position_components,
-        room.looks_like_components, room.pickupper_components
-    )[perceptor_id]["inventory"] == ["coin", "evilCoin"]
+def test_get_percept_include_inventory():
+    system = PerceptSystem()
+    perception_components = {"perceptor": Perception()}
+    position_components = PositionDict({"perceptor": Position(x=0, y=0)})
+    looks_like_components = {}
+    pickupper_components = {
+        "perceptor": Pickupper(
+            inventory=[
+                Entity(looksLike="coin"),
+                Entity(looksLike="evilCoin")
+            ]
+        )
+    }
+    percepts = system.get_percepts(perception_components, position_components,
+                                   looks_like_components, pickupper_components)
+    assert percepts == {
+        "perceptor": {
+            "entities": [],
+            "inventory": ["coin", "evilCoin"]
+        }
+    }
