@@ -1,36 +1,36 @@
-from test_utils import room_from_yaml
+from dungeon.systems import TagSystem
+from dungeon.entity import Pickupper, Entity, ItemPickup
 
 
-def test_item_provides_tags():
-    room = room_from_yaml("""
-templateType: "visual"
-definitions:
-  p:
-    looksLike: "player"
-    ai:
-      kind: "singular"
-      action:
-        actionType: "move"
-        direction: "right"
-    pickupper: {}
-    actions:
-      move: {}
-    tags:
-      - "tagZero"
-  c:
-    pickup:
-      kind: "item"
-      providesTags:
-        - "tagOne"
-        - "tagTwo"
-room: |-
-  pc
-""")
-    room.step()
-    all_tags = room.tag_system.get_tags(
-        room.tags_components, room.pickupper_components)
-    entity_id, _ = room.get_entities(looks_like="player", include_id=True)[0]
-    tags = all_tags[entity_id]
-    assert "tagZero" in tags
-    assert "tagOne" in tags
-    assert "tagTwo" in tags
+def test_include_inherent_tags():
+    system = TagSystem()
+    tags_components = {"a": ["tagOne", "tagTwo"]}
+    pickupper_components = {}
+    tags = system.get_tags(tags_components, pickupper_components)
+    assert tags == {"a": {"tagOne", "tagTwo"}}
+
+
+def test_include_item_tags():
+    system = TagSystem()
+    tags_components = {}
+    pickupper_components = {
+        "a": Pickupper(inventory=[
+            Entity(pickup=ItemPickup(kind="item",
+                                     providesTags=["tagTwo", "tagThree"]))
+        ])
+    }
+    tags = system.get_tags(tags_components, pickupper_components)
+    assert tags == {"a": {"tagTwo", "tagThree"}}
+
+
+def test_combine_tags():
+    system = TagSystem()
+    tags_components = {"a": ["tagOne", "tagTwo"]}
+    pickupper_components = {
+        "a": Pickupper(inventory=[
+            Entity(pickup=ItemPickup(kind="item",
+                                     providesTags=["tagTwo", "tagThree"]))
+        ])
+    }
+    tags = system.get_tags(tags_components, pickupper_components)
+    assert tags == {"a": {"tagOne", "tagTwo", "tagThree"}}
