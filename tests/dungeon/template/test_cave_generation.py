@@ -1,4 +1,5 @@
 import pytest
+import json
 
 from dungeon.template.cave_generation import CaveGenerationTemplate
 
@@ -24,70 +25,78 @@ def template():
 
 
 def test_creates_a_room_with_entities(template):
-    assert template.create_room().get_entities()
+    assert template.create_room().dict()["entities"]
 
 
 def test_correct_width(template):
-    room = template.create_room()
-    min_x = min([e.position.x for e in room.get_entities()])
-    max_x = max([e.position.x for e in room.get_entities()])
+    room = template.create_room().dict()
+    print(room)
+    min_x = min([e["position"]["x"] for e in room["entities"].values()])
+    max_x = max([e["position"]["x"] for e in room["entities"].values()])
     assert max_x + 1 - min_x == template.width
 
 
 def test_correct_height(template):
-    room = template.create_room()
-    min_y = min([e.position.y for e in room.get_entities()])
-    max_y = max([e.position.y for e in room.get_entities()])
+    room = template.create_room().dict()
+    min_y = min([e["position"]["y"] for e in room["entities"].values()])
+    max_y = max([e["position"]["y"] for e in room["entities"].values()])
     assert max_y + 1 - min_y == template.height
 
 
 def test_no_overlap(template):
-    room = template.create_room()
-    for e in room.get_entities():
-        assert len(room.position_components.get_entities_at(
-            e.position.x, e.position.y)) == 1
+    room = template.create_room().dict()
+    positions = [(e["position"]["x"], e["position"]["y"])
+                 for e in room["entities"].values()]
+    assert len(positions) == len(set(positions))
 
 
 def test_correct_amount_of_stuff(template):
-    room = template.create_room()
-    assert len(room.get_entities(looks_like="player")
-               ) == template.stuff["p"].amount
-    assert len(room.get_entities(looks_like="coin")
-               ) == template.stuff["c"].amount
+    room = template.create_room().dict()
+    looks_like = [e["looksLike"] for e in room["entities"].values()]
+    assert looks_like.count("player") == template.stuff["p"].amount
+    assert looks_like.count("coin") == template.stuff["c"].amount
 
 
 def test_template_not_modified_by_room(template):
     room = template.create_room()
-    wall_entity = room.get_entities(looks_like="wall")[0]
-    wall_entity.looks_like = "coin"
-    player_entity = room.get_entities(looks_like="player")[0]
-    player_entity.looks_like = "coin"
+    for entity_id in room.list_entities():
+        entity = room.get_entity(entity_id)
+        entity.looks_like = "coin"
     assert template.definitions["#"].looks_like == "wall"
     assert template.definitions["p"].looks_like == "player"
 
 
 def test_same_room_for_same_seed(template):
-    room_one = template.create_room()
-    room_two = template.create_room()
-    assert sorted(room_one.get_entities(), key=lambda e: e.json()) == sorted(
-        room_two.get_entities(), key=lambda e: e.json())
+    room_one = template.create_room().dict()
+    room_two = template.create_room().dict()
+    assert (
+        sorted(room_one["entities"].values(), key=lambda e: json.dumps(e))
+        == sorted(room_two["entities"].values(), key=lambda e: json.dumps(e))
+    )
 
 
 def test_different_rooms_for_different_seeds(template):
-    room_one = template.create_room()
+    room_one = template.create_room().dict()
     template.seed = 234
-    room_two = template.create_room()
-    assert sorted(room_one.get_entities(), key=lambda e: e.json()) != sorted(
-        room_two.get_entities(), key=lambda e: e.json())
+    room_two = template.create_room().dict()
+    assert (
+        sorted(room_one["entities"].values(), key=lambda e: json.dumps(e))
+        != sorted(room_two["entities"].values(), key=lambda e: json.dumps(e))
+    )
 
 
 def test_outside_is_not_connected_with_inside(template):
-    room = template.create_room()
+    room = template.create_room().dict()
     # Let's designate the area with the player as "inside".
     # "Fill" the area and check that we never reach a location
     # with too large/small x or y.
-    player = room.get_entities(looks_like="player")[0]
-    edge = [(player.position.x, player.position.y)]
+    player = [e for e in room["entities"].values()
+              if e["looksLike"] == "player"][0]
+    wall_locations = [(e["position"]["x"], e["position"]["y"])
+                      for e in room["entities"].values()
+                      if e["looksLike"] == "wall"]
+    edge = [(player["position"]["x"], player["position"]["y"])]
+
     filled = set()
     while edge:
         (x, y) = edge.pop()
@@ -97,9 +106,5 @@ def test_outside_is_not_connected_with_inside(template):
         assert y < template.height
         filled.add((x, y))
         for location in [(x+1, y), (x-1, y), (x, y+1), (x, y-1)]:
-            if (location not in filled
-                    and not [e for e in
-                             room.position_components.get_entities_at(
-                                 location[0], location[1]
-                             ) if room.get_entity(e).looks_like == "wall"]):
+            if location not in filled and location not in wall_locations:
                 edge.append(location)
