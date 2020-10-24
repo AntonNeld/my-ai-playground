@@ -1,175 +1,116 @@
-from test_utils import room_from_yaml
-from dungeon.entity import Entity
-from dungeon.consts import PickUp
+from dungeon.entity import (Entity, Pickupper, ItemPickup, ScorePickup,
+                            VanishPickup)
+from dungeon.consts import PickUp, Position
+from dungeon.systems import PickUpSystem
+from dungeon.custom_component_dicts import PositionDict
 
 
-def test_pickup():
-    room = room_from_yaml("""
-templateType: "visual"
-definitions:
-  p:
-    looksLike: "player"
-    ai:
-      kind: "singular"
-      action:
-        actionType: "move"
-        direction: "right"
-    pickupper: {}
-    actions:
-      move: {}
-  c:
-    pickup:
-      kind: "item"
-room: |-
-  pc
-""")
-
-    room.step()
-    assert len(room.get_entities()) == 1
-    assert room.get_entities()[0].pickupper.inventory == [
-        Entity(**{"pickup": {"kind": "item"}})]
+def test_pickup_item():
+    system = PickUpSystem()
+    pickupper_components = {"pickupper": Pickupper(mode="action")}
+    actions = {"pickupper": PickUp()}
+    position_components = PositionDict({
+        "pickupper": Position(x=0, y=0),
+        "item": Position(x=0, y=0)
+    })
+    pickup_components = {"item": ItemPickup(kind="item")}
+    score_components = {}
+    picked_up_items, removed_entities = system.pick_up_items(
+        pickupper_components, actions, position_components,
+        pickup_components, score_components
+    )
+    assert picked_up_items == {"item": "pickupper"}
+    assert removed_entities == set()
 
 
 def test_inventory_limit():
-    room = room_from_yaml("""
-templateType: "visual"
-definitions:
-  p:
-    looksLike: "player"
-    ai:
-      kind: "singular"
-      action:
-        actionType: "move"
-        direction: "right"
-    pickupper:
-      inventoryLimit: 1
-    actions:
-      move: {}
-  c:
-    pickup:
-      kind: "item"
-room: |-
-  pcc
-""")
-
-    room.step()
-    assert len(room.get_entities()) == 2
-    assert room.get_entities(looks_like="player")[0].pickupper.inventory == [
-        Entity(**{"pickup": {"kind": "item"}})]
-    room.step()
-    assert len(room.get_entities()) == 2
-    assert room.get_entities(looks_like="player")[0].pickupper.inventory == [
-        Entity(**{"pickup": {"kind": "item"}})]
-
-
-def test_pickup_action():
-    room = room_from_yaml("""
-templateType: "visual"
-definitions:
-  p:
-    looksLike: "player"
-    ai:
-      kind: "singular"
-      action:
-        actionType: "move"
-        direction: "right"
-    pickupper:
-      mode: "action"
-    actions:
-      move: {}
-      pick_up: {}
-  c:
-    pickup:
-      kind: "item"
-room: |-
-  pc
-""")
-
-    room.step()
-    assert len(room.get_entities()) == 2
-    room.get_entities(looks_like="player")[0].ai.action = PickUp()
-    room.step()
-    assert len(room.get_entities()) == 1
-    assert room.get_entities()[0].pickupper.inventory == [
-        Entity(**{"pickup": {"kind": "item"}})]
+    system = PickUpSystem()
+    pickupper_components = {"pickupper": Pickupper(
+        mode="action", inventory=[Entity()], inventoryLimit=1)}
+    actions = {"pickupper": PickUp()}
+    position_components = PositionDict({
+        "pickupper": Position(x=0, y=0),
+        "item": Position(x=0, y=0)
+    })
+    pickup_components = {"item": ItemPickup(kind="item")}
+    score_components = {}
+    picked_up_items, removed_entities = system.pick_up_items(
+        pickupper_components, actions, position_components,
+        pickup_components, score_components
+    )
+    assert picked_up_items == {}
+    assert removed_entities == set()
 
 
 def test_score_pickup():
-    room = room_from_yaml("""
-templateType: "visual"
-definitions:
-  p:
-    looksLike: "player"
-    ai:
-      kind: "singular"
-      action:
-        actionType: "move"
-        direction: "right"
-    score: 0
-    pickupper: {}
-    actions:
-      move: {}
-  c:
-    pickup:
-      kind: "addScore"
-      score: 2
-room: |-
-  pc
-""")
-
-    room.step()
-    assert len(room.get_entities()) == 1
-    assert room.get_entities()[0].score == 2
+    system = PickUpSystem()
+    pickupper_components = {"pickupper": Pickupper(mode="action")}
+    actions = {"pickupper": PickUp()}
+    position_components = PositionDict({
+        "pickupper": Position(x=0, y=0),
+        "item": Position(x=0, y=0)
+    })
+    pickup_components = {"item": ScorePickup(kind="addScore", score=1)}
+    score_components = {"pickupper": 3}
+    picked_up_items, removed_entities = system.pick_up_items(
+        pickupper_components, actions, position_components,
+        pickup_components, score_components
+    )
+    assert picked_up_items == {}
+    assert removed_entities == set(["item"])
+    assert score_components["pickupper"] == 4
 
 
-def test_score_pickup_score_none():
-    room = room_from_yaml("""
-templateType: "visual"
-definitions:
-  p:
-    looksLike: "player"
-    ai:
-      kind: "singular"
-      action:
-        actionType: "move"
-        direction: "right"
-    pickupper: {}
-    actions:
-      move: {}
-  c:
-    pickup:
-      kind: "addScore"
-      score: 2
-room: |-
-  pc
-""")
-
-    room.step()
-    assert len(room.get_entities()) == 1
-    assert room.get_entities()[0].score is None
+def test_score_pickup_only_vanish_if_no_score():
+    system = PickUpSystem()
+    pickupper_components = {"pickupper": Pickupper(mode="action")}
+    actions = {"pickupper": PickUp()}
+    position_components = PositionDict({
+        "pickupper": Position(x=0, y=0),
+        "item": Position(x=0, y=0)
+    })
+    pickup_components = {"item": ScorePickup(kind="addScore", score=1)}
+    score_components = {}
+    picked_up_items, removed_entities = system.pick_up_items(
+        pickupper_components, actions, position_components,
+        pickup_components, score_components
+    )
+    assert picked_up_items == {}
+    assert removed_entities == set(["item"])
+    assert score_components == {}
 
 
 def test_vanish_pickup():
-    room = room_from_yaml("""
-templateType: "visual"
-definitions:
-  p:
-    looksLike: "player"
-    ai:
-      kind: "singular"
-      action:
-        actionType: "move"
-        direction: "right"
-    pickupper: {}
-    actions:
-      move: {}
-  c:
-    pickup:
-      kind: "vanish"
-room: |-
-  pc
-""")
+    system = PickUpSystem()
+    pickupper_components = {"pickupper": Pickupper(mode="action")}
+    actions = {"pickupper": PickUp()}
+    position_components = PositionDict({
+        "pickupper": Position(x=0, y=0),
+        "item": Position(x=0, y=0)
+    })
+    pickup_components = {"item": VanishPickup(kind="vanish")}
+    score_components = {}
+    picked_up_items, removed_entities = system.pick_up_items(
+        pickupper_components, actions, position_components,
+        pickup_components, score_components
+    )
+    assert picked_up_items == {}
+    assert removed_entities == set(["item"])
 
-    room.step()
-    assert len(room.get_entities()) == 1
-    assert room.get_entities()[0].pickupper.inventory == []
+
+def test_automatic_pickup():
+    system = PickUpSystem()
+    pickupper_components = {"pickupper": Pickupper(mode="auto")}
+    actions = {}
+    position_components = PositionDict({
+        "pickupper": Position(x=0, y=0),
+        "item": Position(x=0, y=0)
+    })
+    pickup_components = {"item": VanishPickup(kind="vanish")}
+    score_components = {}
+    picked_up_items, removed_entities = system.pick_up_items(
+        pickupper_components, actions, position_components,
+        pickup_components, score_components
+    )
+    assert picked_up_items == {}
+    assert removed_entities == set(["item"])
