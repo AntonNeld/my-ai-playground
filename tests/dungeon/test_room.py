@@ -2,6 +2,16 @@ from dungeon.room import Room
 from dungeon.entity import Entity, CountTagsScore
 from dungeon.consts import Position
 
+BASE_RANDOM_ROOM = {
+    "entities": {
+        "a": {
+            "ai": {"kind": "random"},
+            "actions": {"move": {}},
+            "position": {"x": 0, "y": 0}
+        }
+    }
+}
+
 
 def test_get_entity_scores():
     room = Room(entities={
@@ -33,3 +43,19 @@ def test_get_entity_scores():
         "tags_score_only": 1,
         "all_score_types": 6
     }
+
+
+def test_room_randomness_different_for_different_seeds():
+    room_one = Room(randomSeed=123, **BASE_RANDOM_ROOM)
+    room_two = Room(randomSeed=321, **BASE_RANDOM_ROOM)
+    room_one.step()
+    room_two.step()
+    assert room_one != room_two
+
+
+def test_room_randomness_same_for_same_seeds():
+    room_one = Room(randomSeed=123, **BASE_RANDOM_ROOM)
+    room_two = Room(randomSeed=123, **BASE_RANDOM_ROOM)
+    room_one.step()
+    room_two.step()
+    assert room_one == room_two

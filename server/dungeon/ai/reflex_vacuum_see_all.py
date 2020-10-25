@@ -8,7 +8,7 @@ class ReflexVacuumSeeAllAI(BaseModel):
     # Reflex vacuum cleaner agent from Figure 2.8
     kind: Literal["reflexVacuumSeeAll"]
 
-    def next_action(self, percept):
+    def next_action(self, percept, random_generator):
         dirt_count = len([e for e in percept["entities"]
                           if e["looks_like"] == "dirt"])
 

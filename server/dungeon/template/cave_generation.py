@@ -15,6 +15,7 @@ class PlacementDetails(BaseModel):
 
 class CaveGenerationTemplate(BaseModel):
     template_type: Literal["caveGeneration"] = Field(..., alias="templateType")
+    room_seed: Optional[int] = Field(None, alias="roomSeed")
     definitions: Definitions
     seed: int
     width: int
@@ -30,7 +31,10 @@ class CaveGenerationTemplate(BaseModel):
             random_generator)
         wall_entities = translate_definition_symbol(
             self.wall, self.definitions)
-        room = Room()
+        if self.room_seed is not None:
+            room = Room(randomSeed=self.room_seed)
+        else:
+            room = Room()
         for entity in wall_entities:
             fill_room(room, entity, self.width, self.height, free_locations)
         symbols_to_place = []

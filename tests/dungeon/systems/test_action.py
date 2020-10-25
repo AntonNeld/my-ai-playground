@@ -1,3 +1,4 @@
+import random
 from unittest import mock
 
 from dungeon.systems import ActionSystem
@@ -12,72 +13,81 @@ class MockAI:
     def __init__(self, action):
         self.action = action
 
-    def next_action(self, percept):
+    def next_action(self, percept, random_generator):
         return self.action
 
 
 def test_get_action_from_ai():
     system = ActionSystem()
+    random_generator = random.Random(123)
     ai_components = {"a": MockAI(Move(direction="right"))}
     percepts = {}
     actions_components = {"a": {"move": ActionDetails()}}
     score_components = {}
     label_components = LabelDict({})
     actions = system.get_actions(ai_components, percepts, actions_components,
-                                 score_components, label_components)
+                                 score_components, label_components,
+                                 random_generator)
     assert actions == {"a": Move(direction="right")}
 
 
 def test_do_not_include_do_nothing():
     system = ActionSystem()
+    random_generator = random.Random(123)
     ai_components = {"a": MockAI(DoNothing())}
     percepts = {}
     actions_components = {"a": {"none": ActionDetails()}}
     score_components = {}
     label_components = LabelDict({})
     actions = system.get_actions(ai_components, percepts, actions_components,
-                                 score_components, label_components)
+                                 score_components, label_components,
+                                 random_generator)
     assert actions == {}
 
 
 def test_only_include_allowed_actions():
     system = ActionSystem()
+    random_generator = random.Random(123)
     ai_components = {"a": MockAI(Move(direction="right"))}
     percepts = {}
     actions_components = {}
     score_components = {}
     label_components = LabelDict({})
     actions = system.get_actions(ai_components, percepts, actions_components,
-                                 score_components, label_components)
+                                 score_components, label_components,
+                                 random_generator)
     assert actions == {}
 
 
 def test_apply_action_penalty():
     system = ActionSystem()
+    random_generator = random.Random(123)
     ai_components = {"a": MockAI(Move(direction="right"))}
     percepts = {}
     actions_components = {"a": {"move": ActionDetails(cost=3)}}
     score_components = {"a": 0}
     label_components = LabelDict({})
     system.get_actions(ai_components, percepts, actions_components,
-                       score_components, label_components)
+                       score_components, label_components, random_generator)
     assert score_components == {"a": -3}
 
 
 def test_no_action_penalty_if_no_score_component():
     system = ActionSystem()
+    random_generator = random.Random(123)
     ai_components = {"a": MockAI(Move(direction="right"))}
     percepts = {}
     actions_components = {"a": {"move": ActionDetails(cost=3)}}
     score_components = {}
     label_components = LabelDict({})
     system.get_actions(ai_components, percepts, actions_components,
-                       score_components, label_components)
+                       score_components, label_components, random_generator)
     assert score_components == {}
 
 
 def test_do_profiling():
     system = ActionSystem()
+    random_generator = random.Random(123)
     ai_components = {"a": MockAI(DoNothing())}
     percepts = {}
     actions_components = {}
@@ -86,7 +96,7 @@ def test_do_profiling():
     time_profiling.start()
     memory_profiling.start()
     system.get_actions(ai_components, percepts, actions_components,
-                       score_components, label_components)
+                       score_components, label_components, random_generator)
     time_profiling.stop()
     memory_profiling.stop()
     assert "player" in time_profiling.get_result()["contexts"]
@@ -95,6 +105,7 @@ def test_do_profiling():
 
 def test_no_profiling_if_no_label():
     system = ActionSystem()
+    random_generator = random.Random(123)
     ai_components = {"a": MockAI(DoNothing())}
     percepts = {}
     actions_components = {}
@@ -103,7 +114,7 @@ def test_no_profiling_if_no_label():
     time_profiling.start()
     memory_profiling.start()
     system.get_actions(ai_components, percepts, actions_components,
-                       score_components, label_components)
+                       score_components, label_components, random_generator)
     time_profiling.stop()
     memory_profiling.stop()
     assert time_profiling.get_result()["contexts"] == {}
@@ -118,7 +129,7 @@ class FullMockAI:
     def update_state_percept(self, percept):
         pass
 
-    def next_action(self, percept):
+    def next_action(self, percept, random_generator):
         return self.action
 
     def update_state_action(self, action):
@@ -127,6 +138,7 @@ class FullMockAI:
 
 def test_call_update_state_percept():
     system = ActionSystem()
+    random_generator = random.Random(123)
     ai = FullMockAI(DoNothing())
     ai_components = {"a": ai}
     percepts = {"a": {"entities": []}}
@@ -136,12 +148,13 @@ def test_call_update_state_percept():
     with mock.patch.object(ai, "update_state_percept") as update_state_percept:
         system.get_actions(
             ai_components, percepts, actions_components,
-            score_components, label_components)
+            score_components, label_components, random_generator)
         assert update_state_percept.call_args == mock.call({"entities": []})
 
 
-def test_call_next_action_with_percept():
+def test_call_next_action_with_percept_and_generator():
     system = ActionSystem()
+    random_generator = random.Random(123)
     ai = FullMockAI(DoNothing())
     ai_components = {"a": ai}
     percepts = {"a": {"entities": []}}
@@ -152,12 +165,14 @@ def test_call_next_action_with_percept():
             ai, "next_action", wraps=ai.next_action) as next_action:
         system.get_actions(
             ai_components, percepts, actions_components,
-            score_components, label_components)
-        assert next_action.call_args == mock.call({"entities": []})
+            score_components, label_components, random_generator)
+        assert next_action.call_args == mock.call(
+            {"entities": []}, random_generator)
 
 
 def test_no_percept_means_empty_dict():
     system = ActionSystem()
+    random_generator = random.Random(123)
     ai = FullMockAI(DoNothing())
     ai_components = {"a": ai}
     percepts = {}
@@ -169,13 +184,14 @@ def test_no_percept_means_empty_dict():
                 ai, "next_action", wraps=ai.next_action) as next_action:
             system.get_actions(
                 ai_components, percepts, actions_components,
-                score_components, label_components)
+                score_components, label_components, random_generator)
             assert update_state_percept.call_args == mock.call({})
-            assert next_action.call_args == mock.call({})
+            assert next_action.call_args == mock.call({}, random_generator)
 
 
 def test_call_update_state_action():
     system = ActionSystem()
+    random_generator = random.Random(123)
     ai = FullMockAI(Move(direction="right"))
     ai_components = {"a": ai}
     percepts = {}
@@ -185,7 +201,7 @@ def test_call_update_state_action():
     with mock.patch.object(ai, "update_state_action") as update_state_action:
         system.get_actions(
             ai_components, percepts, actions_components,
-            score_components, label_components)
+            score_components, label_components, random_generator)
         assert update_state_action.call_args == mock.call(
             Move(action_type="move", direction="right")
         )

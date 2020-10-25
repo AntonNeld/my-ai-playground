@@ -10,7 +10,7 @@ class GetNearestCoinAI(BaseModel):
     kind: Literal["getNearestCoin"]
     manual_pickup: bool = Field(False, alias="manualPickup")
 
-    def next_action(self, percept):
+    def next_action(self, percept, random_generator):
         if (self.manual_pickup and {"x": 0, "y": 0, "looks_like": "coin"}
                 in percept["entities"]):
             return PickUp()

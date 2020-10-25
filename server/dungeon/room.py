@@ -1,6 +1,7 @@
 import uuid
+import random
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from errors import ResourceNotFoundError
 from dungeon.entity import Entity
@@ -32,6 +33,7 @@ COMPONENT_PROPS = {
 
 class Room(BaseModel):
     steps: int = 0
+    random_seed: int = Field(0, alias="randomSeed")
 
     class Config:
         extra = "allow"
@@ -130,6 +132,8 @@ class Room(BaseModel):
 
     def step(self, steps=1):
         for _ in range(steps):
+            random_generator = random.Random(self.random_seed)
+
             initial_tags = self.tag_system.get_tags(
                 self.tags_components, self.inventory_components,
                 self.pickup_components)
@@ -140,7 +144,7 @@ class Room(BaseModel):
 
             actions = self.action_system.get_actions(
                 self.ai_components, percepts, self.actions_components,
-                self.score_components, self.label_components)
+                self.score_components, self.label_components, random_generator)
 
             self.movement_system.move_entities(
                 actions, self.position_components,
@@ -171,3 +175,4 @@ class Room(BaseModel):
                 final_tags, self.label_components, self.score_components)
 
             self.steps += 1
+            self.random_seed = hash(random_generator.getstate())

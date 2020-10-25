@@ -4,7 +4,7 @@ from profiling import time_profiling, memory_profiling
 class ActionSystem:
 
     def get_actions(self, ai_components, percepts, actions_components,
-                    score_components, label_components):
+                    score_components, label_components, random_generator):
         actions = {}
         for actor_id, ai in ai_components.items():
             try:
@@ -23,7 +23,7 @@ class ActionSystem:
 
             if hasattr(ai, "update_state_percept"):
                 ai.update_state_percept(percept)
-            action = ai.next_action(percept)
+            action = ai.next_action(percept, random_generator)
             if hasattr(ai, "update_state_action"):
                 ai.update_state_action(action)
 

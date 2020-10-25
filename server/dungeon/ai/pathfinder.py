@@ -108,7 +108,7 @@ class PathfinderAI(BaseModel):
             except NoSolutionError:
                 self.plan = []
 
-    def next_action(self, percept):
+    def next_action(self, percept, random_generator):
         if self.plan:
             return Move(direction=self.plan[0])
         return DoNothing()

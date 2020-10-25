@@ -19,7 +19,6 @@ variants:
   "unknown1Random":
     "definitions.vacuum.ai":
       kind: "randomVacuum"
-      seed: 12345
     "definitions.v":
       - "vacuum"
       - "."
@@ -33,7 +32,6 @@ variants:
   "unknown2Random":
     "definitions.vacuum.ai":
       kind: "randomVacuum"
-      seed: 12345
     "definitions.v":
       - "vacuum"
       - "."
@@ -46,7 +44,6 @@ variants:
   "unknown3Random":
     "definitions.vacuum.ai":
       kind: "randomVacuum"
-      seed: 12345
     "definitions.v":
       - "vacuum"
       - "."
@@ -60,7 +57,6 @@ variants:
   "unknownPoorRandom":
     "definitions.vacuum.ai":
       kind: "randomVacuum"
-      seed: 12345
     "definitions.v":
       - "vacuum"
       - "."
@@ -123,6 +119,7 @@ variants:
       #####
 template:
   templateType: "visual"
+  randomSeed: 12345
   definitions:
     d:
       - "."

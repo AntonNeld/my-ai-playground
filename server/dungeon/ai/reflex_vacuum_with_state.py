@@ -9,7 +9,7 @@ class ReflexVacuumWithStateAI(BaseModel):
     kind: Literal["reflexVacuumWithState"]
     moved: bool = False
 
-    def next_action(self, percept):
+    def next_action(self, percept, random_generator):
         if {"x": 0, "y": 0, "looks_like": "dirt"} in percept["entities"]:
             return PickUp()
         if percept["position"]["x"] == 1 and not self.moved:

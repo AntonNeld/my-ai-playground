@@ -84,7 +84,4 @@ def test_step(client, steps):
     assert response.status_code == 200
 
     room_after = client.get("/api/rooms/testroom").json()
-    assert room_after == {
-        "steps": 1 if steps is None else steps,
-        "entities": {}
-    }
+    assert room_after["steps"] == 1 if steps is None else steps

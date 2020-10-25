@@ -28,12 +28,14 @@ RESOURCE_TYPES = [
         "parents": [],
         "example": {
             "steps": 0,
+            "randomSeed": 1234,
             "entities": {
                 "a": {"looksLike": "player"},
             }
         },
         "example_two": {
             "steps": 1,
+            "randomSeed": 4321,
             "entities": {
                 "b": {"looksLike": "coin"}
             }

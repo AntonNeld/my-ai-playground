@@ -31,7 +31,7 @@ class ExploringVacuumAI(BaseModel):
             elif self.last_action.direction == "right":
                 self.passable[str((x+1, y))] = False
 
-    def next_action(self, percept):
+    def next_action(self, percept, random_generator):
         if {"x": 0, "y": 0, "looks_like": "dirt"} in percept["entities"]:
             return PickUp()
 

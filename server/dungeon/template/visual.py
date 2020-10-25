@@ -1,3 +1,4 @@
+from typing import Optional
 from typing_extensions import Literal
 from pydantic import BaseModel, Field
 
@@ -8,11 +9,15 @@ from .common import Definitions, translate_definition_symbol
 
 class VisualTemplate(BaseModel):
     template_type: Literal["visual"] = Field(..., alias="templateType")
+    random_seed: Optional[int] = Field(None, alias="randomSeed")
     definitions: Definitions
     room: str
 
     def create_room(self):
-        new_room = Room()
+        if self.random_seed is not None:
+            new_room = Room(randomSeed=self.random_seed)
+        else:
+            new_room = Room()
         lines = [line for line in self.room.split(
             "\n") if line and not line.isspace()]
         for y, line in enumerate(lines):

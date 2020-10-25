@@ -119,7 +119,7 @@ class MissionariesAndCannibalsAI(BaseModel):
             ):
                 self.plan.pop(0)
 
-    def next_action(self, percept):
+    def next_action(self, percept, random_generator):
         if not self.plan:
             return DoNothing()
 
@@ -191,8 +191,3 @@ class MissionariesAndCannibalsAI(BaseModel):
             problem = PathfindingProblem((0, 0), grass, walls, [])
             return Move(direction=a_star_graph(problem,
                                                get_heuristic(problem))[0])
-
-    def update_state_action(self, action):
-        return DoNothing()
-        if self.plan:
-            self.plan.pop(0)

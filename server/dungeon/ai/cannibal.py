@@ -12,7 +12,7 @@ class CannibalAI(BaseModel):
     # it will attack the nearest missionary (unless the player is also there)
     kind: Literal["cannibal"]
 
-    def next_action(self, percept):
+    def next_action(self, percept, random_generator):
         if "position" not in percept:
             # We are picked up
             return DoNothing()
