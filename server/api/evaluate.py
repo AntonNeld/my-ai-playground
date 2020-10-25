@@ -55,9 +55,10 @@ def evaluate_routes(state_keeper):
                 memory_result = memory_profiling.get_result()
             scores = room.get_entity_scores()
 
-            for entity_id, entity in [(e_id, e) for e_id, e in
-                                      room.get_entities(include_id=True)
-                                      if e.label is not None]:
+            for entity_id in room.list_entities():
+                entity = room.get_entity(entity_id)
+                if entity.label is None:
+                    continue
                 label = (entity.label if variant is None
                          else f"{variant}:{entity.label}")
                 if entity_id in scores:

@@ -74,8 +74,8 @@ class Room(BaseModel):
         only_public = super().dict(include=include, **kwargs)
         return {
             **only_public, "entities": {
-                entity_id: entity.dict(**kwargs) for entity_id, entity
-                in self.get_entities(include_id=True)
+                entity_id: self.get_entity(entity_id).dict(**kwargs)
+                for entity_id in self.list_entities()
             }
         }
 
@@ -110,16 +110,6 @@ class Room(BaseModel):
                 component = getattr(self, component_prop)[entity_id]
                 setattr(entity, component_name, component)
         return entity
-
-    def get_entities(self, include_id=False, **kwargs):
-        entities_with_id = [(entity_id, self.get_entity(entity_id))
-                            for entity_id in self.entity_ids]
-        filtered = list(filter(lambda e: all(getattr(e[1], key) == value
-                                             for key, value in kwargs.items()),
-                               entities_with_id))
-        if include_id:
-            return filtered
-        return [e for i, e in filtered]
 
     def get_entity_scores(self):
         tags = self.tag_system.get_tags(
