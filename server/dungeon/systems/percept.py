@@ -1,7 +1,7 @@
 class PerceptSystem:
 
     def get_percepts(self, perception_components, position_components,
-                     looks_like_components, pickupper_components):
+                     looks_like_components, inventory_components):
         percepts = {}
         for perceptor_id, perception in perception_components.items():
             if perceptor_id not in position_components:
@@ -31,10 +31,10 @@ class PerceptSystem:
                 entities_view.append(entity_view)
             percept["entities"] = entities_view
 
-            if perceptor_id in pickupper_components:
+            if perceptor_id in inventory_components:
                 percept["inventory"] = [
                     e.looks_like for
-                    e in pickupper_components[perceptor_id].inventory
+                    e in inventory_components[perceptor_id].items
                 ]
             percepts[perceptor_id] = percept
         return percepts

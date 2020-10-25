@@ -27,8 +27,11 @@ Pickup = Union[ItemPickup, ScorePickup, VanishPickup]
 
 class Pickupper(BaseModel):
     mode: Union[Literal["auto"], Literal["action"]] = "auto"
-    inventory: List[Entity] = []
-    inventory_limit: Optional[int] = Field(None, alias="inventoryLimit")
+
+
+class Inventory(BaseModel):
+    items: List[Entity] = []
+    limit: Optional[int]
 
 
 class Perception(BaseModel):
@@ -64,6 +67,7 @@ class Entity(BaseModel):
     blocks_movement: Optional[BlocksMovement] = Field(
         None, alias="blocksMovement")
     pickupper: Optional[Pickupper]
+    inventory: Optional[Inventory]
     pickup: Optional[Pickup]
     looks_like: Optional[LooksLike] = Field(None, alias="looksLike")
     tags: Optional[List[str]]
@@ -74,4 +78,4 @@ class Entity(BaseModel):
     actions: Optional[Dict[str, ActionDetails]]
 
 
-Pickupper.update_forward_refs()
+Inventory.update_forward_refs()

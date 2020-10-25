@@ -21,7 +21,8 @@ template:
         looksLike: "player"
         pickupper:
           mode: "action"
-          inventoryLimit: 2
+        inventory:
+          limit: 2
         score: 0
         ai:
           kind: "missionariesAndCannibals"

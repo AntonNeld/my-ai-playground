@@ -1,17 +1,17 @@
 class TagSystem:
 
-    def get_tags(self, tags_components, pickupper_components):
+    def get_tags(self, tags_components, inventory_components):
         tags = {}
         for entity_id in set([*tags_components.keys(),
-                              *pickupper_components.keys()]):
+                              *inventory_components.keys()]):
             try:
                 innate_tags = set(tags_components[entity_id])
             except KeyError:
                 innate_tags = set()
 
             item_tags = set()
-            if entity_id in pickupper_components:
-                for item in pickupper_components[entity_id].inventory:
+            if entity_id in inventory_components:
+                for item in inventory_components[entity_id].items:
                     if item.pickup is not None and item.pickup.kind == "item":
                         for tag in item.pickup.provides_tags:
                             item_tags.add(tag)

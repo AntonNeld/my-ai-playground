@@ -19,6 +19,7 @@ COMPONENT_PROPS = {
     "score": "score_components",
     "blocks_movement": "blocks_movement_components",
     "pickupper": "pickupper_components",
+    "inventory": "inventory_components",
     "pickup": "pickup_components",
     "looks_like": "looks_like_components",
     "tags": "tags_components",
@@ -46,6 +47,7 @@ class Room(BaseModel):
         self.score_components = {}
         self.blocks_movement_components = {}
         self.pickupper_components = {}
+        self.inventory_components = {}
         self.pickup_components = {}
         self.looks_like_components = {}
         self.tags_components = {}
@@ -113,7 +115,7 @@ class Room(BaseModel):
 
     def get_entity_scores(self):
         tags = self.tag_system.get_tags(
-            self.tags_components, self.pickupper_components)
+            self.tags_components, self.inventory_components)
         tag_scores = self.count_tags_score_system.get_constant_tag_scores(
             self.count_tags_score_components, self.position_components,
             tags, self.label_components)
@@ -128,11 +130,11 @@ class Room(BaseModel):
     def step(self, steps=1):
         for _ in range(steps):
             initial_tags = self.tag_system.get_tags(
-                self.tags_components, self.pickupper_components)
+                self.tags_components, self.inventory_components)
 
             percepts = self.percept_system.get_percepts(
                 self.perception_components, self.position_components,
-                self.looks_like_components, self.pickupper_components)
+                self.looks_like_components, self.inventory_components)
 
             actions = self.action_system.get_actions(
                 self.ai_components, percepts, self.actions_components,
@@ -145,19 +147,19 @@ class Room(BaseModel):
 
             picked_up, removed = self.pick_up_system.pick_up_items(
                 self.pickupper_components, actions, self.position_components,
-                self.pickup_components,
-                self.score_components)
+                self.pickup_components, self.score_components,
+                self.inventory_components)
             for pickup_id, pickupper_id in picked_up.items():
                 pickup = self.get_entity(pickup_id)
                 pickup.position = None
-                self.pickupper_components[pickupper_id].inventory.append(
+                self.inventory_components[pickupper_id].items.append(
                     pickup)
                 self.remove_entity(pickup_id)
             for removed_id in removed:
                 self.remove_entity(removed_id)
 
             created_entities = self.drop_system.drop_items(
-                self.pickupper_components, actions, self.position_components)
+                self.inventory_components, actions, self.position_components)
             for entity in created_entities:
                 self.add_entity(entity)
 
@@ -167,7 +169,7 @@ class Room(BaseModel):
                 self.remove_entity(removed_id)
 
             final_tags = self.tag_system.get_tags(
-                self.tags_components, self.pickupper_components)
+                self.tags_components, self.inventory_components)
 
             self.count_tags_score_system.add_tag_scores(
                 self.count_tags_score_components, self.position_components,

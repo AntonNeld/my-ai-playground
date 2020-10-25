@@ -1,6 +1,6 @@
 from dungeon.systems import PerceptSystem
 from dungeon.custom_component_dicts import PositionDict
-from dungeon.entity import Perception, Pickupper, Entity
+from dungeon.entity import Perception, Inventory, Entity
 from dungeon.consts import Position
 
 
@@ -10,9 +10,9 @@ def test_percept_include_entities():
     position_components = PositionDict(
         {"perceptor": Position(x=0, y=0), "otherEntity": Position(x=1, y=1)})
     looks_like_components = {"otherEntity": "coin"}
-    pickupper_components = {}
+    inventory_components = {}
     percepts = system.get_percepts(perception_components, position_components,
-                                   looks_like_components, pickupper_components)
+                                   looks_like_components, inventory_components)
     assert percepts == {
         "perceptor": {
             "entities": [{"x": 1, "y": 1, "looks_like": "coin"}]
@@ -26,9 +26,9 @@ def test_percept_excludes_self():
     position_components = PositionDict(
         {"perceptor": Position(x=0, y=0), "otherEntity": Position(x=1, y=1)})
     looks_like_components = {"otherEntity": "coin", "perceptor": "player"}
-    pickupper_components = {}
+    inventory_components = {}
     percepts = system.get_percepts(perception_components, position_components,
-                                   looks_like_components, pickupper_components)
+                                   looks_like_components, inventory_components)
     assert percepts == {
         "perceptor": {
             "entities": [{"x": 1, "y": 1, "looks_like": "coin"}]
@@ -54,9 +54,9 @@ def test_percept_exclude_entities_beyond_max_distance():
         "farEntityThree": "wall",
         "farEntityFour": "wall",
     }
-    pickupper_components = {}
+    inventory_components = {}
     percepts = system.get_percepts(perception_components, position_components,
-                                   looks_like_components, pickupper_components)
+                                   looks_like_components, inventory_components)
     assert percepts == {
         "perceptor": {
             "entities": [{"x": 3, "y": 0, "looks_like": "coin"}]
@@ -69,9 +69,9 @@ def test_percept_include_position():
     perception_components = {"perceptor": Perception(includePosition=True)}
     position_components = PositionDict({"perceptor": Position(x=0, y=0)})
     looks_like_components = {}
-    pickupper_components = {}
+    inventory_components = {}
     percepts = system.get_percepts(perception_components, position_components,
-                                   looks_like_components, pickupper_components)
+                                   looks_like_components, inventory_components)
     assert percepts == {
         "perceptor": {
             "entities": [],
@@ -85,16 +85,16 @@ def test_get_percept_include_inventory():
     perception_components = {"perceptor": Perception()}
     position_components = PositionDict({"perceptor": Position(x=0, y=0)})
     looks_like_components = {}
-    pickupper_components = {
-        "perceptor": Pickupper(
-            inventory=[
+    inventory_components = {
+        "perceptor": Inventory(
+            items=[
                 Entity(looksLike="coin"),
                 Entity(looksLike="evilCoin")
             ]
         )
     }
     percepts = system.get_percepts(perception_components, position_components,
-                                   looks_like_components, pickupper_components)
+                                   looks_like_components, inventory_components)
     assert percepts == {
         "perceptor": {
             "entities": [],
