@@ -3,7 +3,6 @@ class PickUpSystem:
     def pick_up_items(self, pickupper_components, actions, position_components,
                       pickup_components, score_components,
                       inventory_components):
-        picked_up_items = {}
         removed_entities = set()
         for pickupper_id, pickupper in pickupper_components.items():
             if pickupper_id not in position_components:
@@ -24,7 +23,8 @@ class PickUpSystem:
                         inventory = inventory_components[pickupper_id]
                         if (inventory.limit is None
                                 or len(inventory.items) < inventory.limit):
-                            picked_up_items[pickup_id] = pickupper_id
+                            del position_components[pickup_id]
+                            inventory.items.append(pickup_id)
                     except KeyError:
                         pass
                 elif kind == "vanish":
@@ -34,4 +34,4 @@ class PickUpSystem:
                     added_score = pickup_components[pickup_id].score
                     if pickupper_id in score_components:
                         score_components[pickupper_id] += added_score
-        return picked_up_items, removed_entities
+        return removed_entities

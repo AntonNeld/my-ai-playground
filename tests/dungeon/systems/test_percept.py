@@ -1,6 +1,6 @@
 from dungeon.systems import PerceptSystem
 from dungeon.custom_component_dicts import PositionDict
-from dungeon.entity import Perception, Inventory, Entity
+from dungeon.entity import Perception, Inventory
 from dungeon.consts import Position
 
 
@@ -84,13 +84,10 @@ def test_get_percept_include_inventory():
     system = PerceptSystem()
     perception_components = {"perceptor": Perception()}
     position_components = PositionDict({"perceptor": Position(x=0, y=0)})
-    looks_like_components = {}
+    looks_like_components = {"itemOne": "coin", "itemTwo": "evilCoin"}
     inventory_components = {
         "perceptor": Inventory(
-            items=[
-                Entity(looksLike="coin"),
-                Entity(looksLike="evilCoin")
-            ]
+            items=["itemOne", "itemTwo"]
         )
     }
     percepts = system.get_percepts(perception_components, position_components,

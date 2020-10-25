@@ -30,7 +30,7 @@ class Pickupper(BaseModel):
 
 
 class Inventory(BaseModel):
-    items: List[Entity] = []
+    items: List[str] = []
     limit: Optional[int]
 
 
@@ -76,6 +76,3 @@ class Entity(BaseModel):
     count_tags_score: Optional[CountTagsScore] = Field(
         None, alias="countTagsScore")
     actions: Optional[Dict[str, ActionDetails]]
-
-
-Inventory.update_forward_refs()

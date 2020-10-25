@@ -115,7 +115,8 @@ class Room(BaseModel):
 
     def get_entity_scores(self):
         tags = self.tag_system.get_tags(
-            self.tags_components, self.inventory_components)
+            self.tags_components, self.inventory_components,
+            self.pickup_components)
         tag_scores = self.count_tags_score_system.get_constant_tag_scores(
             self.count_tags_score_components, self.position_components,
             tags, self.label_components)
@@ -130,7 +131,8 @@ class Room(BaseModel):
     def step(self, steps=1):
         for _ in range(steps):
             initial_tags = self.tag_system.get_tags(
-                self.tags_components, self.inventory_components)
+                self.tags_components, self.inventory_components,
+                self.pickup_components)
 
             percepts = self.percept_system.get_percepts(
                 self.perception_components, self.position_components,
@@ -145,23 +147,15 @@ class Room(BaseModel):
                 self.blocks_movement_components,
                 initial_tags)
 
-            picked_up, removed = self.pick_up_system.pick_up_items(
+            removed_entities = self.pick_up_system.pick_up_items(
                 self.pickupper_components, actions, self.position_components,
                 self.pickup_components, self.score_components,
                 self.inventory_components)
-            for pickup_id, pickupper_id in picked_up.items():
-                pickup = self.get_entity(pickup_id)
-                pickup.position = None
-                self.inventory_components[pickupper_id].items.append(
-                    pickup)
-                self.remove_entity(pickup_id)
-            for removed_id in removed:
+            for removed_id in removed_entities:
                 self.remove_entity(removed_id)
 
-            created_entities = self.drop_system.drop_items(
+            self.drop_system.drop_items(
                 self.inventory_components, actions, self.position_components)
-            for entity in created_entities:
-                self.add_entity(entity)
 
             removed_entities = self.attack_system.do_attacks(
                 actions, self.position_components, self.vulnerable_components)
@@ -169,7 +163,8 @@ class Room(BaseModel):
                 self.remove_entity(removed_id)
 
             final_tags = self.tag_system.get_tags(
-                self.tags_components, self.inventory_components)
+                self.tags_components, self.inventory_components,
+                self.pickup_components)
 
             self.count_tags_score_system.add_tag_scores(
                 self.count_tags_score_components, self.position_components,

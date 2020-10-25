@@ -1,4 +1,4 @@
-from dungeon.entity import (Entity, Pickupper, Inventory, ItemPickup,
+from dungeon.entity import (Pickupper, Inventory, ItemPickup,
                             ScorePickup, VanishPickup)
 from dungeon.consts import PickUp, Position
 from dungeon.systems import PickUpSystem
@@ -16,11 +16,12 @@ def test_pickup_item():
     })
     pickup_components = {"item": ItemPickup(kind="item")}
     score_components = {}
-    picked_up_items, removed_entities = system.pick_up_items(
+    removed_entities = system.pick_up_items(
         pickupper_components, actions, position_components,
         pickup_components, score_components, inventory_components
     )
-    assert picked_up_items == {"item": "pickupper"}
+    assert inventory_components["pickupper"] == Inventory(items=["item"])
+    assert "item" not in position_components
     assert removed_entities == set()
 
 
@@ -35,18 +36,20 @@ def test_pick_up_item_no_inventory():
     })
     pickup_components = {"item": ItemPickup(kind="item")}
     score_components = {}
-    picked_up_items, removed_entities = system.pick_up_items(
+    removed_entities = system.pick_up_items(
         pickupper_components, actions, position_components,
         pickup_components, score_components, inventory_components
     )
-    assert picked_up_items == {}
+    assert "pickupper" not in inventory_components
+    assert position_components["item"] == Position(x=0, y=0)
     assert removed_entities == set()
 
 
 def test_inventory_limit():
     system = PickUpSystem()
     pickupper_components = {"pickupper": Pickupper(mode="action")}
-    inventory_components = {"pickupper": Inventory(items=[Entity()], limit=1)}
+    inventory_components = {
+        "pickupper": Inventory(items=["old_item"], limit=1)}
     actions = {"pickupper": PickUp()}
     position_components = PositionDict({
         "pickupper": Position(x=0, y=0),
@@ -54,11 +57,13 @@ def test_inventory_limit():
     })
     pickup_components = {"item": ItemPickup(kind="item")}
     score_components = {}
-    picked_up_items, removed_entities = system.pick_up_items(
+    removed_entities = system.pick_up_items(
         pickupper_components, actions, position_components,
         pickup_components, score_components, inventory_components
     )
-    assert picked_up_items == {}
+    assert inventory_components["pickupper"] == Inventory(
+        items=["old_item"], limit=1)
+    assert position_components["item"] == Position(x=0, y=0)
     assert removed_entities == set()
 
 
@@ -73,11 +78,10 @@ def test_score_pickup():
     })
     pickup_components = {"item": ScorePickup(kind="addScore", score=1)}
     score_components = {"pickupper": 3}
-    picked_up_items, removed_entities = system.pick_up_items(
+    removed_entities = system.pick_up_items(
         pickupper_components, actions, position_components,
         pickup_components, score_components, inventory_components
     )
-    assert picked_up_items == {}
     assert removed_entities == set(["item"])
     assert score_components["pickupper"] == 4
 
@@ -93,11 +97,10 @@ def test_score_pickup_only_vanish_if_no_score():
     })
     pickup_components = {"item": ScorePickup(kind="addScore", score=1)}
     score_components = {}
-    picked_up_items, removed_entities = system.pick_up_items(
+    removed_entities = system.pick_up_items(
         pickupper_components, actions, position_components,
         pickup_components, score_components, inventory_components
     )
-    assert picked_up_items == {}
     assert removed_entities == set(["item"])
     assert score_components == {}
 
@@ -113,11 +116,10 @@ def test_vanish_pickup():
     })
     pickup_components = {"item": VanishPickup(kind="vanish")}
     score_components = {}
-    picked_up_items, removed_entities = system.pick_up_items(
+    removed_entities = system.pick_up_items(
         pickupper_components, actions, position_components,
         pickup_components, score_components, inventory_components
     )
-    assert picked_up_items == {}
     assert removed_entities == set(["item"])
 
 
@@ -132,9 +134,8 @@ def test_automatic_pickup():
     })
     pickup_components = {"item": VanishPickup(kind="vanish")}
     score_components = {}
-    picked_up_items, removed_entities = system.pick_up_items(
+    removed_entities = system.pick_up_items(
         pickupper_components, actions, position_components,
         pickup_components, score_components, inventory_components
     )
-    assert picked_up_items == {}
     assert removed_entities == set(["item"])

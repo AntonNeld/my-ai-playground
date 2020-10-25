@@ -13,6 +13,9 @@ class CannibalAI(BaseModel):
     kind: Literal["cannibal"]
 
     def next_action(self, percept):
+        if "position" not in percept:
+            # We are picked up
+            return DoNothing()
 
         obstacles = [(e["x"], e["y"]) for e in percept["entities"]
                      if e["looks_like"] == "wall"

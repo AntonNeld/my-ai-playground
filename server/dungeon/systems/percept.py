@@ -33,8 +33,9 @@ class PerceptSystem:
 
             if perceptor_id in inventory_components:
                 percept["inventory"] = [
-                    e.looks_like for
+                    looks_like_components[e] for
                     e in inventory_components[perceptor_id].items
+                    if e in looks_like_components
                 ]
             percepts[perceptor_id] = percept
         return percepts
