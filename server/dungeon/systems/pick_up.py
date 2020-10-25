@@ -18,11 +18,11 @@ class PickUpSystem:
                        if e in pickup_components]
             for pickup_id in pickups:
                 kind = pickup_components[pickup_id].kind
-                if (
-                    kind == "item" and not
-                    pickupper.full_inventory()
-                ):
-                    picked_up_items[pickup_id] = pickupper_id
+                if kind == "item":
+                    if (pickupper.inventory_limit is None
+                            or len(pickupper.inventory)
+                            < pickupper.inventory_limit):
+                        picked_up_items[pickup_id] = pickupper_id
                 elif kind == "vanish":
                     removed_entities.add(pickup_id)
                 elif kind == "addScore":
