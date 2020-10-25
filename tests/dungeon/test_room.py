@@ -4,11 +4,33 @@ from dungeon.consts import Position
 
 BASE_RANDOM_ROOM = {
     "entities": {
-        "a": {
+        "random_mover": {
             "ai": {"kind": "random"},
             "actions": {"move": {}},
             "position": {"x": 0, "y": 0}
-        }
+        },
+        "collider_one": {
+            "position": {"x": 10, "y": 0},
+            "ai": {
+                "kind": "singular",
+                "action": {
+                    "actionType": "move",
+                    "direction": "right"
+                }
+            },
+            "actions": {"move": {}}
+        },
+        "collider_two": {
+            "position": {"x": 12, "y": 0},
+            "ai": {
+                "kind": "singular",
+                "action": {
+                    "actionType": "move",
+                    "direction": "left"
+                }
+            },
+            "actions": {"move": {}}
+        },
     }
 }
 
