@@ -1,6 +1,15 @@
 from uuid import UUID
 
 
+class MockRandom:
+
+    def __init__(self, chosen):
+        self.chosen = chosen
+
+    def choice(self, iterable):
+        return self.chosen
+
+
 def is_uuid(string):
     try:
         UUID(hex=string)

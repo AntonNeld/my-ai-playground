@@ -154,7 +154,7 @@ class Room(BaseModel):
             removed_entities = self.pick_up_system.pick_up_items(
                 self.pickupper_components, actions, self.position_components,
                 self.pickup_components, self.score_components,
-                self.inventory_components)
+                self.inventory_components, random_generator)
             for removed_id in removed_entities:
                 self.remove_entity(removed_id)
 

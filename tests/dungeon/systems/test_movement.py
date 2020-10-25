@@ -5,6 +5,7 @@ from dungeon.systems import MovementSystem
 from dungeon.consts import Move, Position
 from dungeon.custom_component_dicts import PositionDict
 from dungeon.entity import BlocksMovement
+from test_utils import MockRandom
 
 
 @pytest.mark.parametrize("direction,x,y",
@@ -93,15 +94,6 @@ def test_movement_is_blocked_even_if_blocker_moves_away():
                          blocks_movement_components, tags_components,
                          random_generator)
     assert position_components["a"] == Position(x=0, y=0)
-
-
-class MockRandom:
-
-    def __init__(self, chosen):
-        self.chosen = chosen
-
-    def choice(self, iterable):
-        return self.chosen
 
 
 @pytest.mark.parametrize("chosen", ["a", "b", "c"])
