@@ -35,6 +35,8 @@ class MovementSystem:
                 new_positions[(x, y)].append(mover_id)
         for (x, y), entities in new_positions.items():
             while entities:
+                # If there are multiple entities trying to move to the same
+                # location, their moves are evaluated in random order.
                 chosen = random_generator.choice(entities)
                 position_components[chosen] = Position(x=x, y=y)
                 entities.remove(chosen)

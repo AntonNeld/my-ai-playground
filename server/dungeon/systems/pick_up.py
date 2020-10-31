@@ -19,6 +19,8 @@ class PickUpSystem:
                 pickup_positions[(x, y)] = []
             pickup_positions[(x, y)].append(pickupper_id)
         for (x, y), pickuppers in pickup_positions.items():
+            # If multiple entities try to pick up things in the same location,
+            # evaluate in random order
             pickupper_id = random_generator.choice(pickuppers)
             pickups = [e for e in position_components.get_entities_at(x, y)
                        if e in pickup_components]
