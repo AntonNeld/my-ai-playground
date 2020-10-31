@@ -4,7 +4,7 @@ from typing import Optional, List, Union
 from pydantic import BaseModel
 from typing_extensions import Literal
 
-from dungeon.consts import DoNothing, Move, Drop, PickUp
+from dungeon.actions import DoNothing, Move, Drop, PickUp
 from .search import breadth_first_graph, a_star_graph
 from .problems.pathfinding import PathfindingProblem, get_heuristic
 

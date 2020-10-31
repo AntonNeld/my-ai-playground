@@ -1,6 +1,7 @@
 from dungeon.room import Room
-from dungeon.entity import Entity, CountTagsScore
-from dungeon.consts import Position
+from dungeon.entity import Entity
+from dungeon.components import CountTagsScore
+from dungeon.components import Position
 
 BASE_RANDOM_ROOM = {
     "entities": {

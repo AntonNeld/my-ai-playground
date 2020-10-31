@@ -2,7 +2,7 @@ from typing import Optional
 from typing_extensions import Literal
 from pydantic import BaseModel, Field
 
-from dungeon.entity import Position
+from dungeon.components import Position
 from dungeon.room import Room
 from .common import Definitions, translate_definition_symbol
 

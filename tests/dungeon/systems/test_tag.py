@@ -1,5 +1,5 @@
 from dungeon.systems import TagSystem
-from dungeon.entity import Inventory, ItemPickup
+from dungeon.components import Inventory, ItemPickup
 
 
 def test_include_inherent_tags():

@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from typing_extensions import Literal
 
-from dungeon.consts import DoNothing, Move, Attack
+from dungeon.actions import DoNothing, Move, Attack
 from .search import a_star_graph, NoSolutionError
 from .problems.pathfinding import PathfindingProblem, get_heuristic
 

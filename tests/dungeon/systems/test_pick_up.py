@@ -1,9 +1,10 @@
 import pytest
 import random
 
-from dungeon.entity import (Pickupper, Inventory, ItemPickup,
-                            ScorePickup, VanishPickup)
-from dungeon.consts import PickUp, Position
+from dungeon.components import (Pickupper, Inventory, ItemPickup,
+                                ScorePickup, VanishPickup)
+from dungeon.actions import PickUp
+from dungeon.components import Position
 from dungeon.systems import PickUpSystem
 from dungeon.custom_component_dicts import PositionDict
 from test_utils import MockRandom

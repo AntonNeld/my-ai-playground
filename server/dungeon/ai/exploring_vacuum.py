@@ -3,7 +3,7 @@ from typing import Tuple, Dict
 from pydantic import BaseModel, Field
 from typing_extensions import Literal
 
-from dungeon.consts import Action, PickUp, DoNothing, Move
+from dungeon.actions import Action, PickUp, DoNothing, Move
 from .problems.pathfinding import PathfindingProblem, get_heuristic
 from .search import a_star_graph, NoSolutionError
 

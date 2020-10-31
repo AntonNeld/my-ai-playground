@@ -1,8 +1,9 @@
 import pytest
 
 from dungeon.systems import AttackSystem
-from dungeon.consts import Attack, Position
-from dungeon.entity import Vulnerable
+from dungeon.actions import Attack
+from dungeon.components import Position
+from dungeon.components import Vulnerable
 from dungeon.custom_component_dicts import PositionDict
 
 

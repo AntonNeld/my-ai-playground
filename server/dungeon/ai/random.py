@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from typing_extensions import Literal
 
-from dungeon.consts import Move
+from dungeon.actions import Move
 
 
 class RandomAI(BaseModel):

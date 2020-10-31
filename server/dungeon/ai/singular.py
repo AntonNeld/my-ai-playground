@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from typing_extensions import Literal
 
-from dungeon.consts import Action
+from dungeon.actions import Action
 
 
 class SingularAI(BaseModel):

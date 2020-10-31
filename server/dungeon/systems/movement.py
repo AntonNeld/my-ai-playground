@@ -1,4 +1,4 @@
-from dungeon.consts import Position
+from dungeon.components import Position
 
 
 class MovementSystem:

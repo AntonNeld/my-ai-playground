@@ -2,8 +2,8 @@ import random
 from unittest import mock
 
 from dungeon.systems import ActionSystem
-from dungeon.consts import Move, DoNothing
-from dungeon.entity import ActionDetails
+from dungeon.actions import Move, DoNothing
+from dungeon.components import ActionDetails
 from dungeon.custom_component_dicts import LabelDict
 from profiling import time_profiling, memory_profiling
 

@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from typing_extensions import Literal
 
-from dungeon.consts import PickUp, Move, DoNothing
+from dungeon.actions import PickUp, Move, DoNothing
 
 
 class ReflexVacuumSeeAllAI(BaseModel):

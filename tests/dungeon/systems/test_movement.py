@@ -2,9 +2,10 @@ import pytest
 import random
 
 from dungeon.systems import MovementSystem
-from dungeon.consts import Move, Position
+from dungeon.actions import Move
+from dungeon.components import Position
 from dungeon.custom_component_dicts import PositionDict
-from dungeon.entity import BlocksMovement
+from dungeon.components import BlocksMovement
 from test_utils import MockRandom
 
 

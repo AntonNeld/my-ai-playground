@@ -1,7 +1,7 @@
 from dungeon.systems import PerceptSystem
 from dungeon.custom_component_dicts import PositionDict
-from dungeon.entity import Perception, Inventory
-from dungeon.consts import Position
+from dungeon.components import Perception, Inventory
+from dungeon.components import Position
 
 
 def test_percept_include_entities():

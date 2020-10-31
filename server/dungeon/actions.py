@@ -3,16 +3,6 @@ from typing import Union
 from pydantic import BaseModel, Field
 from typing_extensions import Literal
 
-LooksLike = Union[Literal["player"], Literal["coin"], Literal["evilCoin"],
-                  Literal["wall"], Literal["vacuum"], Literal["dirt"],
-                  Literal["water"], Literal["grass"],
-                  Literal["labelA"], Literal["labelB"]]
-
-
-class Position(BaseModel):
-    x: int
-    y: int
-
 
 class Move(BaseModel):
     action_type: Literal["move"] = Field("move", alias="actionType")

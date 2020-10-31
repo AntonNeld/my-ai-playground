@@ -1,7 +1,7 @@
 from dungeon.systems import CountTagsScoreSystem
 from dungeon.custom_component_dicts import PositionDict, LabelDict
-from dungeon.consts import Position
-from dungeon.entity import CountTagsScore
+from dungeon.components import Position
+from dungeon.components import CountTagsScore
 
 
 def test_right_amount_of_tags():

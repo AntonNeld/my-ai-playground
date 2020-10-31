@@ -1,7 +1,8 @@
-from dungeon.entity import Inventory
+from dungeon.components import Inventory
 from dungeon.systems import DropSystem
 from dungeon.custom_component_dicts import PositionDict
-from dungeon.consts import Drop, Position
+from dungeon.actions import Drop
+from dungeon.components import Position
 
 
 def test_drop_item():

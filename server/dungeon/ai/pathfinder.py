@@ -3,7 +3,8 @@ from typing import Dict, List, Union, Optional
 from pydantic import BaseModel, Field
 from typing_extensions import Literal
 
-from dungeon.consts import LooksLike, DoNothing, Move
+from dungeon.actions import DoNothing, Move
+from dungeon.components import LooksLike
 from .problems.pathfinding import PathfindingProblem, get_heuristic
 from .search import (
     a_star_graph,
