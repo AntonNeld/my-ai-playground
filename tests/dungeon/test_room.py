@@ -10,6 +10,8 @@ BASE_RANDOM_ROOM = {
             "actions": {"move": {}},
             "position": {"x": 0, "y": 0}
         },
+        # Colliders don't depend on randomness,
+        # but should be same for the same seed anyway
         "collider_one": {
             "position": {"x": 10, "y": 0},
             "ai": {

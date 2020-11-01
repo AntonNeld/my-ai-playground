@@ -149,12 +149,12 @@ class Room(BaseModel):
             self.movement_system.move_entities(
                 actions, self.position_components,
                 self.blocks_movement_components,
-                initial_tags, random_generator)
+                initial_tags)
 
             removed_entities = self.pick_up_system.pick_up_items(
                 self.pickupper_components, actions, self.position_components,
                 self.pickup_components, self.score_components,
-                self.inventory_components, random_generator)
+                self.inventory_components)
             for removed_id in removed_entities:
                 self.remove_entity(removed_id)
 
