@@ -7,9 +7,15 @@ const drawOrder = [
   "grass",
   "wall",
   "water",
-  "labelA",
-  "labelB",
+  "label:*",
 ];
+
+function orderOf(looksLike) {
+  if (looksLike.startsWith("label:")) {
+    return drawOrder.indexOf("label:*");
+  }
+  return drawOrder.indexOf(looksLike);
+}
 
 export class Room extends EventTarget {
   constructor(element) {
@@ -53,10 +59,7 @@ export class Room extends EventTarget {
     // sort to make some types of entities appear above others
     this.data = data
       .filter(({ position, looksLike }) => position && looksLike)
-      .sort(
-        (a, b) =>
-          drawOrder.indexOf(b.looksLike) - drawOrder.indexOf(a.looksLike)
-      );
+      .sort((a, b) => orderOf(b.looksLike) - orderOf(a.looksLike));
     this.draw();
   }
 
@@ -93,10 +96,23 @@ export class Room extends EventTarget {
             )
             .attr("opacity", 0)
             .call((g) => g.transition(transition).attr("opacity", 1));
-          g.append("image")
+          g.filter((d) => !d.looksLike.startsWith("label:"))
+            .append("image")
             .attr("width", 1)
             .attr("height", 1)
             .attr("href", (d) => `assets/${d.looksLike}.svg`);
+          g.filter((d) => d.looksLike.startsWith("label:"))
+            .append("text")
+            .attr("width", 1)
+            .attr("height", 1)
+            .attr("dominant-baseline", "middle")
+            .attr("text-anchor", "middle")
+            .attr("font-family", "monospace")
+            .attr("font-size", "1px")
+            .attr("y", 0.35)
+            .attr("x", 0.5)
+            .attr("fill", "white")
+            .text((d) => d.looksLike.replace("label:", ""));
           g.append("rect")
             .attr("width", 1)
             .attr("height", 1)
