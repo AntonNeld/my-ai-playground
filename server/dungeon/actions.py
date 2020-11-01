@@ -3,11 +3,18 @@ from typing import Union
 from pydantic import BaseModel, Field
 from typing_extensions import Literal
 
+Direction = Union[Literal["up"], Literal["down"],
+                  Literal["left"], Literal["right"]]
+
 
 class Move(BaseModel):
     action_type: Literal["move"] = Field("move", alias="actionType")
-    direction: Union[Literal["up"], Literal["down"],
-                     Literal["left"], Literal["right"]]
+    direction: Direction
+
+
+class Swap(BaseModel):
+    action_type: Literal["swap"] = Field("swap", alias="actionType")
+    direction: Direction
 
 
 class PickUp(BaseModel):
@@ -25,8 +32,7 @@ class DoNothing(BaseModel):
 
 class Attack(BaseModel):
     action_type: Literal["attack"] = Field("attack", alias="actionType")
-    direction: Union[Literal["up"], Literal["down"],
-                     Literal["left"], Literal["right"]]
+    direction: Direction
 
 
-Action = Union[Move, PickUp, Drop, Attack, DoNothing]
+Action = Union[Move, Swap, PickUp, Drop, Attack, DoNothing]

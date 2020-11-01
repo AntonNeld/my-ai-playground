@@ -6,7 +6,7 @@ class MovementSystem:
     def move_entities(self, actions, position_components,
                       blocks_movement_components, tags):
         for mover_id, action in actions.items():
-            if action.action_type != "move":
+            if action.action_type not in ("move", "swap"):
                 continue
 
             dx = dy = 0
@@ -24,11 +24,28 @@ class MovementSystem:
             x = position_components[mover_id].x + dx
             y = position_components[mover_id].y + dy
             colliding_entities = position_components.get_entities_at(x, y)
-            if all([
+            if all(
                     can_coexist(mover_id, e, blocks_movement_components, tags)
                     for e in colliding_entities
-            ]):
-                position_components[mover_id] = Position(x=x, y=y)
+            ):
+                if action.action_type == "swap":
+                    old_x = position_components[mover_id].x
+                    old_y = position_components[mover_id].y
+                    to_swap_with = position_components.get_entities_at(x, y)
+                    in_old_location = [
+                        e for e in position_components.get_entities_at(
+                            old_x, old_y) if e != mover_id
+                    ]
+                    if all(
+                        can_coexist(
+                            e1, e2, blocks_movement_components, tags
+                        ) for e1 in to_swap_with for e2 in in_old_location
+                    ):
+                        position_components[mover_id] = Position(x=x, y=y)
+                        for e in to_swap_with:
+                            position_components[e] = Position(x=old_x, y=old_y)
+                else:
+                    position_components[mover_id] = Position(x=x, y=y)
 
 
 def can_coexist(an_entity, another_entity, blocks_movement_components, tags):
