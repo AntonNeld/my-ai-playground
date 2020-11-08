@@ -1,4 +1,33 @@
 # The N-puzzle (8-puzzle, 15-puzzle...), where you swap squares
+variants:
+  "8-puzzle":
+    room:
+      - |-
+        #####
+        #abc#
+        #def#
+        #gh #
+        #####
+      - |-
+        .
+         @GD
+         AHF
+         CEB
+  "15-puzzle":
+    room:
+      - |-
+        ######
+        #abcd#
+        #efgh#
+        #ijkl#
+        #mno #
+        ######
+      - |-
+        .
+         @JNA
+         BCKM
+         OIDG
+         ELHF
 
 template:
   templateType: "visual"
@@ -114,18 +143,90 @@ template:
         score: 100
         tags:
           H: 1
+    I:
+      looksLike: "label:9"
+      swappable: {}
+      tags:
+        - "I"
+    i:
+      countTagsScore:
+        addTo: "player"
+        scoreType: "constant"
+        score: 100
+        tags:
+          I: 1
+    J:
+      looksLike: "label:10"
+      swappable: {}
+      tags:
+        - "J"
+    j:
+      countTagsScore:
+        addTo: "player"
+        scoreType: "constant"
+        score: 100
+        tags:
+          J: 1
+    K:
+      looksLike: "label:11"
+      swappable: {}
+      tags:
+        - "K"
+    k:
+      countTagsScore:
+        addTo: "player"
+        scoreType: "constant"
+        score: 100
+        tags:
+          K: 1
+    L:
+      looksLike: "label:12"
+      swappable: {}
+      tags:
+        - "L"
+    l:
+      countTagsScore:
+        addTo: "player"
+        scoreType: "constant"
+        score: 100
+        tags:
+          L: 1
+    M:
+      looksLike: "label:13"
+      swappable: {}
+      tags:
+        - "M"
+    m:
+      countTagsScore:
+        addTo: "player"
+        scoreType: "constant"
+        score: 100
+        tags:
+          M: 1
+    N:
+      looksLike: "label:14"
+      swappable: {}
+      tags:
+        - "N"
+    n:
+      countTagsScore:
+        addTo: "player"
+        scoreType: "constant"
+        score: 100
+        tags:
+          N: 1
+    O:
+      looksLike: "label:15"
+      swappable: {}
+      tags:
+        - "O"
+    o:
+      countTagsScore:
+        addTo: "player"
+        scoreType: "constant"
+        score: 100
+        tags:
+          O: 1
 
     ".": [] # To set origin for YAML parser
-
-  room:
-    - |-
-      #####
-      #abc#
-      #def#
-      #gh #
-      #####
-    - |-
-      .
-       @GD
-       AHF
-       CEB
+  room: ""
