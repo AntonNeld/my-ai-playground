@@ -37,7 +37,7 @@ template:
       blocksMovement: {}
     "@":
       label: "player"
-      looksLike: "label: "
+      looksLike: "color:black"
       score: 0
       ai:
         kind: "singular"

@@ -96,11 +96,13 @@ export class Room extends EventTarget {
             )
             .attr("opacity", 0)
             .call((g) => g.transition(transition).attr("opacity", 1));
+          // Non-label, non-color entities use SVG images
           g.filter((d) => !d.looksLike.startsWith("label:"))
             .append("image")
             .attr("width", 1)
             .attr("height", 1)
             .attr("href", (d) => `assets/${d.looksLike}.svg`);
+          // label:* entities use text inside a rectangle
           g.filter((d) => d.looksLike.startsWith("label:"))
             .append("text")
             .attr("width", 1)
@@ -122,6 +124,12 @@ export class Room extends EventTarget {
             .attr("stroke", "white")
             .attr("fill-opacity", 0)
             .attr("stroke-width", 0.02);
+          // color:* entities use a filled rectangle
+          g.filter((d) => d.looksLike.startsWith("color:"))
+            .append("rect")
+            .attr("width", 1)
+            .attr("height", 1)
+            .attr("fill", (d) => d.looksLike.replace("color:", ""));
           g.append("rect")
             .attr("width", 1)
             .attr("height", 1)

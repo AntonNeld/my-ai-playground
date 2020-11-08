@@ -3,10 +3,18 @@ from typing import Union, List, Optional, Dict
 from pydantic import BaseModel, Field, constr
 from typing_extensions import Literal
 
-LooksLike = Union[Literal["player"], Literal["coin"], Literal["evilCoin"],
-                  Literal["wall"], Literal["vacuum"], Literal["dirt"],
-                  Literal["water"], Literal["grass"],
-                  constr(regex=r"^label:.*")]  # noqa: F722
+LooksLike = Union[
+    Literal["player"],
+    Literal["coin"],
+    Literal["evilCoin"],
+    Literal["wall"],
+    Literal["vacuum"],
+    Literal["dirt"],
+    Literal["water"],
+    Literal["grass"],
+    constr(regex=r"^label:.*"),  # noqa: F722
+    constr(regex=r"^color:.*")  # noqa: F722
+]
 
 
 class Position(BaseModel):
