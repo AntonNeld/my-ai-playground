@@ -9,6 +9,7 @@ from dungeon.components import (
     Position,
     Perception,
     BlocksMovement,
+    Swappable,
     Pickupper,
     Inventory,
     Pickup,
@@ -25,6 +26,7 @@ class Entity(BaseModel):
     score: Optional[int]
     blocks_movement: Optional[BlocksMovement] = Field(
         None, alias="blocksMovement")
+    swappable: Optional[Swappable]
     pickupper: Optional[Pickupper]
     inventory: Optional[Inventory]
     pickup: Optional[Pickup]

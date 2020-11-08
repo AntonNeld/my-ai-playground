@@ -4,9 +4,9 @@ from dungeon.components import Position
 class MovementSystem:
 
     def move_entities(self, actions, position_components,
-                      blocks_movement_components, tags):
+                      blocks_movement_components, tags, swappable_components):
         for mover_id, action in actions.items():
-            if action.action_type not in ("move", "swap"):
+            if action.action_type != "move":
                 continue
 
             dx = dy = 0
@@ -28,24 +28,24 @@ class MovementSystem:
                     can_coexist(mover_id, e, blocks_movement_components, tags)
                     for e in colliding_entities
             ):
-                if action.action_type == "swap":
-                    old_x = position_components[mover_id].x
-                    old_y = position_components[mover_id].y
-                    to_swap_with = position_components.get_entities_at(x, y)
-                    in_old_location = [
-                        e for e in position_components.get_entities_at(
-                            old_x, old_y) if e != mover_id
-                    ]
-                    if all(
-                        can_coexist(
-                            e1, e2, blocks_movement_components, tags
-                        ) for e1 in to_swap_with for e2 in in_old_location
-                    ):
-                        position_components[mover_id] = Position(x=x, y=y)
-                        for e in to_swap_with:
-                            position_components[e] = Position(x=old_x, y=old_y)
-                else:
+                old_x = position_components[mover_id].x
+                old_y = position_components[mover_id].y
+                to_swap_with = [
+                    e for e in position_components.get_entities_at(x, y)
+                    if e in swappable_components
+                ]
+                in_old_location = [
+                    e for e in position_components.get_entities_at(
+                        old_x, old_y) if e != mover_id
+                ]
+                if all(
+                    can_coexist(
+                        e1, e2, blocks_movement_components, tags
+                    ) for e1 in to_swap_with for e2 in in_old_location
+                ):
                     position_components[mover_id] = Position(x=x, y=y)
+                    for e in to_swap_with:
+                        position_components[e] = Position(x=old_x, y=old_y)
 
 
 def can_coexist(an_entity, another_entity, blocks_movement_components, tags):

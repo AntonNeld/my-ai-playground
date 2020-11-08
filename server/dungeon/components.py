@@ -61,5 +61,9 @@ class BlocksMovement(BaseModel):
     passable_for_tags: List[str] = Field([], alias="passableForTags")
 
 
+class Swappable(BaseModel):
+    pass
+
+
 class Vulnerable(BaseModel):
     pass

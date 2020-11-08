@@ -19,6 +19,7 @@ COMPONENT_PROPS = {
     "perception": "perception_components",
     "score": "score_components",
     "blocks_movement": "blocks_movement_components",
+    "swappable": "swappable_components",
     "pickupper": "pickupper_components",
     "inventory": "inventory_components",
     "pickup": "pickup_components",
@@ -48,6 +49,7 @@ class Room(BaseModel):
         self.perception_components = {}
         self.score_components = {}
         self.blocks_movement_components = {}
+        self.swappable_components = {}
         self.pickupper_components = {}
         self.inventory_components = {}
         self.pickup_components = {}
@@ -149,7 +151,7 @@ class Room(BaseModel):
             self.movement_system.move_entities(
                 actions, self.position_components,
                 self.blocks_movement_components,
-                initial_tags)
+                initial_tags, self.swappable_components)
 
             removed_entities = self.pick_up_system.pick_up_items(
                 self.pickupper_components, actions, self.position_components,
