@@ -1,0 +1,131 @@
+# The N-puzzle (8-puzzle, 15-puzzle...), where you swap squares
+
+template:
+  templateType: "visual"
+  definitions:
+    "#":
+      looksLike: "wall"
+      blocksMovement: {}
+    "@":
+      label: "player"
+      looksLike: "label: "
+      score: 0
+      ai:
+        kind: "singular"
+        action:
+          actionType: "none"
+      perception: {}
+      actions:
+        move:
+          cost: 1
+    A:
+      looksLike: "label:1"
+      swappable: {}
+      tags:
+        - "A"
+    a:
+      countTagsScore:
+        addTo: "player"
+        scoreType: "constant"
+        score: 100
+        tags:
+          A: 1
+    B:
+      looksLike: "label:2"
+      swappable: {}
+      tags:
+        - "B"
+    b:
+      countTagsScore:
+        addTo: "player"
+        scoreType: "constant"
+        score: 100
+        tags:
+          B: 1
+    C:
+      looksLike: "label:3"
+      swappable: {}
+      tags:
+        - "C"
+    c:
+      countTagsScore:
+        addTo: "player"
+        scoreType: "constant"
+        score: 100
+        tags:
+          C: 1
+    D:
+      looksLike: "label:4"
+      swappable: {}
+      tags:
+        - "D"
+    d:
+      countTagsScore:
+        addTo: "player"
+        scoreType: "constant"
+        score: 100
+        tags:
+          D: 1
+    E:
+      looksLike: "label:5"
+      swappable: {}
+      tags:
+        - "E"
+    e:
+      countTagsScore:
+        addTo: "player"
+        scoreType: "constant"
+        score: 100
+        tags:
+          E: 1
+    F:
+      looksLike: "label:6"
+      swappable: {}
+      tags:
+        - "F"
+    f:
+      countTagsScore:
+        addTo: "player"
+        scoreType: "constant"
+        score: 100
+        tags:
+          F: 1
+    G:
+      looksLike: "label:7"
+      swappable: {}
+      tags:
+        - "G"
+    g:
+      countTagsScore:
+        addTo: "player"
+        scoreType: "constant"
+        score: 100
+        tags:
+          G: 1
+    H:
+      looksLike: "label:8"
+      swappable: {}
+      tags:
+        - "H"
+    h:
+      countTagsScore:
+        addTo: "player"
+        scoreType: "constant"
+        score: 100
+        tags:
+          H: 1
+
+    ".": [] # To set origin for YAML parser
+
+  room:
+    - |-
+      #####
+      #abc#
+      #def#
+      #gh #
+      #####
+    - |-
+      .
+       @GD
+       AHF
+       CEB
