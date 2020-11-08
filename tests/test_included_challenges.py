@@ -84,9 +84,9 @@ TESTS = [
     }
 ]
 
-root_dir = Path(__file__).parent.parent.parent.parent
+root_dir = Path(__file__).parent.parent
 app = create_app(challenge_dir=root_dir /
-                 "server" / "dungeon" / "challenges")
+                 "server" / "challenges")
 test_client = TestClient(app)
 
 
