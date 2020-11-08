@@ -107,19 +107,29 @@ export class Room extends EventTarget {
             .attr("height", 1)
             .attr("dominant-baseline", "middle")
             .attr("text-anchor", "middle")
-            .attr("font-family", "monospace")
-            .attr("font-size", "1px")
-            .attr("y", 0.35)
+            .attr("font-family", "courier")
+            .attr("font-size", "0.7px")
+            .attr("y", 0.4)
             .attr("x", 0.5)
             .attr("fill", "white")
             .text((d) => d.looksLike.replace("label:", ""));
+          g.filter((d) => d.looksLike.startsWith("label:"))
+            .append("rect")
+            .attr("x", 0.05)
+            .attr("y", 0.05)
+            .attr("width", 0.9)
+            .attr("height", 0.9)
+            .attr("stroke", "white")
+            .attr("fill-opacity", 0)
+            .attr("stroke-width", 0.02);
           g.append("rect")
             .attr("width", 1)
             .attr("height", 1)
             .attr("stroke", "red")
             .attr("fill-opacity", 0)
             .attr("stroke-width", 0.02)
-            .attr("opacity", (d) => (d.id === this.highlighted ? 1 : 0));
+            .attr("opacity", (d) => (d.id === this.highlighted ? 1 : 0))
+            .classed("highlight-rect", true);
           g.append("rect")
             .attr("width", 1)
             .attr("height", 1)
@@ -148,7 +158,7 @@ export class Room extends EventTarget {
                 (d) => `translate(${d.position.x},${-d.position.y})`
               );
             update
-              .select("rect")
+              .select(".highlight-rect")
               .transition(transition)
               .attr("opacity", (d) => (d.id === this.highlighted ? 1 : 0));
             return update;
