@@ -27,3 +27,23 @@ def test_parse_colocated_entities():
         exclude_none=True, by_alias=True)["entities"].values()
     assert {"position": {"x": 0, "y": 0}, "looksLike": "player"} in entities
     assert {"position": {"x": 0, "y": 0}, "looksLike": "wall"} in entities
+
+
+def test_multiple_layers():
+    template = VisualTemplate(**{
+        "templateType": "visual",
+        "definitions": {
+            "p": {"looksLike": "player"},
+            "c": {"looksLike": "coin"},
+            "#": {"looksLike": "wall"}
+        },
+        "room": ["#\n#p\n#", "\n c"]
+    })
+    entities = template.create_room().dict(
+        exclude_none=True, by_alias=True)["entities"].values()
+    assert len(entities) == 5
+    assert {"position": {"x": 0, "y": 0}, "looksLike": "wall"} in entities
+    assert {"position": {"x": 0, "y": 1}, "looksLike": "wall"} in entities
+    assert {"position": {"x": 0, "y": 2}, "looksLike": "wall"} in entities
+    assert {"position": {"x": 1, "y": 1}, "looksLike": "player"} in entities
+    assert {"position": {"x": 1, "y": 1}, "looksLike": "coin"} in entities
