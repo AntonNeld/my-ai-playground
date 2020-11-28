@@ -12,6 +12,7 @@ class Node:
         self.path_cost = path_cost
         self.parent = parent
         self.action = action
+        self.depth = parent.depth + 1 if parent is not None else 0
 
     def get_child(self, problem, action):
         state = problem.result(self.state, action)
@@ -31,6 +32,4 @@ class Node:
         return self.parent.states_in_solution() + [self.state]
 
     def depth(self):
-        if self.parent is None:
-            return 0
-        return self.parent.depth() + 1
+        return self.depth

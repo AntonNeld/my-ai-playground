@@ -14,9 +14,6 @@ from .search import (
     depth_first_graph,
     depth_first_tree,
     depth_first_tree_check_path,
-    depth_limited_graph,
-    depth_limited_tree,
-    depth_limited_tree_check_path,
     greedy_best_first_graph,
     greedy_best_first_tree,
     iterative_deepening_graph,
@@ -84,12 +81,14 @@ class PathfinderAI(BaseModel):
                 elif self.algorithm == "depthFirstTreeCheckPath":
                     self.plan = depth_first_tree_check_path(problem)
                 elif self.algorithm == "depthLimitedGraph":
-                    self.plan = depth_limited_graph(problem, self.depth_limit)
+                    self.plan = depth_first_graph(
+                        problem, depth_limit=self.depth_limit)
                 elif self.algorithm == "depthLimitedTree":
-                    self.plan = depth_limited_tree(problem, self.depth_limit)
+                    self.plan = depth_first_tree(
+                        problem, depth_limit=self.depth_limit)
                 elif self.algorithm == "depthLimitedTreeCheckPath":
-                    self.plan = depth_limited_tree_check_path(
-                        problem, self.depth_limit)
+                    self.plan = depth_first_tree_check_path(
+                        problem, depth_limit=self.depth_limit)
                 elif self.algorithm == "greedyBestFirstGraph":
                     self.plan = greedy_best_first_graph(
                         problem, get_heuristic(problem))

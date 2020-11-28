@@ -1,16 +1,20 @@
 from .common import Node, NoSolutionError
 
 
-def depth_first_graph(problem, iteration_limit=10000):
+def depth_first_graph(problem, depth_limit=None, iteration_limit=10000):
     starting_node = Node(problem.initial_state(), 0)
     if problem.goal_test(starting_node.state):
         return starting_node.solution()
     frontier = [starting_node]
     explored = set()
     iterations = 0
+    depth_limited = False
     while frontier:
         node = frontier.pop()
         explored.add(node.state)
+        if node.depth == depth_limit:
+            depth_limited = True
+            continue
         for action in problem.actions(node.state):
             child = node.get_child(problem, action)
             if (child.state not in explored and
@@ -21,17 +25,21 @@ def depth_first_graph(problem, iteration_limit=10000):
         iterations += 1
         if iterations > iteration_limit:
             raise NoSolutionError(iteration_limit=iteration_limit)
-    raise NoSolutionError()
+    raise NoSolutionError(depth_limited=depth_limited)
 
 
-def depth_first_tree(problem, iteration_limit=10000):
+def depth_first_tree(problem, depth_limit=None, iteration_limit=10000):
     starting_node = Node(problem.initial_state(), 0)
     if problem.goal_test(starting_node.state):
         return starting_node.solution()
     frontier = [starting_node]
     iterations = 0
+    depth_limited = False
     while frontier:
         node = frontier.pop()
+        if node.depth == depth_limit:
+            depth_limited = True
+            continue
         for action in problem.actions(node.state):
             child = node.get_child(problem, action)
             if problem.goal_test(child.state):
@@ -40,10 +48,11 @@ def depth_first_tree(problem, iteration_limit=10000):
         iterations += 1
         if iterations > iteration_limit:
             raise NoSolutionError(iteration_limit=iteration_limit)
-    raise NoSolutionError()
+    raise NoSolutionError(depth_limited=depth_limited)
 
 
-def depth_first_tree_check_path(problem, iteration_limit=10000):
+def depth_first_tree_check_path(problem, depth_limit=None,
+                                iteration_limit=10000):
     """
     Depth first tree search, but check the path to the current node
     for duplicate states.
@@ -53,8 +62,12 @@ def depth_first_tree_check_path(problem, iteration_limit=10000):
         return starting_node.solution()
     frontier = [starting_node]
     iterations = 0
+    depth_limited = False
     while frontier:
         node = frontier.pop()
+        if node.depth == depth_limit:
+            depth_limited = True
+            continue
         for action in problem.actions(node.state):
             child = node.get_child(problem, action)
             if child.state not in node.states_in_solution():
@@ -64,4 +77,4 @@ def depth_first_tree_check_path(problem, iteration_limit=10000):
         iterations += 1
         if iterations > iteration_limit:
             raise NoSolutionError(iteration_limit=iteration_limit)
-    raise NoSolutionError()
+    raise NoSolutionError(depth_limited=depth_limited)
