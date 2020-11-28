@@ -24,8 +24,9 @@ def depth_first_graph(problem, depth_limit=None, iteration_limit=10000):
                 frontier.append(child)
         iterations += 1
         if iterations > iteration_limit:
-            raise NoSolutionError(iteration_limit=iteration_limit)
-    raise NoSolutionError(depth_limited=depth_limited)
+            raise NoSolutionError(iterations=iterations,
+                                  iteration_limited=True)
+    raise NoSolutionError(iterations=iterations, depth_limited=depth_limited)
 
 
 def depth_first_tree(problem, depth_limit=None, iteration_limit=10000):
@@ -47,8 +48,9 @@ def depth_first_tree(problem, depth_limit=None, iteration_limit=10000):
             frontier.append(child)
         iterations += 1
         if iterations > iteration_limit:
-            raise NoSolutionError(iteration_limit=iteration_limit)
-    raise NoSolutionError(depth_limited=depth_limited)
+            raise NoSolutionError(iterations=iterations,
+                                  iteration_limited=True)
+    raise NoSolutionError(iterations=iterations, depth_limited=depth_limited)
 
 
 def depth_first_tree_check_path(problem, depth_limit=None,
@@ -76,5 +78,6 @@ def depth_first_tree_check_path(problem, depth_limit=None,
                 frontier.append(child)
         iterations += 1
         if iterations > iteration_limit:
-            raise NoSolutionError(iteration_limit=iteration_limit)
-    raise NoSolutionError(depth_limited=depth_limited)
+            raise NoSolutionError(iterations=iterations,
+                                  iteration_limited=True)
+    raise NoSolutionError(iterations=iterations, depth_limited=depth_limited)

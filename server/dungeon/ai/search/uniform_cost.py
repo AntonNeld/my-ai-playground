@@ -29,8 +29,9 @@ def uniform_cost_graph(problem, iteration_limit=10000):
 
         iterations += 1
         if iterations > iteration_limit:
-            raise NoSolutionError(iteration_limit=iteration_limit)
-    raise NoSolutionError()
+            raise NoSolutionError(iterations=iterations,
+                                  iteration_limited=True)
+    raise NoSolutionError(iterations=iterations)
 
 
 def uniform_cost_tree(problem, iteration_limit=10000):
@@ -48,5 +49,6 @@ def uniform_cost_tree(problem, iteration_limit=10000):
             frontier.add(child)
         iterations += 1
         if iterations > iteration_limit:
-            raise NoSolutionError(iteration_limit=iteration_limit)
-    raise NoSolutionError()
+            raise NoSolutionError(iterations=iterations,
+                                  iteration_limited=True)
+    raise NoSolutionError(iterations=iterations)

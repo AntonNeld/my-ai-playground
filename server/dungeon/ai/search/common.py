@@ -1,7 +1,9 @@
 class NoSolutionError(Exception):
 
-    def __init__(self, depth_limited=False, iteration_limit=None):
-        self.iteration_limit = iteration_limit
+    def __init__(self, iterations, depth_limited=False,
+                 iteration_limited=False):
+        self.iterations = iterations
+        self.iteration_limited = iteration_limited
         self.depth_limited = depth_limited
 
 

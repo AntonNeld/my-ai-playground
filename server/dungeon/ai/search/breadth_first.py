@@ -20,8 +20,9 @@ def breadth_first_graph(problem, iteration_limit=10000):
                 frontier.append(child)
         iterations += 1
         if iterations > iteration_limit:
-            raise NoSolutionError(iteration_limit=iteration_limit)
-    raise NoSolutionError()
+            raise NoSolutionError(iterations=iterations,
+                                  iteration_limited=True)
+    raise NoSolutionError(iterations=iterations)
 
 
 def breadth_first_tree(problem, iteration_limit=10000):
@@ -39,5 +40,6 @@ def breadth_first_tree(problem, iteration_limit=10000):
             frontier.append(child)
         iterations += 1
         if iterations > iteration_limit:
-            raise NoSolutionError(iteration_limit=iteration_limit)
-    raise NoSolutionError()
+            raise NoSolutionError(iterations=iterations,
+                                  iteration_limited=True)
+    raise NoSolutionError(iterations=iterations)

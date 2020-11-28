@@ -94,7 +94,7 @@ class NPuzzleAI(BaseModel):
             problem = NPuzzleProblem(numbers)
             try:
                 self.plan = iterative_deepening_graph(
-                    problem, iteration_limit=100000)
+                    problem, iteration_limit=200000)
             except NoSolutionError:
                 self.plan = []
 
