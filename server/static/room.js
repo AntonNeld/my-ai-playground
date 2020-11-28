@@ -8,11 +8,15 @@ const drawOrder = [
   "wall",
   "water",
   "label:*",
+  "color:*",
 ];
 
 function orderOf(looksLike) {
   if (looksLike.startsWith("label:")) {
     return drawOrder.indexOf("label:*");
+  }
+  if (looksLike.startsWith("color:")) {
+    return drawOrder.indexOf("color:*");
   }
   return drawOrder.indexOf(looksLike);
 }
@@ -97,7 +101,11 @@ export class Room extends EventTarget {
             .attr("opacity", 0)
             .call((g) => g.transition(transition).attr("opacity", 1));
           // Non-label, non-color entities use SVG images
-          g.filter((d) => !d.looksLike.startsWith("label:"))
+          g.filter(
+            (d) =>
+              !d.looksLike.startsWith("label:") &&
+              !d.looksLike.startsWith("color:")
+          )
             .append("image")
             .attr("width", 1)
             .attr("height", 1)
