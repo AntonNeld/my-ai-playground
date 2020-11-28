@@ -81,3 +81,33 @@ def depth_first_tree_check_path(problem, depth_limit=None,
             raise NoSolutionError(iterations=iterations,
                                   iteration_limited=True)
     raise NoSolutionError(iterations=iterations, depth_limited=depth_limited)
+
+
+def depth_first_recursive(problem, depth_limit=None, iteration_limit=10000):
+    starting_node = Node(problem.initial_state(), 0)
+    return _find_solution(starting_node, problem, depth_limit, iteration_limit)
+
+
+def _find_solution(node, problem, depth_limit, iteration_limit):
+    if problem.goal_test(node.state):
+        return node.solution()
+    if depth_limit == 0:
+        raise NoSolutionError(iterations=0, depth_limited=True)
+    depth_limited = False
+    iterations = 1
+    for action in problem.actions(node.state):
+        child = node.get_child(problem, action)
+        try:
+            return _find_solution(
+                child, problem,
+                depth_limit - 1 if depth_limit is not None else None,
+                iteration_limit - iterations
+            )
+        except NoSolutionError as e:
+            iterations += e.iterations
+            if e.iteration_limited or iterations > iteration_limit:
+                raise NoSolutionError(
+                    iterations=iterations, iteration_limited=True)
+            if e.depth_limited:
+                depth_limited = True
+    raise NoSolutionError(iterations=iterations, depth_limited=depth_limited)

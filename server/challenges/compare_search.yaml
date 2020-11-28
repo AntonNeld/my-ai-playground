@@ -14,6 +14,9 @@ variants:
     "definitions.p.ai.algorithm": "depthFirstTree"
   "depthFirstTreeCheckPath":
     "definitions.p.ai.algorithm": "depthFirstTreeCheckPath"
+  "depthFirstRecursive":
+    "definitions.p.ai.algorithm": "depthFirstRecursive"
+    "definitions.p.ai.depthLimit": 30
   "depthLimitedGraph":
     "definitions.p.ai.algorithm": "depthLimitedGraph"
     "definitions.p.ai.depthLimit": 30
@@ -33,6 +36,8 @@ variants:
     "definitions.p.ai.algorithm": "iterativeDeepeningTree"
   "iterativeDeepeningTreeCheckPath":
     "definitions.p.ai.algorithm": "iterativeDeepeningTreeCheckPath"
+  "iterativeDeepeningRecursive":
+    "definitions.p.ai.algorithm": "iterativeDeepeningRecursive"
   "uniformCostGraph":
     "definitions.p.ai.algorithm": "uniformCostGraph"
   "uniformCostTree":

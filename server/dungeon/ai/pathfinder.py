@@ -14,11 +14,13 @@ from .search import (
     depth_first_graph,
     depth_first_tree,
     depth_first_tree_check_path,
+    depth_first_recursive,
     greedy_best_first_graph,
     greedy_best_first_tree,
     iterative_deepening_graph,
     iterative_deepening_tree,
     iterative_deepening_tree_check_path,
+    iterative_deepening_recursive,
     uniform_cost_graph,
     uniform_cost_tree,
     NoSolutionError
@@ -38,6 +40,7 @@ class PathfinderAI(BaseModel):
         Literal["depthFirstGraph"],
         Literal["depthFirstTree"],
         Literal["depthFirstTreeCheckPath"],
+        Literal["depthFirstRecursive"],
         Literal["depthLimitedGraph"],
         Literal["depthLimitedTree"],
         Literal["depthLimitedTreeCheckPath"],
@@ -46,10 +49,11 @@ class PathfinderAI(BaseModel):
         Literal["iterativeDeepeningGraph"],
         Literal["iterativeDeepeningTree"],
         Literal["iterativeDeepeningTreeCheckPath"],
+        Literal["iterativeDeepeningRecursive"],
         Literal["uniformCostGraph"],
         Literal["uniformCostTree"],
     ] = "breadthFirstGraph"
-    # This one is only used for depthLimitedGraph and depthLimitedTree
+    # This one is only used for depthLimited* and depthFirstRecursive
     depth_limit: Optional[int] = Field(None, alias="depthLimit")
     plan: Optional[List[str]]
 
@@ -80,6 +84,9 @@ class PathfinderAI(BaseModel):
                     self.plan = depth_first_tree(problem)
                 elif self.algorithm == "depthFirstTreeCheckPath":
                     self.plan = depth_first_tree_check_path(problem)
+                elif self.algorithm == "depthFirstRecursive":
+                    self.plan == depth_first_recursive(
+                        problem, depth_limit=self.depth_limit)
                 elif self.algorithm == "depthLimitedGraph":
                     self.plan = depth_first_graph(
                         problem, depth_limit=self.depth_limit)
@@ -101,6 +108,8 @@ class PathfinderAI(BaseModel):
                     self.plan = iterative_deepening_tree(problem)
                 elif self.algorithm == "iterativeDeepeningTreeCheckPath":
                     self.plan = iterative_deepening_tree_check_path(problem)
+                elif self.algorithm == "iterativeDeepeningRecursive":
+                    self.plan = iterative_deepening_recursive(problem)
                 elif self.algorithm == "uniformCostGraph":
                     self.plan = uniform_cost_graph(problem)
                 elif self.algorithm == "uniformCostTree":
