@@ -11,10 +11,11 @@ from .reflex_vacuum_see_all import ReflexVacuumSeeAllAI
 from .random_vacuum import RandomVacuumAI
 from .exploring_vacuum import ExploringVacuumAI
 from .pathfinder import PathfinderAI
+from .n_puzzle import NPuzzleAI
 
 AI = Union[SingularAI, GetNearestCoinAI, RandomAI, ReflexVacuumAgentAI,
            ReflexVacuumWithStateAI, ReflexVacuumSeeAllAI, RandomVacuumAI,
            MissionariesAndCannibalsAI, CannibalAI, ExploringVacuumAI,
-           PathfinderAI]
+           PathfinderAI, NPuzzleAI]
 
 __all__ = ("AI",)

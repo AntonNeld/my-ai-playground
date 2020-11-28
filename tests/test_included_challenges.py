@@ -81,7 +81,16 @@ TESTS = [
         "scores": {
             "boat": 5893,
         }
-    }
+    },
+    {
+        "challenge": "n_puzzle",
+        "duration": 100,
+        "scores": {
+            "3-puzzle:player": 298,
+            "8-puzzle:player": 772,
+            "15-puzzle:player": 0
+        }
+    },
 ]
 
 root_dir = Path(__file__).parent.parent

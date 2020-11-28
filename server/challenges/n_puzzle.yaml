@@ -1,5 +1,16 @@
 # The N-puzzle (8-puzzle, 15-puzzle...), where you swap squares
 variants:
+  "3-puzzle":
+    room:
+      - |-
+        ####
+        #ab#
+        #c #
+        ####
+      - |-
+        .
+         @B
+         AC
   "8-puzzle":
     room:
       - |-
@@ -40,9 +51,7 @@ template:
       looksLike: "color:black"
       score: 0
       ai:
-        kind: "singular"
-        action:
-          actionType: "none"
+        kind: "nPuzzle"
       perception: {}
       actions:
         move:
